@@ -1,0 +1,32 @@
+---
+title: "Final Presentation"
+format: html
+editor: visual
+---
+
+## Final Project Overview: Instructions -- The overview consists of 2-3 sentences summarizing the project and goals. 
+
+
+## Introduction: For the introduction, the first paragraph describes the problem addressed, its significance, and some background to motivate the problem.
+
+After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA as risk factors for recurrence.  In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells in the bone marrow and circulating tumor DNA in the blood.    
+
+# In the second paragraph, explain why your problem is interdisciplinary, what fields can contribute to its understanding, and incorporate background related to what you learned from meeting with faculty/staff. 
+
+
+## Methods-- Start working on the Methods/Results section, which consists of code and its output along with text describing what you are doing. Push your draft to GitHub and provide a link to it. 
+
+```{r}
+1 + 1
+```
+
+
+## Results 
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
