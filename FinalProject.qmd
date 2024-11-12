@@ -7,26 +7,2928 @@ editor: visual
 ## Final Project Overview: Instructions -- The overview consists of 2-3 sentences summarizing the project and goals. 
 
 
-## Introduction: For the introduction, the first paragraph describes the problem addressed, its significance, and some background to motivate the problem.
+## Introduction:
 
 After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA as risk factors for recurrence.  In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells in the bone marrow and circulating tumor DNA in the blood.    
 
-# In the second paragraph, explain why your problem is interdisciplinary, what fields can contribute to its understanding, and incorporate background related to what you learned from meeting with faculty/staff. 
+This is a translational study, and so we will look at clinical risk factors for ctDNA and DTC positivity. 
 
+## Methods-- 
 
-## Methods-- Start working on the Methods/Results section, which consists of code and its output along with text describing what you are doing. Push your draft to GitHub and provide a link to it. 
+In SURMOUNT, 
 
 ```{r}
-1 + 1
+library(here)
+library(dplyr) 
+ d <- read.csv(file = here("..", "Datasets",
+                          "surmount184_merged_20241108.csv"))
+names(d) 
+
+### I'm not sure what else goes into the methods for this vs results  
+
 ```
 
 
 ## Results 
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+
+
+#summary variables:  final_overall_stage final_t_stage final_n_stage 
+# final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') final_tumor_grade final_histology
+# demo_race_final fu_locreg_site_num (numeric values for local regional site) 
+# fu_locreg_site_char (character values for local regional site)
+# fu_dist_site_num (numeric values for distant site)
+# fu_dist_site_char (character values for distant site)
+# censor_date (most recent fu_date_to among patients who are alive without local or distant progression) 
+
+
+# identify if 22-021 and 21-033 are in here 
+participant_check <- c("28115-22-021", "28115-21-033") %in% d$participant_id
+
+# Print results
+names(participant_check) <- c("28115-22-021", "28115-21-033")
+print(participant_check)
+#neither is in here! great! 
+
+
+str(d) #to look at what structure variables are in -- > we will need to do some stuff with dates 
+#timepoint is a character (ok) -- do we need this to be factor? 
+#collection_date is a character, should convert to date 
+#eVAF numeric
+#mean_VAF numeric 
+#total variants interger 
+#ctDNA_detected = character, ok 
+#ctdna_cohort = integer (but there are some NAs)-- we may want to  
+#censor_date --> should convert to date 
+#fu_dist_Date should conver to date 
+#_fu_locreg_date should convert to date 
+
+
+
+####date nonsense, come back to this#### NOT DOING THIS PART 
+library(dplyr)
+#this does not quite work as it turns a bunch into NAs. May need to do this for each individual line based on how the data is structured 
+date_columns <- grep("date", colnames(d), value = TRUE, ignore.case = TRUE) 
+date_columns 
+#d[date_columns] <- lapply(d[date_columns], function(x) as.Date(x, format = "%d/%b/%Y"))
+#str(d) #converted most of the date columns to dates 
+
+
+###### ctDNA to limit to ctDNA cohort (but ok to include NAs as long as they were ever ctDNA cohort == 1) --> shall call this subset_data 
+
+# Step 1: Identify all participant_ids where ctDNA_cohort == 1
+valid_participants <- d |> 
+  filter(ctdna_cohort == 1) |> 
+  pull(participant_id) |> 
+  unique()
+
+# Step 2: Subset the data to include all rows where participant_id is in the valid list
+subset_data <- d |> 
+  filter(participant_id %in% valid_participants)
+
+# Count the number of unique participant_ids in the subset_data
+unique_count <- subset_data |> 
+  summarise(unique_participants = n_distinct(participant_id))
+
+# View the result == 109!! 
+unique_count
+
+#now we have the subset_data = the ctDNA cohort (n=109), we can start looking at demographics. First we will do overall, then we will do divided by ctDNA_detected  
+#ctDNA_detected = character, ok 
+
+names(subset_data)
+### Excluding the FAILS from this cohort 
+######create the ctDNA Ever positive variable 
+table(subset_data$ctDNA_detected) # 2 missing and then FALSE, TRUE 
+
+
+# Create the 'ctDNA_ever' variable: 
+# This will be 1 if ctDNA_detected was 1 for any record for the participant, otherwise 0.
+subset_data <- subset_data %>%
+  group_by(participant_id) %>%
+  mutate(ctDNA_ever = if_else(any(ctDNA_detected == TRUE), TRUE, FALSE)) %>%
+  ungroup()
+
+# View the updated data
+table(subset_data$participant_id, subset_data$ctDNA_ever)
+
+#100 negatives, 9 positives, as it should be! for ctDNA_ever 
+subset_data |> 
+  group_by(participant_id) |> 
+  summarize(ctDNA_ever = first(ctDNA_ever)) |> 
+  count(ctDNA_ever)
+
+####### DTCS -- create DTC_ever -- come back to this ########
+#do the same thing for DTCs --ever dtc positive  --> this is a little wonky, want to ensure we aren't actually eliminating any of the dtc results in our subsetting... 
+
+names(subset_data) #looking at the names of variables to find the DTC indicator variable 
+library(stringr)
+
+#variable is dtc_ihc_result_final
+#dtc_ihc_summary_count
+#dtc_final_result_ date
+
+#looking at the unique counts for the different dtc variables, dtc_ihc_result_final has more than final_result so is the combined one 
+unique(subset_data$dtc_ihc_result_final) #0, NA, 1 
+table(subset_data$dtc_ihc_result_final) # 152 zeros, 41 positives as I can see, where are the NAs? 
+table(d$dtc_ihc_result_final)
+sum(is.na(subset_data$dtc_ihc_result_final)) #128 NAs 
+sum(is.na(subset_data$FINAL_RESULT)) # 447 NAs 
+  
+  
+unique(subset_data$FINAL_RESULT)
+table(subset_data$FINAL_RESULT) #79 people using this one 
+
+
+subset_data <- subset_data |> 
+  group_by(participant_id) |> 
+  mutate(dtc_ever = if_else(any(dtc_ihc_result_final == 1, na.rm = TRUE), 1, 0)) |> 
+  ungroup()
+
+# View the updated data
+table(subset_data$participant_id, subset_data$dtc_ever) 
+
+#70 DTC ever negatives, 39 positives, correct!   
+subset_data |> 
+  group_by(participant_id) |> 
+  summarize(dtc_ever = first(dtc_ever)) |> 
+  count(dtc_ever)
+
+
+########### Variables to look at for Table 1 #########
+
+###### median age at diagnosis 
+
+names(subset_data) #to identify the variables I want to use 
+str(subset_data$diag_date_1) #character
+str(subset_data$demo_dob) #character 
+
+d$diag_date_1 <- as.Date(d$diag_date_1, format = "%m/%d/%Y")  
+d$demo_dob <- as.Date(d$demo_dob, format = "%m/%d/%Y")  
+
+str(d$diag_date_1) #dates! 
+str(d$demo_dob) #dates! 
+
+### doing the same for subset_data as it didn't carry over into that data set 
+subset_data$diag_date_1 <- as.Date(subset_data$diag_date_1, format = "%m/%d/%Y")  
+subset_data$demo_dob <- as.Date(subset_data$demo_dob, format = "%m/%d/%Y")  
+
+# calculating age from date of diagnosis to dob 
+subset_data$age_at_diag <- as.numeric(difftime(subset_data$diag_date_1, subset_data$demo_dob, units = "days")) / 365.25
+head(subset_data$age_at_diag)
+
+summary(subset_data$age_at_diag) #median 48.75 
+
+age_summary <- subset_data %>%
+  group_by(ctDNA_ever) %>%
+  summarise(
+    mean_age = mean(age_at_diag, na.rm = TRUE),  # Calculate mean age
+    median_age = median(age_at_diag, na.rm = TRUE),  # Calculate median age
+    sd_age = sd(age_at_diag, na.rm = TRUE),  # Calculate standard deviation of age
+    n = n()  # Number of participants in each group
+  )
+
+print(age_summary)
+
+# Perform the Wilcoxon rank-sum test to compare the medians of age between ctDNA_ever positive and negative groups
+wilcox_test_result <- wilcox.test(age_at_diag ~ ctDNA_ever, data = subset_data)
+
+# Print the result
+print(wilcox_test_result)
+
+#looking at range of age for the ctDNA pos vs neg groups 
+age_summary <- subset_data %>%
+  group_by(ctDNA_ever) %>%
+  summarise(
+    min_age = min(age_at_diag, na.rm = TRUE),  # Minimum age
+    max_age = max(age_at_diag, na.rm = TRUE),  # Maximum age
+    .groups = "drop"
+  )
+
+# View the summary table
+print(age_summary)
+
+##### Race: demo_race_final
+
+# Get the count of unique participant_ids for each category in demo_race_final
+race_counts_unique_percent <- subset_data %>%
+  group_by(demo_race_final) %>%
+  summarise(unique_participants = n_distinct(participant_id)) %>%
+  mutate(percent = unique_participants / sum(unique_participants) * 100)
+
+# View the result
+print(race_counts_unique_percent)
+
+
+
+# Count distinct participant_ids by ctDNA_ever and demo_race_final
+count_distinct_participants <- subset_data %>%
+  group_by(demo_race_final, ctDNA_ever) %>%
+  summarise(distinct_participant_count = n_distinct(participant_id), .groups = "drop")
+
+# Print the result
+count_distinct_participants
+
+
+
+library(dplyr)
+
+# Step 1: Summarize by unique participant_id
+summarized_data <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ctDNA_ever = first(ctDNA_ever),   # Taking the first observed value of ctDNA_ever for each participant
+    demo_race_final = first(demo_race_final),  # Taking the first observed value of demo_race_final for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table <- table(summarized_data$ctDNA_ever, summarized_data$demo_race_final)
+contingency_table
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the result p val - 0.91 
+chisq_test
+
+
+
+#receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
+
+# Breakdown of final_receptor_group by unique participant_id
+receptor_status_by_participant <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(final_receptor_group = first(final_receptor_group),  # Or choose the most frequent group if needed
+            .groups = "drop")
+
+# View the result
+table(receptor_status_by_participant$final_receptor_group)
+
+# Summarizing data by participant_id, final_receptor_group, and ctDNA_ever
+receptor_ctDNA_status <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    final_receptor_group = first(final_receptor_group),  # Or the most frequent if needed
+    ctDNA_ever = first(ctDNA_ever),  # Taking the first observed value for ctDNA_ever
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table_receptor <- table(receptor_ctDNA_status$final_receptor_group, receptor_ctDNA_status$ctDNA_ever)
+contingency_table_receptor
+
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table_receptor)
+
+# Step 4: Print the result # p-value 0.10
+chisq_test
+
+
+#curious about whether TNBC vs non-TNBC association exists (or HR + vs non-HR positive)
+#start with TNBC (using QDC)
+#inclusion criteria inc_dx_crit___1  = TNBC 
+
+
+#inc_dx_crit_list___1  
+
+TNBC_ctDNA_status <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    inc_dx_crit_list___1 = first(inc_dx_crit_list___1),  # Or the most frequent if needed
+    ctDNA_ever = first(ctDNA_ever),  # Taking the first observed value for ctDNA_ever
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table_TNBC <- table(TNBC_ctDNA_status$inc_dx_crit_list___1, TNBC_ctDNA_status$ctDNA_ever)
+contingency_table_TNBC
+
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table_TNBC)
+
+# Step 4: p-val is 0.12 
+chisq_test
+ 
+
+#ER vs non-ER 
+#first create HR_status variable 
+subset_data <- subset_data |> 
+  mutate(HR_status = case_when(
+    final_receptor_group %in% c(2, 3) ~ "HR+",
+    final_receptor_group %in% c(1, 4) ~ "Non-HR+",
+    TRUE ~ NA_character_  # In case there are missing or other unexpected values
+  ))
+
+# View the new HR_status variable
+table(subset_data$HR_status)
+
+HR_status_by_participant <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(HR_status = first(HR_status),  # Or use mode() if you have multiple rows per participant
+            .groups = "drop")
+
+# View the result 
+table(HR_status_by_participant$HR_status) #aligns with final receptor status (ultimately 60 HR+, 49 HR-)
+
+# Summarize ctDNA_detected status by HR_status, for each unique participant_id
+summary_data <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    HR_status = first(HR_status),  # Get the HR_status for the participant
+    ctDNA_status = first(ctDNA_ever),  # Get the ctDNA_detected status for the participant
+    .groups = "drop"
+  )
+
+contingency_table_HR <- table(summary_data$ctDNA_status, summary_data$HR_status)
+contingency_table_HR
+chisq_test <- chisq.test(contingency_table_HR)
+
+# Print chi-squared test results #0.28 
+chisq_test
+
+
+
+
+###tumor grade: final_tumor_grade --> NOTE: 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not reported  
+
+# Exclude rows where final_tumor_grade is 3 (not reported), want to exclude the 2 pts who had grade not reported 
+summary_data <- subset_data %>%
+  filter(final_tumor_grade != 3) %>%  # Exclude grade == 3
+  group_by(participant_id) %>%
+  summarise(
+    grade = first(final_tumor_grade),  # Get the final_tumor_grade for each participant
+    ctDNA_ever = first(ctDNA_ever),    # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of grade vs ctDNA_ever
+contingency_table <- table(summary_data$grade, summary_data$ctDNA_ever)
+
+# View the contingency table
+print(contingency_table)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# View the Chi-squared test result -- p-value 0.0229 
+print(chisq_test)
+
+######histology  #people have different combinations of histology (1-15)
+  table(subset_data$participant_id, subset_data$final_histology)
+  
+  histology_summary <- subset_data %>%
+    distinct(participant_id, final_histology) %>%  # Get unique participant-histology combinations
+    group_by(final_histology) %>%  # Group by histology type
+    summarise(count = n())  # Count the number of participants per histology type
+  
+  # View the summary table
+  print(histology_summary) #the different combinations add up to 109. There are a decent number who had both ductal and lobular histology 
+  
+  #trying to create Ductal, lobular, both, or other variables 
+  subset_data <- subset_data %>%
+    mutate(histology_category = case_when(
+      grepl("3", as.character(final_histology)) & grepl("14", as.character(final_histology)) ~ "Both Ductal and Lobular",  # Both Ductal and Lobular
+      grepl("3", as.character(final_histology)) ~ "Ductal",  # Ductal
+      grepl("14", as.character(final_histology)) ~ "Lobular",  # Lobular
+      TRUE ~ "Other"  # Any other combination
+    ))
+  
+  # Count the number of participants in each histology category
+  histology_counts <- subset_data %>%
+    group_by(histology_category) %>%
+    summarise(count = n_distinct(participant_id))  # Count distinct participants
+  
+  # View the counts -- adds up to 109! 
+  print(histology_counts)
+  
+  #contingency table 
+  library(tidyr)
+  contingency_table <- subset_data %>%
+    distinct(participant_id, histology_category, ctDNA_ever) %>%  # Ensure each patient is counted once
+    count(histology_category, ctDNA_ever) %>%
+    pivot_wider(names_from = ctDNA_ever, values_from = n, values_fill = list(n = 0))  # Pivot the table to get ctDNA_ever as columns
+  
+  # 3. Perform the Chi-squared test of independence
+  chisq_test <- chisq.test(contingency_table[,-1])  # Remove the histology_category column for the test
+  
+  # 4. Print the contingency table
+  print(contingency_table) 
+  
+  # 5. Print the result of the Chi-squared test p-value - 0.2276
+  print(chisq_test)
+  
+  
+  
+  #### Stage -- N stage  --> come back to this N stage stuff 
+
+table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 (No, N1, N2, N3)
+  
+ nodal_summary <- subset_data %>%
+    distinct(participant_id, final_n_stage) %>%  # Get unique participant-stage combinations
+    group_by(final_n_stage) %>%  # Group by stage
+    summarise(count = n())  # Count the number of participants per histology type
+  
+#View the summary table --adds up to 109, 46 = pN0 63 = pN1 
+  print(nodal_summary)
+  
+  subset_data_by_id <- subset_data %>%
+    filter(final_n_stage %in% c(0, 1, 2, 3)) %>%  # Include only relevant nodal stages
+    group_by(participant_id) %>%
+    summarise(
+      nodal_status = first(final_n_stage),  # Use final_n_stage as nodal_status for each participant
+      ctDNA_ever = first(ctDNA_ever),       # Get ctDNA_ever status for each participant
+      .groups = "drop"
+    )
+  
+  # Step 3: Create a contingency table of nodal_status vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$nodal_status, subset_data_by_id$ctDNA_ever)
+  
+  # Step 4: Check if any cells in the contingency table have zero counts, which could affect test validity
+  print(contingency_table)
+  
+  # Step 5: Perform Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Step 6: Print the Chi-squared test result p = 0.0001 
+  print(chisq_test) 
+  
+  
+  #### Creating Node - vs node + variable from summary indicator variable 
+  subset_data_by_id <- subset_data %>%
+    group_by(participant_id) %>%
+    summarise(
+      node_status = ifelse(first(final_n_stage) == 0, "Node Negative", "Node Positive"),  # Node negative if 0, positive otherwise
+      ctDNA_ever = first(ctDNA_ever),  # Get ctDNA_ever status for each participant
+      .groups = "drop"
+    )
+  
+  # Step 2: Create a contingency table of node_status vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$node_status, subset_data_by_id$ctDNA_ever)
+  
+  # Step 3: Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Step 4: Print the contingency table and Chi-squared test results
+  print(contingency_table)
+  print(chisq_test)
+  
+  
+  ####### EXTRA CODE/CONFIRMATION / slightly different but ignore for our analysis 
+  #cross-check with indicator pN0 in our data that reflects nodal positivity.... there is 1 patient that is node - by summary variable but node + by indicator variable 
+  ## should double check this at some point 
+  node_pos <- subset_data %>%
+    distinct(participant_id, inc_dx_crit_list___2) %>%  # Get unique participant-stage combinations
+    group_by(inc_dx_crit_list___2) %>%  # Group by stage
+    summarise(count = n())  # Count the number of participants per histology type
+  
+  print(node_pos)
+  
+  contingency_table <- subset_data %>%
+    distinct(participant_id, inc_dx_crit_list___2, ctDNA_ever) %>%  # Ensure unique participants
+    count(inc_dx_crit_list___2, ctDNA_ever) %>%  # Count occurrences
+    spread(key = ctDNA_ever, value = n, fill = 0)  # Spread data into a matrix
+  
+  # View the contingency table
+  print(contingency_table)
+  
+  # Perform the Chi-square test =0.3902 
+  chi_square_result <- chisq.test(contingency_table[, -1])  # Exclude the first column with the levels
+  print(chi_square_result)
+
+  
+  
+
+  
+#######t stage final_t_stage 
+  
+  table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (90 = pTx) so can proceed with this 
+  
+  t_summary <- subset_data %>%
+    distinct(participant_id, final_t_stage) %>%  # Get unique participant-stage combinations
+    group_by(final_t_stage) %>%  # Group by stage
+    summarise(count = n())  # Count the number of participants per histology type
+  
+  # View the summary table --adds up to 109, most are pN0 or cN0, a good number are pN1 or cN1, or pN2  
+  print(t_summary)
+  
+  
+  #### T stage, for our T stage table, will use T1 vs T2 or greater to simplify 
+ #exclude 99 (the pTx) 
+  subset_data_clean <- subset_data %>%
+    filter(final_t_stage != 99, ctDNA_ever != 99)
+  
+  # Combine final_t_stage into T1 vs. T2 or greater
+  subset_data_clean <- subset_data_clean %>%
+    mutate(final_t_stage_combined = ifelse(final_t_stage == 1, "T1", "T2 or greater"))
+  
+  # Summarize the data by participant_id after creating the new combined t_stage
+  subset_data_by_id <- subset_data_clean %>%
+    group_by(participant_id) %>%
+    summarise(
+      final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
+      ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+    )
+  
+  # Create a contingency table of final_t_stage_combined vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$final_t_stage_combined, subset_data_by_id$ctDNA_ever)
+  
+  # Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Print the contingency table and Chi-squared test results
+  print(contingency_table)
+  print(chisq_test)
+
+#### TRy for T stage stats using T3 or greater as cutoff -- not super useful, So DONOT USE THIS FOR TABLE  
+  
+  #exclude 99 (the pTx) 
+  subset_data_clean <- subset_data %>%
+    filter(final_t_stage != 99, ctDNA_ever != 99)
+  
+  # Combine final_t_stage into T1/T2 or T3 or greater
+  subset_data_clean <- subset_data_clean %>%
+    mutate(final_t_stage_combined = case_when(
+      final_t_stage == 1 | final_t_stage == 2 ~ "T1 or T2",  # Group T1 and T2 together
+      final_t_stage >= 3 ~ "T3 or greater",  # Group T3 and higher as a separate category
+      TRUE ~ NA_character_  # Handle any unexpected values
+    ))
+  
+  
+  # Summarize the data by participant_id after creating the new combined t_stage
+  subset_data_by_id <- subset_data_clean %>%
+    group_by(participant_id) %>%
+    summarise(
+      final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
+      ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+    )
+  
+  # Create a contingency table of final_t_stage_combined vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$final_t_stage_combined, subset_data_by_id$ctDNA_ever)
+  
+  # Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Print the contingency table and Chi-squared test results --> not significant so ignore this 
+  print(contingency_table)
+  print(chisq_test)
+  
+  
+  
+  ########stage of disease -- final_overall_stage 
+
+  table(subset_data$final_overall_stage) #we have values in 1,2,3,4, and 99 so can proceed with this 
+  
+  stage_summary <- subset_data %>%
+    distinct(participant_id, final_overall_stage) %>%  # Get unique participant-stage combinations
+    group_by(final_overall_stage) %>%  # Group by stage
+    summarise(count = n())  # Count the number of participants per histology type
+  
+  # View the summary table --adds up to 109 (1 99), most are stage 2, some are stage I some are stage III, no stage IV (yay)
+  print(stage_summary)
+  
+  #exclude the 99 
+  subset_data_clean <- subset_data %>%
+    filter(final_overall_stage != 99, ctDNA_ever != 99)
+  
+  # Summarize the data by participant_id
+  subset_data_by_id <- subset_data_clean %>%
+    group_by(participant_id) %>%
+    summarise(
+      final_overall_stage = first(final_overall_stage),  # Get the final_overall_stage for each participant
+      ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+    )
+  
+  # Create a contingency table of final_overall_stage vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$final_overall_stage, subset_data_by_id$ctDNA_ever)
+  
+  # Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Print the contingency table and Chi-squared test results --> hot dogggg p val = 0.006 
+  print(contingency_table)
+  print(chisq_test)
+  
+  
+
+
+###########surgical treatment diag_surgery_type_1 (or diag_surgery_type_2) 
+  
+  
+  table(subset_data$diag_surgery_type_1) #1= partial mastectomy/lumpectomy, 2 = mastectomy. no missingness 
+  
+  surgery <- subset_data %>%
+    distinct(participant_id, diag_surgery_type_1) %>%  # Get unique participant-stage combinations
+    group_by(diag_surgery_type_1) %>%  # Group by stage
+    summarise(count = n())  # Count the number of participants per histology type
+  
+  # View the summary table
+  print(surgery)
+  
+  
+  # Summarize the data by participant_id
+  subset_data_by_id <- subset_data_clean %>%
+    group_by(participant_id) %>%
+    summarise(
+     surgery = first(diag_surgery_type_1),  # Get the final_overall_stage for each participant
+      ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+    )
+  
+  # Create a contingency table of final_overall_stage vs ctDNA_ever
+  contingency_table <- table(subset_data_by_id$surgery, subset_data_by_id$ctDNA_ever)
+  
+  # Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  
+  # Print the contingency table and Chi-squared test results --> p-val = 1....
+  print(contingency_table)
+  print(chisq_test)
+  
+  
+
+######## axillary management. Really just care about whether or not someone got an axillary dissection. diag_axillary_type___2_1 (or diag_axillary_type___2_2 IF 2 biopsy forms)
+
+  table(subset_data$diag_axillary_type___2_1) 
+  table(subset_data$diag_axillary_type___2_2) #a handful of axillary dissection on the second biopsy form so i think we want to combine these two 
+  
+  # Create a binary variable to identify participants who had axillary dissection
+  subset_data_clean <- subset_data %>%
+    mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
+  
+  # Ensure every participant has a ctDNA_ever and axillary_dissection value
+  # Ensure every patient has an axillary dissection category, where 0 means no axillary dissection, and 1 means they had one
+  subset_data_clean <- subset_data %>%
+    mutate(axillary_dissection = case_when(
+      diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1 ~ 1,  # Had axillary dissection
+      TRUE ~ 0  # No axillary dissection (includes missing values)
+    ))
+  
+  # Summarize the data by participant_id, including the axillary_dissection and ctDNA_ever variables
+  subset_data_by_id <- subset_data_clean %>%
+    group_by(participant_id) %>%
+    summarise(
+      axillary_dissection = first(axillary_dissection),  # Get the axillary dissection status for each participant
+      ctDNA_ever = first(ctDNA_ever)  # Get the ctDNA_ever status for each participant
+    )
+  
+  contingency_table <- table(subset_data_by_id$axillary_dissection, subset_data_by_id$ctDNA_ever)
+  
+  # Perform the Chi-squared test
+  chisq_test <- chisq.test(contingency_table)
+  fishers <- fisher.test(contingency_table)
+  print(fishers)
+  
+  # Print the contingency table and Chi-squared test results --> p-value 0.173 (used chisq for consistency...)
+  print(contingency_table)
+  print(chisq_test)
+
+####inflammatory inflamm_yn -- IGNORE THIS for Table 1 
+table(d$inflamm_yn_1) ### i think the inflammatory folks must just not be in the subset of patients (6 yes's in the overall cohort, but none in the subset data for etierh inflamm variable)
+table(d$inflamm_yn_2)  ### I think inflammatory folks just not in subset of patients in the ctDNA cohort 
+table(subset_data$inflamm_yn)
+  
+#### radiation prtx_radiation 
+table(subset_data$prtx_radiation) 
+
+radiation <- subset_data |> 
+  distinct(participant_id,prtx_radiation) |> 
+  group_by(prtx_radiation) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(radiation)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    radiation = first(prtx_radiation),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$radiation, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+fishers <- fisher.test(contingency_table)
+print(fishers)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.33 
+print(contingency_table)
+print(chisq_test)
+
+
+#### chemotherapy prtx_chemo 
+table(subset_data$prtx_chemo) 
+
+chemo <- subset_data |> 
+  distinct(participant_id,prtx_chemo) |> 
+  group_by(prtx_chemo) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(chemo) #3 people didn not get chemo in this cohort 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    chemo = first(prtx_chemo),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$chemo, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+fishers <- fisher.test(contingency_table)
+print(fishers)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.33 
+print(contingency_table)
+print(chisq_test)
+
+
+
+####neoadjuvant chemo diag_neoadj_chemo_1 or diag_neoadj_chemo_2 
+
+table(subset_data$diag_neoadj_chemo_1) 
+table(subset_data$diag_neoadj_chemo_2) #there were no ppl who were recorded on the second biopsy form as having neoadjuvant therapy so can use only the first variable 
+
+nact <- subset_data |> 
+  distinct(participant_id,diag_neoadj_chemo_1) |> 
+  group_by(diag_neoadj_chemo_1) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(nact) #3 people didn not get chemo in this cohort 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    nact = first(diag_neoadj_chemo_1),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$nact, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.95 
+print(contingency_table)
+print(chisq_test)
+
+
+####hormone therapy prtx_endo 
+
+table(subset_data$prtx_endo) 
+
+endo <- subset_data |> 
+  distinct(participant_id,prtx_endo) |> 
+  group_by(prtx_endo) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(endo) #most ppl did get endo (62 of the 109)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    endo = first(prtx_endo),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$endo, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.95 
+print(contingency_table)
+print(chisq_test)
+
+
+
+
+####bone modifying agents prtx_bonemod 
+
+table(subset_data$prtx_bonemod) 
+
+bonemod <- subset_data |> 
+  distinct(participant_id,prtx_bonemod) |> 
+  group_by(prtx_bonemod) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(bonemod) #most ppl did get endo (39 got bonemod)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    bonemod = first(prtx_bonemod),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of bonemod vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$bonemod, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.84 
+print(contingency_table)
+print(chisq_test)
+
+
+
+####referred to trial fu_trial_yn --> this variable seems to have disappeared. I can re-make it based on fu_trial_pid
+
+names(d)
+
+table(subset_data$fu_trial_yn)  #this variable does not exist in our data set 
+
+subset_data <- subset_data %>%
+  mutate(trial = ifelse(!is.na(fu_trial_pid) & fu_trial_pid != "", "Yes", "No"))
+print(subset_data$trial)
+
+
+trial <- subset_data |> 
+  distinct(participant_id,trial) |> 
+  group_by(trial) |>  # Group by trial yes/no 
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(trial) #most ppl did get endo (62 of the 109) --> 38 pts went on trial 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    trial = first(trial),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$trial, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.95 
+print(contingency_table)
+print(chisq_test)
+
+
+
+  
+  
+Later  
+#2 = non-pcr, 1 = pcr 
+#path cr diag_pcr_1 or diag_pcr_2  
+table(subset_data$diag_pcr_1) 
+table(subset_data$diag_pcr_2) #none recorded here si can just use pcr_1 
+
+pcr <- subset_data %>%
+  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) %>%  # Convert "." to NA
+  filter(!is.na(diag_pcr_1)) %>%  # Exclude rows where diag_pcr_1 is NA
+  distinct(participant_id, diag_pcr_1) %>%
+  group_by(diag_pcr_1) %>%
+  summarise(count = n()) # Count the number of participants per histology type
+
+# View the summary table
+print(pcr) #this is correct bc 19 ppl got NACT, and we have 19 ppl recorded for pcr data 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    pcr = first(diag_pcr_1),  # Get the final_overall_stage for each participant
+    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
+  )
+
+# Create a contingency table of pcr vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$pcr, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.86 -- does not seem to be association among those who got pcr (but also we have a group with 1 in it...) 
+print(contingency_table)
+print(chisq_test)
+
+
+
+########recurrence
+#local first, then distant.then create summary variable of either locreg or distant 
+#local fu_locreg_prog 
+
+# Step 1: Summarize data by unique participant_id
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    fu_locreg_prog = first(fu_locreg_prog),  # Get fu_locreg_prog status for each participant
+    ctDNA_ever = first(ctDNA_ever),          # Get ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create a contingency table of fu_locreg_prog vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$fu_locreg_prog, subset_data_by_id$ctDNA_ever)
+
+# Step 3: Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the contingency table and Chi-squared test results -- p-val of <<<< 0.000001 
+print(contingency_table)
+print(chisq_test)
+
+####looking at sites of locoregional progression: local site fu_locreg_site_num or fu_locreg_site_char 
+### Just want to look at site distribution here 
+
+# Summarize the distribution of fu_locreg_site_char by unique participant_id
+site_distribution <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    site = first(fu_locreg_site_char),  # Get the site for each unique participant
+    .groups = "drop"
+  ) %>%
+  count(site)  # Count the occurrences of each site
+
+# View the distribution of sites -- mostly axillary nodes. 4 of 6 axillary. 1 internal mammary. 2 supraclav. 2 ipsilateral breast 
+print(site_distribution)
+
+#####distant recurrence: distant fu_dist_prog 
+
+# Step 1: Summarize data by unique participant_id
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    fu_dist_prog = first(fu_dist_prog),  # Get fu_dist_prog status for each participant
+    ctDNA_ever = first(ctDNA_ever),          # Get ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create a contingency table of dist prog vs ctDNA_ever --> 12 who had distant progression 
+contingency_table <- table(subset_data_by_id$fu_dist_prog, subset_data_by_id$ctDNA_ever)
+
+# Step 3: Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the contingency table and Chi-squared test results -- p-val of <<<< 0.000001 
+print(contingency_table)
+print(chisq_test)
+
+
+### Distant sites 
+#distant site fu_dist_site_num #fu_dist_site_char  -- start justl ooking at the locations 
+
+# Summarize the distribution of fu_dist_site_char by unique participant_id
+dist_site_distribution <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    site = first(fu_dist_site_char),  # Get the site for each unique participant
+    .groups = "drop"
+  ) %>%
+  count(site)  # Count the occurrences of each site
+
+# View the distribution of sites -- Bone in 7. Liver in 3. Lung in 2. 1 intra-abdominal 
+print(dist_site_distribution)
+
+#any recurrence 
+#either fu_locreg_prog or fu_dist_prog 
+
+subset_data <- subset_data %>%
+  mutate(ever_relapsed = ifelse(fu_locreg_prog == 1 | fu_dist_prog == 1, "Yes", "No"))
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    ctDNA_ever = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results -- total 14 relapses, 8 were ctDNA +, 6 were not ever ctDNA positive 
+print(contingency_table)
+print(chisq_test) 
+
+#### Relapse and DTC 
+#using ever_relapsed
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    dtc = first(dtc_ever),        # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$dtc)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test) 
+
+# Identify participants missing data in either `ever_relapsed` or `dtc_ever`
+missing_data <- subset_data_by_id %>%
+  filter(is.na(ever_relapsed) | is.na(dtc))
+
+# Print the IDs of participants with missing data
+print(missing_data$participant_id) #two individuals do not have relapse data (17-021, 18-032, as we had seen above)
+
+### look at ever_relapsed by ctDNA 
+
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    ctDNA = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$ctDNA)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test) 
+
+####survival analysis  fu_survival 
+
+table(subset_data$fu_surv)
+
+surv <- subset_data %>%
+  distinct(participant_id, fu_surv) %>%
+  group_by(fu_surv) %>%
+  summarise(count = n()) # Count the number of participants per histology type
+
+# View the summary table
+print(surv) #1 NA patient --> identify the NA patient below  dead = 5, alive 103. There is 1 that's an NA. 
+
+na_participant <- subset_data %>%
+  filter(is.na(fu_surv)) %>%
+  select(participant_id, fu_surv)
+
+# Print the result -- 28115-17-021  -- no follow up data for this pt looking in redcap, everyone else has some survival data in the ctDNA cohort. 
+print(na_participant)
+
+# Summarize data by unique participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    surv = first(fu_surv),          # Get survival status for each participant
+    ctDNA_ever = first(ctDNA_ever),  # Get ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of surv vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$surv, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test)
+
+
+############ Test Characteristics and Baseline versus cumulative positivity (ctDNA to start)#######
+
+
+### DTC by ctDNA (ever positive) 
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    dtc = first(DTC_ever),  # Get the ever dtc for each participant
+    ctDNA_ever = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of dtc vs ctDNA_ever
+contingency_table <- table(subset_data_by_id$dtc, subset_data_by_id$ctDNA_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results, p-val 0.839 
+print(contingency_table)
+print(chisq_test)
+
+
+
+##### Test stuff (#s and such of tests)
+
+#number of tests (ctDNA)
+library(dplyr)
+
+# Assuming the status variable is named `ctDNA_status` in d, and then in subset 
+status_summary_d <- d %>%
+  group_by(ctDNA_detected) %>%
+  summarise(total_samples = n(), .groups = "drop")
+
+# Print the summary -- we've got 385 FALSE, 8 FAILS, 11 TRUES 
+print(status_summary_d)
+
+#looking at the number of Fails by unique participant_id
+fail_count <- d %>%
+  filter(ctDNA_detected == "Fail") %>%   # Filter for rows where status is "FAIL"
+  distinct(participant_id) %>%          # Get unique participant IDs
+  summarise(total_fails = n())          # Count unique participant IDs
+
+# Print the result -- 4 individuals with FAIL results, which is what we got in the consort  
+print(fail_count)
+fail_count <- subset_data %>%
+  filter(ctDNA_detected == "Fail") %>%   # Filter for rows where status is "FAIL"
+  distinct(participant_id) %>%          # Get unique participant IDs
+  summarise(total_fails = n())          # Count unique participant IDs
+
+# Print the result -- none of the fails were pulled into the ctDNA cohort  
+print(fail_count)
+
+#number of DTC tests in this cohort of 109 patients 
+
+unique(subset_data$dtc_ihc_result_final) #NA, 0, and 1 
+
+status_summary_subset <- subset_data %>%
+  group_by(dtc_ihc_result_final) %>%
+  summarise(total_samples = n(), .groups = "drop")
+
+# Print the summary -- we've got 221 negatives, 49 positives, 128 NAs, across 39 patients (positive) and 70 patients (negative)  
+#### confirm with nick that not missing the NAs, but I suspect based on the below that we are fine and thse are just ctDNA only timepoints 
+print(status_summary_subset)
+
+### looking at NAs -- all of them have FALSE (so i think these are all the ones that had ctDNA timepoints )
+na_participants_dtc <- subset_data %>%
+  filter(is.na(dtc_ihc_result_final)) %>%
+  select(participant_id, dtc_ihc_result_final, FINAL_RESULT, ORIG_RSLT_DTC, ctDNA_detected, timepoint)
+
+# Print the list of participant IDs with NA in `dtc_ihc_result_final`-- they all have FALSE ctDNA results, so these are the ctDNA timepoints
+#all of the timepoints are long-term except for CLEVER baseline. 
+print(na_participants_dtc, n=128)
+
+#look at timepoints 
+unique_timepoints <- unique(subset_data$timepoint)
+print(unique_timepoints)
+
+#Identify participant_ids with both "SURMOUNT" and "CLEVER Screening" timepoints
+participants_dual_timepoints <- subset_data %>%
+  filter(timepoint %in% c("SURMOUNT-Baseline", "Year 1 Follow Up", "Year 2 Follow Up", 
+                    "Year 3 Follow Up", "Year 4 Follow Up", "CLEVER-Baseline")) %>%  # Filter for relevant timepoints
+  group_by(participant_id) %>%
+  filter(n_distinct(timepoint) > 1) %>%                         # Ensure participant has both timepoints
+  ungroup() %>%
+  select(participant_id, timepoint, date) %>%                    # Select participant_id, timepoint, and date
+  distinct()       
+
+participants_dual_timepoints <- subset_data %>%
+  filter(timepoint %in% c("SURMOUNT-Baseline", "Year 1 Follow Up", "Year 2 Follow Up", 
+                    "Year 3 Follow Up", "Year 4 Follow Up", "CLEVER-Baseline")) %>% 
+  group_by(participant_id) %>%
+  filter(n_distinct(timepoint) > 1) %>%                        
+  ungroup() %>%
+  select(participant_id, timepoint, dtc_ihc_date_final, dtc_ihc_result_final) %>%           
+  distinct()  
+
+# Print the list of participant_ids with both timepoints -- great, all the CLEVER-Baselines are NAs in this as they should (blood only) 
+print(participants_dual_timepoints, n=190)
+
+
+##### eVAF 
+names(subset_data) #use eVAF
+
+# Calculate the median and range (min and max) for `eVAF` as percentages for participants with `ctDNA_detected == TRUE`
+eVAF_range_ctDNA_detected_percent <- subset_data %>%
+  filter(ctDNA_detected == TRUE) %>%   # Filter for those with ctDNA detected
+  summarise(
+    median_eVAF_percent = median(eVAF, na.rm = TRUE) * 100,  # Convert median to percentage
+    min_eVAF_percent = min(eVAF, na.rm = TRUE) * 100,        # Convert minimum to percentage
+    max_eVAF_percent = max(eVAF, na.rm = TRUE) * 100         # Convert maximum to percentage
+  )
+
+# Print the result
+print(eVAF_range_ctDNA_detected_percent)
+
+#### DTC counts 
+names(subset_data) #use dtc_ihc_summary_count_final  
+
+# Calculate the median and range (min and max) for `eVAF` as percentages for participants with `ctDNA_detected == TRUE`
+dtc_count <- subset_data %>%
+  filter(dtc_ihc_result_final == 1) %>%   # Filter for those with dtcs detected 
+  summarise(
+    median_dtc_count = median(dtc_ihc_summary_count_final, na.rm = TRUE), 
+    min_dtc_count = min(dtc_ihc_summary_count_final, na.rm = TRUE),        
+    max_dtc_count = max(dtc_ihc_summary_count_final, na.rm = TRUE)         
+  )
+
+# Print the result
+print(dtc_count)
+
+
+#### Number of timepoints we see 
+
+# Timepoints per patient (median, range)
+timepoints_per_patient <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    total_timepoints = n_distinct(timepoint),  # Count distinct timepoints for each patient
+    .groups = "drop"
+  ) %>%
+  summarise(
+    median_timepoints = median(total_timepoints, na.rm = TRUE),  # Calculate median
+    min_timepoints = min(total_timepoints, na.rm = TRUE),        # Calculate minimum
+    max_timepoints = max(total_timepoints, na.rm = TRUE)         # Calculate maximum
+  )
+
+#  Timepoints of ctDNA assessment (`ctDNA_detected`)
+ctDNA_timepoints <- subset_data %>%
+  filter(!is.na(ctDNA_detected)) %>%  # Filter out NA values for ctDNA_detected
+  group_by(participant_id) %>%
+  summarise(
+    ctDNA_timepoints = n_distinct(timepoint),  # Count distinct timepoints of ctDNA assessment
+    .groups = "drop"
+  ) %>%
+  summarise(
+    median_ctDNA_timepoints = median(ctDNA_timepoints, na.rm = TRUE),  # Calculate median
+    min_ctDNA_timepoints = min(ctDNA_timepoints, na.rm = TRUE),        # Calculate minimum
+    max_ctDNA_timepoints = max(ctDNA_timepoints, na.rm = TRUE)         # Calculate maximum
+  )
+
+#  Timepoints of DTC assessment (`dtc_ihc_results_final`)
+dtc_timepoints <- subset_data %>%
+  filter(!is.na(dtc_ihc_result_final)) %>%  # Filter out NA values for dtc_ihc_result_final
+  group_by(participant_id) %>%
+  summarise(
+    dtc_timepoints = n_distinct(timepoint),  # Count distinct timepoints of DTC assessment
+    .groups = "drop"
+  ) %>%
+  summarise(
+    median_dtc_timepoints = median(dtc_timepoints, na.rm = TRUE),  # Calculate median
+    min_dtc_timepoints = min(dtc_timepoints, na.rm = TRUE),        # Calculate minimum
+    max_dtc_timepoints = max(dtc_timepoints, na.rm = TRUE)         # Calculate maximum
+  )
+
+# Print all summaries
+print("Timepoints per patient:")
+print(timepoints_per_patient)
+
+print("Timepoints of ctDNA assessment:")
+print(ctDNA_timepoints)
+
+print("Timepoints of DTC assessment:")
+print(dtc_timepoints)
+
+### timepoints on clinical trial ### Ask Nick -- should we include all the timepoints on trial technically 
+#(CLEVER-Baseline, EOO, C3, C6, C12, 6M F/U, etc.) or just the ones while on treatment (C3, C6, C12) 
+#, or only the ones while patiennts are 
+unique_timepoints <- unique(subset_data$timepoint)
+print(unique_timepoints) 
+
+
+trial_timepoints <- c("CLEVER-Baseline", "EOO", "C3", "C6", "C12", "6M F/U", "12M F/U", "18M F/U", "24M F/U", "30M F/U", "36M F/U")
+
+# Count the number of samples by timepoint (for specific clinical trial timepoints)
+samples_by_trial_timepoint <- subset_data %>%
+  filter(timepoint %in% trial_timepoints) %>%  # Filter for relevant timepoints
+  group_by(timepoint) %>%                      # Group by timepoint
+  summarise(
+    total_samples = n_distinct(participant_id),  # Count distinct participant_ids (samples)
+    .groups = "drop"  # Remove grouping after summarizing
+  )
+
+# Print the result
+print(samples_by_trial_timepoint) #total samples on trial (ctDNA and dtC)
+
+#### ctDNA on trial 
+
+ctDNA_samples_by_timepoint <- subset_data %>%
+  filter(timepoint %in% trial_timepoints, !is.na(ctDNA_detected)) %>%  # Filter for relevant timepoints and ctDNA detected
+  group_by(timepoint) %>%                      # Group by timepoint
+  summarise(
+    total_samples_ctDNA = n_distinct(participant_id),  # Count distinct participant_ids (ctDNA samples)
+    .groups = "drop"  # Remove grouping after summarizing
+  )
+
+# Print the result for ctDNA samples -- 32 CLEVER-Baseline, 9 EOO, 20 C3, 28 C6, 4 C12, 27 6M, 18 12M, 13 18M, 13 24M, 12 30M, 18 36M 
+print(ctDNA_samples_by_timepoint)
+
+
+##### DTC by trial timepoint 
+# Count the number of DTC samples by timepoint (for specific clinical trial timepoints)
+dtc_samples_by_timepoint <- subset_data %>%
+  filter(timepoint %in% trial_timepoints, !is.na(dtc_ihc_result_final)) %>%  # Filter for relevant timepoints and DTC results
+  group_by(timepoint) %>%                      # Group by timepoint
+  summarise(
+    total_samples_dtc = n_distinct(participant_id),  # Count distinct participant_ids (DTC samples)
+    .groups = "drop"  # Remove grouping after summarizing
+  )
+
+# Print the result for DTC samples -- makes sense, no CLEVER baseline timepoints, 9 EOO, 19 C3, 28 C6, 4 C12, 19 6M F/U 
+print(dtc_samples_by_timepoint)
+
+#### Number of ctDNA timepoints on surmount 
+print(unique_timepoints) 
+surmount_timepoints <- c("SURMOUNT-Baseline", "Year 1 Follow Up", "Year 2 Follow Up", "Year 3 Follow Up", "Year 4 Follow Up", "Long Term FU 1", "Long Term FU 2") 
+
+ctDNA_surmount <- subset_data %>%
+  filter(timepoint %in% surmount_timepoints, !is.na(ctDNA_detected)) %>%  # Filter for relevant timepoints and ctDNA detected
+  group_by(timepoint) %>%                      # Group by timepoint
+  summarise(
+    total_samples_ctDNA = n_distinct(participant_id),  # Count distinct participant_ids (ctDNA samples)
+    .groups = "drop"  # Remove grouping after summarizing
+  )
+
+# Print the result for ctDNA samples -- 109 Baseline, Y1 FU 40, Y2 FU 25, Y3 FU 14, Y4 FU 4, LT FU 10, LT 2 FU 2
+print(ctDNA_surmount)
+
+
+### number of DTC timepoints on surmount 
+# Count the number of DTC samples by timepoint 
+dtc_timepoint_surmount <- subset_data %>%
+  filter(timepoint %in% surmount_timepoints, !is.na(dtc_ihc_result_final)) %>%  # Filter for relevant timepoints and DTC results
+  group_by(timepoint) %>%                      # Group by timepoint
+  summarise(
+    total_samples_dtc = n_distinct(participant_id),  # Count distinct participant_ids (DTC samples)
+    .groups = "drop"  # Remove grouping after summarizing
+  )
+
+# Print the result for DTC samples -- 
+print(dtc_timepoint_surmount)
+
+
+#### positivity by timepoint -- ctDNA 
+
+ctDNA_pos_rate_by_timepoint <- subset_data %>%
+  filter(!is.na(ctDNA_detected)) %>%  # Ensure we are considering only non-missing ctDNA_detected values
+  group_by(timepoint, participant_id) %>%  # Group by timepoint and participant
+  summarise(
+    ctDNA_pos = max(ctDNA_detected == TRUE),  # If any value is TRUE, participant is ctDNA positive at that timepoint
+    .groups = "drop"
+  ) %>%
+  group_by(timepoint) %>%  # Group again by timepoint to calculate the positivity rate
+  summarise(
+    positivity_rate = mean(ctDNA_pos),  # Calculate the positivity rate for each timepoint
+    total_samples = n_distinct(participant_id),  # Count the number of distinct participants
+    .groups = "drop"
+  )
+
+# Print the result for ctDNA positivity rate by timepoint
+print(ctDNA_pos_rate_by_timepoint)
+
+# Calculate cumulative ctDNA positivity rate by timepoint
+ctDNA_pos_rate_cumulative <- ctDNA_pos_rate_by_timepoint %>%
+  arrange(timepoint) %>%  # Ensure the data is sorted by timepoint
+  mutate(
+    cumulative_pos_rate = cumsum(positivity_rate * total_samples) / cumsum(total_samples)  # Cumulative positivity rate
+  )
+
+print(ctDNA_pos_rate_cumulative)
+
+#### Cumulative positivity ctDNA 
+
+library(dplyr)
+
+# Calculate ctDNA positivity rate by participant
+ctDNA_pos_rate <- subset_data %>%
+  filter(!is.na(ctDNA_detected)) %>%  # Exclude missing ctDNA results
+  group_by(participant_id) %>%  # Group by participant
+  summarise(
+    ctDNA_pos = max(ctDNA_detected == TRUE),  # If any value is TRUE, participant is ctDNA positive
+    .groups = "drop"
+  )
+
+# Calculate cumulative positivity rate
+ctDNA_pos_rate_cumulative <- ctDNA_pos_rate %>%
+  summarise(
+    total_pos = sum(ctDNA_pos),  # Total number of ctDNA positive participants
+    total_samples = n(),  # Total number of participants
+    cumulative_pos_rate = total_pos / total_samples  # Cumulative positivity rate
+  )
+
+# Print the cumulative positivity rate
+print(ctDNA_pos_rate_cumulative)
+
+
+# Count the number of positive ctDNA samples and total samples
+ctDNA_pos_vs_total <- subset_data %>%
+  filter(!is.na(ctDNA_detected)) %>%  # Exclude missing ctDNA results
+  summarise(
+    total_samples = n(),  # Total number of ctDNA samples
+    positive_samples = sum(ctDNA_detected == TRUE),  # Count of positive ctDNA samples
+    .groups = "drop"
+  ) %>%
+  mutate(
+    positivity_rate = positive_samples / total_samples  # Proportion of positive ctDNA samples
+  )
+
+# Print the results
+print(ctDNA_pos_vs_total)
+
+
+#### cumulative positivity DTC 
+
+# Calculate ctDNA positivity rate by participant
+DTC_pos_rate <- subset_data %>%
+  filter(!is.na(dtc_ihc_result_final)) %>%  # Exclude missing ctDNA results
+  group_by(participant_id) %>%  # Group by participant
+  summarise(
+    dtc = max(dtc_ihc_result_final == 1),  # If any value is TRUE, participant is ctDNA positive
+    .groups = "drop"
+  )
+
+# Calculate cumulative positivity rate
+DTC_pos_rate_cumulative <- DTC_pos_rate %>%
+  summarise(
+    total_pos = sum(dtc),  # Total number of ctDNA positive participants
+    total_samples = n(),  # Total number of participants
+    cumulative_pos_rate = total_pos / total_samples  # Cumulative positivity rate
+  )
+
+# Print the cumulative positivity rate
+print(DTC_pos_rate_cumulative)
+
+
+# Count the number of positive ctDNA samples and total samples
+dtc_pos_vs_total <- subset_data %>%
+  filter(!is.na(dtc_ihc_result_final)) %>%  # Exclude missing ctDNA results
+  summarise(
+    total_samples = n(),  # Total number of ctDNA samples
+    positive_samples = sum(dtc_ihc_result_final == 1),  # Count of positive ctDNA samples
+    .groups = "drop"
+  ) %>%
+  mutate(
+    positivity_rate = positive_samples / total_samples  # Proportion of positive ctDNA samples
+  )
+
+# Print the results
+print(dtc_pos_vs_total)
+
+
+######  Test characteristics ctDNA 
+
+true_results <- subset_data$ever_relapsed  # Actual labels (True: 1 = relapsed, 0 = not relapsed)
+predicted_results <- subset_data$ctDNA_ever  # Predicted labels (True: 1 = ctDNA ever detected, 0 = not detected)
+
+# Create confusion matrix
+conf_matrix <- table(Predicted = predicted_results, Actual = true_results)
+
+# Calculate sensitivity, specificity, PPV, and NPV
+sensitivity <- conf_matrix[2, 2] / sum(conf_matrix[2, ])  # True Positives / (True Positives + False Negatives)
+specificity <- conf_matrix[1, 1] / sum(conf_matrix[1, ])  # True Negatives / (True Negatives + False Positives)
+ppv <- conf_matrix[2, 2] / sum(conf_matrix[, 2])  # True Positives / (True Positives + False Positives)
+npv <- conf_matrix[1, 1] / sum(conf_matrix[, 1])  # True Negatives / (True Negatives + False Negatives)
+
+# Print the results
+cat("Sensitivity: ", sensitivity, "\n")
+cat("Specificity: ", specificity, "\n")
+cat("Positive Predictive Value (PPV): ", ppv, "\n")
+cat("Negative Predictive Value (NPV): ", npv, "\n")
+
+
+### Test characteristics for DTC 
+
+
+# Example data: True results (ever relapsed) and predicted results (DTC ever detected)
+true_results <- subset_data$ever_relapsed  # Actual labels (True: 1 = relapsed, 0 = not relapsed)
+predicted_results <- subset_data$dtc_ever  # Predicted labels (True: 1 = DTC ever detected, 0 = not detected)
+
+# Create confusion matrix
+conf_matrix_2 <- table(Predicted = predicted_results, Actual = true_results)
+
+# Calculate sensitivity, specificity, PPV, and NPV
+sensitivity <- conf_matrix_2[2, 2] / sum(conf_matrix_2[2, ])  # True Positives / (True Positives + False Negatives)
+specificity <- conf_matrix_2[1, 1] / sum(conf_matrix_2[1, ])  # True Negatives / (True Negatives + False Positives)
+ppv <- conf_matrix_2[2, 2] / sum(conf_matrix_2[, 2])  # True Positives / (True Positives + False Positives)
+npv <- conf_matrix_2[1, 1] / sum(conf_matrix_2[, 1])  # True Negatives / (True Negatives + False Negatives)
+
+# Print the results
+cat("Sensitivity: ", sensitivity, "\n")
+cat("Specificity: ", specificity, "\n")
+cat("Positive Predictive Value (PPV): ", ppv, "\n")
+cat("Negative Predictive Value (NPV): ", npv, "\n")
+
+#### how many DTC pts went on trial? 
+
+# Total DTC+ patients
+total_dtc_plus <- nrow(subset(subset_data, dtc_ihc_result_final == 1))
+
+names(subset_data)
+
+# DTC+ patients who went on trial (those who have a fu_trial_pid)
+
+library(dplyr)
+
+# Total unique DTC+ patients
+total_dtc_plus <- subset_data %>%
+  filter(dtc_ihc_result_final == 1) %>%
+  distinct(participant_id) %>%
+  nrow()
+
+# Unique DTC+ patients who went on trial (those who have a trial ID fu_trial_pid)
+dtc_plus_trial <- subset_data %>%
+  filter(dtc_ihc_result_final == 1 & !is.na(fu_trial_pid)) %>%
+  distinct(participant_id) %>%
+  nrow()
+
+# Proportion of DTC+ patients who went on trial
+proportion_trial <- dtc_plus_trial / total_dtc_plus
+
+# Display results
+cat("Total unique DTC+ patients:", total_dtc_plus, "\n")
+cat("Unique DTC+ patients who went on trial:", dtc_plus_trial, "\n")
+cat("Proportion of DTC+ patients who went on trial:", proportion_trial, "\n")
+
+# All DTC + patients went on trial (39/39)
+
+
+##### Concordance between DTC and ctDNA 
+
+
+### concordance overall 
+
+# Filter and get unique participants by participant_id
+concordance_overall_unique <- subset_data %>%
+  distinct(participant_id, .keep_all = TRUE) %>%
+  mutate(concordance = ifelse(dtc_ever == ctDNA_ever, "Concordant", "Discordant"))
+
+# Count total concordant and discordant pairs for unique participants
+overall_concordant <- sum(concordance_overall_unique$concordance == "Concordant")
+overall_discordant <- sum(concordance_overall_unique$concordance == "Discordant")
+
+# Proportion of concordance
+proportion_concordant <- overall_concordant / (overall_concordant + overall_discordant)
+
+cat("Overall Concordant (unique participants):", overall_concordant, "\n")
+cat("Overall Discordant (unique participants):", overall_discordant, "\n")
+cat("Overall Proportion Concordant (unique participants):", proportion_concordant, "\n")
+
+#Proportion concordance 63% (ever positive)
+
+# Ensure that dtc_ihc_result_final is converted to TRUE/FALSE for consistency with ctDNA_detected
+concordance_by_timepoint <- subset_data %>%
+  filter(!is.na(dtc_ihc_result_final) & !is.na(ctDNA_detected)) %>%
+  mutate(
+    # Convert dtc_ihc_result_final (1 = TRUE, 0 = FALSE) to match ctDNA format (TRUE/FALSE)
+    dtc_ihc_result_final_bool = ifelse(dtc_ihc_result_final == 1, TRUE, FALSE),
+    # Create a column to determine concordance (both DTC and ctDNA being TRUE or both being FALSE)
+    concordance = ifelse(dtc_ihc_result_final_bool == ctDNA_detected, "Concordant", "Discordant")
+  ) %>%
+  group_by(timepoint) %>%
+  summarise(
+    total_concordant = sum(concordance == "Concordant"),
+    total_discordant = sum(concordance == "Discordant"),
+    total_samples = n(),  # Total number of samples at this timepoint
+    concordance_rate = total_concordant / total_samples  # Concordance rate per timepoint
+  )
+
+# Print concordance results for each timepoint
+print(concordance_by_timepoint)
+
+# Now calculate overall concordance across all timepoints
+overall_concordance <- sum(concordance_by_timepoint$total_concordant) / 
+  sum(concordance_by_timepoint$total_samples)
+
+cat("Overall Concordance Rate across all timepoints:", overall_concordance, "\n")
+#concordance, considering testing by timepoint, is 80%, versus 63% when you consider the tests separately. Does this make sense? 
+
+
+############### DTC Demographics ########## 
+
+###### median age at diagnosis 
+
+names(subset_data) #to identify the variables I want to use 
+str(subset_data$diag_date_1) #character
+str(subset_data$org_consent_date) #character 
+str(subset_data$collection_date) #character 
+
+d$diag_date_1 <- as.Date(d$diag_date_1, format = "%m/%d/%Y")  
+d$org_consent_date <- as.Date(d$demo_dob, format = "%m/%d/%Y")  
+d$collection_date <- as.Date(d$demo_dob, format = "%m/%d/%Y") 
+
+
+str(d$diag_date_1) #dates! 
+str(d$org_consent_date) #dates! 
+
+### doing the same for subset_data as it didn't carry over into that data set 
+subset_data$diag_date_1 <- as.Date(subset_data$diag_date_1, format = "%m/%d/%Y")  
+subset_data$org_consent_date <- as.Date(subset_data$org_consent_date, format = "%m/%d/%Y")  
+subset_data$collection_date <- as.Date(subset_data$collection_date, format = "%m/%d/%Y")  
+
+
+# calculating age from date of diagnosis to dob 
+subset_data$time_to_consent <- as.numeric(difftime(subset_data$org_consent_date, subset_data$diag_date_1, units = "days")) / 365.25
+head(subset_data$time_to_consent)
+
+subset_data$time_to_consent_month <- as.numeric(difftime(subset_data$org_consent_date, subset_data$diag_date_1, units = "days")) / 30
+head(subset_data$time_to_consent_month)
+
+summary(subset_data$time_to_consent) #median 
+
+time_to_consent <- subset_data %>%
+  group_by(ctDNA_ever) %>%
+  summarise(
+    mean_time_to_consent = mean(time_to_consent, na.rm = TRUE),  # Calculate mean age
+    median_time_to_consent = median(time_to_consent, na.rm = TRUE),  # Calculate median age
+    sd_age = sd(time_to_consent, na.rm = TRUE),  # Calculate standard deviation of age
+    n = n()  # Number of participants in each group
+  )
+
+print(time_to_consent) #interesting dtc ever are slightly more positive 
+
+# Perform the Wilcoxon rank-sum test to compare the medians of age between dtc_ever positive and negative groups
+wilcox_test_result <- wilcox.test(time_to_consent ~ ctDNA_ever, data = subset_data)
+
+# Print the result
+print(wilcox_test_result)
+
+#looking at range of age for the dtc pos 
+consent_summ <- subset_data %>%
+  group_by(ctDNA_ever) %>%
+  summarise(
+    min_time_to_consent = min(time_to_consent, na.rm = TRUE),  # Minimum age
+    max_time_to_consent = max(time_to_consent, na.rm = TRUE),  # Maximum age
+    .groups = "drop"
+  )
+
+# View the summary table
+print(consent_summ)
+
+
+
+#### Age at Dx (by DTC)
+
+names(subset_data) #to identify the variables I want to use 
+str(subset_data$diag_date_1) #character
+str(subset_data$demo_dob) #character 
+
+d$diag_date_1 <- as.Date(d$diag_date_1, format = "%m/%d/%Y")  
+d$demo_dob <- as.Date(d$demo_dob, format = "%m/%d/%Y")  
+
+str(d$diag_date_1) #dates! 
+str(d$demo_dob) #dates! 
+
+### doing the same for subset_data as it didn't carry over into that data set 
+subset_data$diag_date_1 <- as.Date(subset_data$diag_date_1, format = "%m/%d/%Y")  
+subset_data$demo_dob <- as.Date(subset_data$demo_dob, format = "%m/%d/%Y")  
+
+# calculating age from date of diagnosis to dob 
+subset_data$age_at_diag <- as.numeric(difftime(subset_data$diag_date_1, subset_data$demo_dob, units = "days")) / 365.25
+head(subset_data$age_at_diag)
+
+summary(subset_data$age_at_diag) #median 48.75 
+
+age_summary <- subset_data %>%
+  group_by(dtc_ever) %>%
+  summarise(
+    mean_age = mean(age_at_diag, na.rm = TRUE),  # Calculate mean age
+    median_age = median(age_at_diag, na.rm = TRUE),  # Calculate median age
+    sd_age = sd(age_at_diag, na.rm = TRUE),  # Calculate standard deviation of age
+    n = n()  # Number of participants in each group
+  )
+
+print(age_summary) #interesting dtc ever are slightly more positive 
+
+# Perform the Wilcoxon rank-sum test to compare the medians of age between dtc_ever positive and negative groups
+wilcox_test_result <- wilcox.test(age_at_diag ~ dtc_ever, data = subset_data)
+
+# Print the result
+print(wilcox_test_result)
+
+#looking at range of age for the dtc pos 
+age_summary <- subset_data %>%
+  group_by(dtc_ever) %>%
+  summarise(
+    min_age = min(age_at_diag, na.rm = TRUE),  # Minimum age
+    max_age = max(age_at_diag, na.rm = TRUE),  # Maximum age
+    .groups = "drop"
+  )
+
+# View the summary table
+print(age_summary)
+
+
+##### Race: demo_race_final
+
+# Get the count of unique participant_ids for each category in demo_race_final
+race_counts_unique_percent <- subset_data %>%
+  group_by(demo_race_final) %>%
+  summarise(unique_participants = n_distinct(participant_id)) %>%
+  mutate(percent = unique_participants / sum(unique_participants) * 100)
+
+# View the result
+print(race_counts_unique_percent)
+
+
+
+# Count distinct participant_ids by dtc_ever and demo_race_final
+count_distinct_participants <- subset_data %>%
+  group_by(demo_race_final, dtc_ever) %>%
+  summarise(distinct_participant_count = n_distinct(participant_id), .groups = "drop")
+
+# Print the result
+count_distinct_participants
+
+
+
+library(dplyr)
+
+# Step 1: Summarize by unique participant_id
+summarized_data <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    dtc_ever = first(dtc_ever),   # Taking the first observed value of dtc_ever for each participant
+    demo_race_final = first(demo_race_final),  # Taking the first observed value of demo_race_final for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table <- table(summarized_data$dtc_ever, summarized_data$demo_race_final)
+contingency_table
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the result p val - 0.65 
+chisq_test
+
+
+
+#receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
+
+# Breakdown of final_receptor_group by unique participant_id
+receptor_status_by_participant <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(final_receptor_group = first(final_receptor_group),  # Or choose the most frequent group if needed
+            .groups = "drop")
+
+# View the result
+table(receptor_status_by_participant$final_receptor_group)
+
+# Summarizing data by participant_id, final_receptor_group, and dtc_ever
+receptor_dtc_status <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    final_receptor_group = first(final_receptor_group),  # Or the most frequent if needed
+    dtc_ever = first(dtc_ever),  # Taking the first observed value for dtc_ever
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table_receptor <- table(receptor_dtc_status$final_receptor_group, receptor_dtc_status$dtc_ever)
+contingency_table_receptor
+
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table_receptor)
+
+# Step 4: Print the result # p-value 0.14 -- interesting looks like more even distribution of DTC + across TNBC than for ctDNA 
+chisq_test
+
+
+#curious about whether TNBC vs non-TNBC association exists (or HR + vs non-HR positive)
+#start with TNBC (using QDC)
+#inclusion criteria inc_dx_crit___1  = TNBC 
+
+
+#inc_dx_crit_list___1  
+
+TNBC_dtc_status <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    inc_dx_crit_list___1 = first(inc_dx_crit_list___1),  # Or the most frequent if needed
+    dtc_ever = first(dtc_ever),  # Taking the first observed value for dtc_ever
+    .groups = "drop"
+  )
+
+# Step 2: Create the contingency table
+contingency_table_TNBC <- table(TNBC_dtc_status$inc_dx_crit_list___1, TNBC_dtc_status$dtc_ever)
+contingency_table_TNBC
+
+# Step 3: Perform the chi-squared test of independence
+chisq_test <- chisq.test(contingency_table_TNBC)
+
+# Step 4: p-val is 0.17 
+chisq_test
+
+
+#ER vs non-ER 
+#first create HR_status variable 
+subset_data <- subset_data |> 
+  mutate(HR_status = case_when(
+    final_receptor_group %in% c(2, 3) ~ "HR+",
+    final_receptor_group %in% c(1, 4) ~ "Non-HR+",
+    TRUE ~ NA_character_  # In case there are missing or other unexpected values
+  ))
+
+# View the new HR_status variable
+table(subset_data$HR_status)
+
+HR_status_by_participant <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(HR_status = first(HR_status),  # Or use mode() if you have multiple rows per participant
+            .groups = "drop")
+
+# View the result 
+table(HR_status_by_participant$HR_status) #aligns with final receptor status (ultimately 60 HR+, 49 HR-)
+
+# Summarize dtc_detected status by HR_status, for each unique participant_id
+summary_data <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    HR_status = first(HR_status),  # Get the HR_status for the participant
+    dtc_status = first(dtc_ever),  # Get the dtc_detected status for the participant
+    .groups = "drop"
+  )
+
+contingency_table_HR <- table(summary_data$dtc_status, summary_data$HR_status)
+contingency_table_HR
+chisq_test <- chisq.test(contingency_table_HR)
+
+# Print chi-squared test results #0.28 
+chisq_test
+
+
+
+
+###tumor grade: final_tumor_grade --> NOTE: 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not reported  
+
+# Exclude rows where final_tumor_grade is 3 (not reported), want to exclude the 2 pts who had grade not reported 
+summary_data <- subset_data %>%
+  filter(final_tumor_grade != 3) %>%  # Exclude grade == 3
+  group_by(participant_id) %>%
+  summarise(
+    grade = first(final_tumor_grade),  # Get the final_tumor_grade for each participant
+    dtc_ever = first(dtc_ever),    # Get the dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of grade vs dtc_ever
+contingency_table <- table(summary_data$grade, summary_data$dtc_ever)
+
+# View the contingency table
+print(contingency_table)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# View the Chi-squared test result -- p-value 0.12 NOT SIG for DTCs 
+print(chisq_test)
+
+######histology  #people have different combinations of histology (1-15)
+table(subset_data$participant_id, subset_data$final_histology)
+
+histology_summary <- subset_data %>%
+  distinct(participant_id, final_histology) %>%  # Get unique participant-histology combinations
+  group_by(final_histology) %>%  # Group by histology type
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(histology_summary) #the different combinations add up to 109. There are a decent number who had both ductal and lobular histology 
+
+#trying to create Ductal, lobular, both, or other variables 
+subset_data <- subset_data %>%
+  mutate(histology_category = case_when(
+    grepl("3", as.character(final_histology)) & grepl("14", as.character(final_histology)) ~ "Both Ductal and Lobular",  # Both Ductal and Lobular
+    grepl("3", as.character(final_histology)) ~ "Ductal",  # Ductal
+    grepl("14", as.character(final_histology)) ~ "Lobular",  # Lobular
+    TRUE ~ "Other"  # Any other combination
+  ))
+
+# Count the number of participants in each histology category
+histology_counts <- subset_data %>%
+  group_by(histology_category) %>%
+  summarise(count = n_distinct(participant_id))  # Count distinct participants
+
+# View the counts -- adds up to 109! 
+print(histology_counts)
+
+#contingency table 
+library(tidyr)
+contingency_table <- subset_data %>%
+  distinct(participant_id, histology_category, dtc_ever) %>%  # Ensure each patient is counted once
+  count(histology_category, dtc_ever) %>%
+  pivot_wider(names_from = dtc_ever, values_from = n, values_fill = list(n = 0))  # Pivot the table to get dtc_ever as columns
+
+# 3. Perform the Chi-squared test of independence
+chisq_test <- chisq.test(contingency_table[,-1])  # Remove the histology_category column for the test
+
+# 4. Print the contingency table
+print(contingency_table) 
+
+# 5. Print the result of the Chi-squared test p-value - 0.03 ### More ductal positive generally compard to all histology 
+print(chisq_test)
+
+
+
+#### Stage -- N stage  --> come back to this N stage stuff 
+
+table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 (No, N1, N2, N3)
+
+nodal_summary <- subset_data %>%
+  distinct(participant_id, final_n_stage) %>%  # Get unique participant-stage combinations
+  group_by(final_n_stage) %>%  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+#View the summary table --adds up to 109, 46 = pN0 63 = pN1 
+print(nodal_summary)
+
+subset_data_by_id <- subset_data %>%
+  filter(final_n_stage %in% c(0, 1, 2, 3)) %>%  # Include only relevant nodal stages
+  group_by(participant_id) %>%
+  summarise(
+    nodal_status = first(final_n_stage),  # Use final_n_stage as nodal_status for each participant
+    dtc_ever = first(dtc_ever),       # Get dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 3: Create a contingency table of nodal_status vs dtc_ever
+contingency_table <- table(subset_data_by_id$nodal_status, subset_data_by_id$dtc_ever)
+
+# Step 4: Check if any cells in the contingency table have zero counts, which could affect test validity
+print(contingency_table)
+
+# Step 5: Perform Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 6: Print the Chi-squared test result p = 0.0001 
+print(chisq_test) 
+
+
+#### Creating Node - vs node + variable from summary variable  
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    node_status = ifelse(first(final_n_stage) == 0, "Node Negative", "Node Positive"),  # Node negative if 0, positive otherwise
+    dtc_ever = first(dtc_ever),  # Get dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create a contingency table of node_status vs dtc_ever
+contingency_table <- table(subset_data_by_id$node_status, subset_data_by_id$dtc_ever)
+
+# Step 3: Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test)
+
+
+####### EXTRA CODE/CONFIRMATION / slightly different but ignore for our analysis 
+#cross-check with indicator pN0 in our data that reflects nodal positivity.... there is 1 patient that is node - by summary variable but node + by indicator variable 
+## should double check this at some point 
+node_pos <- subset_data %>%
+  distinct(participant_id, inc_dx_crit_list___2) %>%  # Get unique participant-stage combinations
+  group_by(inc_dx_crit_list___2) %>%  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+print(node_pos)
+
+contingency_table <- subset_data %>%
+  distinct(participant_id, inc_dx_crit_list___2, dtc_ever) %>%  # Ensure unique participants
+  count(inc_dx_crit_list___2, dtc_ever) %>%  # Count occurrences
+  spread(key = dtc_ever, value = n, fill = 0)  # Spread data into a matrix
+
+# View the contingency table
+print(contingency_table)
+
+# Perform the Chi-square test =0.3902 
+chi_square_result <- chisq.test(contingency_table[, -1])  # Exclude the first column with the levels
+print(chi_square_result)
+
+
+
+
+
+#######t stage final_t_stage 
+
+table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (90 = pTx) so can proceed with this 
+
+t_summary <- subset_data %>%
+  distinct(participant_id, final_t_stage) %>%  # Get unique participant-stage combinations
+  group_by(final_t_stage) %>%  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table --adds up to 109, most are pN0 or cN0, a good number are pN1 or cN1, or pN2  
+print(t_summary)
+
+
+#### T stage, for our T stage table, will use T1 vs T2 or greater to simplify 
+#exclude 99 (the pTx) 
+subset_data_clean <- subset_data %>%
+  filter(final_t_stage != 99, dtc_ever != 99)
+
+# Combine final_t_stage into T1 vs. T2 or greater
+subset_data_clean <- subset_data_clean %>%
+  mutate(final_t_stage_combined = ifelse(final_t_stage == 1, "T1", "T2 or greater"))
+
+# Summarize the data by participant_id after creating the new combined t_stage
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_t_stage_combined vs dtc_ever
+contingency_table <- table(subset_data_by_id$final_t_stage_combined, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test)
+
+#### TRy for T stage stats using T3 or greater as cutoff -- not super useful, So DONOT USE THIS FOR TABLE  
+
+#exclude 99 (the pTx) 
+subset_data_clean <- subset_data %>%
+  filter(final_t_stage != 99, dtc_ever != 99)
+
+# Combine final_t_stage into T1/T2 or T3 or greater
+subset_data_clean <- subset_data_clean %>%
+  mutate(final_t_stage_combined = case_when(
+    final_t_stage == 1 | final_t_stage == 2 ~ "T1 or T2",  # Group T1 and T2 together
+    final_t_stage >= 3 ~ "T3 or greater",  # Group T3 and higher as a separate category
+    TRUE ~ NA_character_  # Handle any unexpected values
+  ))
+
+
+# Summarize the data by participant_id after creating the new combined t_stage
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_t_stage_combined vs dtc_ever
+contingency_table <- table(subset_data_by_id$final_t_stage_combined, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> not significant so ignore this 
+print(contingency_table)
+print(chisq_test)
+
+
+
+########stage of disease -- final_overall_stage 
+
+table(subset_data$final_overall_stage) #we have values in 1,2,3,4, and 99 so can proceed with this 
+
+stage_summary <- subset_data %>%
+  distinct(participant_id, final_overall_stage) %>%  # Get unique participant-stage combinations
+  group_by(final_overall_stage) %>%  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table --adds up to 109 (1 99), most are stage 2, some are stage I some are stage III, no stage IV (yay)
+print(stage_summary)
+
+#exclude the 99 
+subset_data_clean <- subset_data %>%
+  filter(final_overall_stage != 99, dtc_ever != 99)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    final_overall_stage = first(final_overall_stage),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$final_overall_stage, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> kind of interesting, stage doesnt seem to predict dtc pos --> 0.80 
+print(contingency_table)
+print(chisq_test)
+
+
+
+
+###########surgical treatment diag_surgery_type_1 (or diag_surgery_type_2) 
+
+
+table(subset_data$diag_surgery_type_1) #1= partial mastectomy/lumpectomy, 2 = mastectomy. no missingness 
+
+surgery <- subset_data %>%
+  distinct(participant_id, diag_surgery_type_1) %>%  # Get unique participant-stage combinations
+  group_by(diag_surgery_type_1) %>%  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(surgery)
+
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    surgery = first(diag_surgery_type_1),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$surgery, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val = 0.48....
+print(contingency_table)
+print(chisq_test)
+
+
+
+######## axillary management. Really just care about whether or not someone got an axillary dissection. diag_axillary_type___2_1 (or diag_axillary_type___2_2 IF 2 biopsy forms)
+
+table(subset_data$diag_axillary_type___2_1) 
+table(subset_data$diag_axillary_type___2_2) #a handful of axillary dissection on the second biopsy form so i think we want to combine these two 
+
+# Create a binary variable to identify participants who had axillary dissection
+subset_data_clean <- subset_data %>%
+  mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
+
+# Ensure every participant has a dtc_ever and axillary_dissection value
+# Ensure every patient has an axillary dissection category, where 0 means no axillary dissection, and 1 means they had one
+subset_data_clean <- subset_data %>%
+  mutate(axillary_dissection = case_when(
+    diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1 ~ 1,  # Had axillary dissection
+    TRUE ~ 0  # No axillary dissection (includes missing values)
+  ))
+
+# Summarize the data by participant_id, including the axillary_dissection and dtc_ever variables
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    axillary_dissection = first(axillary_dissection),  # Get the axillary dissection status for each participant
+    dtc_ever = first(dtc_ever)  # Get the dtc_ever status for each participant
+  )
+
+contingency_table <- table(subset_data_by_id$axillary_dissection, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+fishers <- fisher.test(contingency_table)
+print(fishers)
+
+# Print the contingency table and Chi-squared test results --> p-value 0.173 (used chisq for consistency...)
+print(contingency_table)
+print(chisq_test)
+
+####inflammatory inflamm_yn -- IGNORE THIS for Table 1 
+table(d$inflamm_yn_1) ### i think the inflammatory folks must just not be in the subset of patients (6 yes's in the overall cohort, but none in the subset data for etierh inflamm variable)
+table(d$inflamm_yn_2)  ### I think inflammatory folks just not in subset of patients in the dtc cohort 
+table(subset_data$inflamm_yn)
+
+#### radiation prtx_radiation 
+table(subset_data$prtx_radiation) 
+
+radiation <- subset_data |> 
+  distinct(participant_id,prtx_radiation) |> 
+  group_by(prtx_radiation) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(radiation)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    radiation = first(prtx_radiation),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$radiation, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+fishers <- fisher.test(contingency_table)
+print(fishers)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.77 
+print(contingency_table)
+print(chisq_test)
+
+
+#### chemotherapy prtx_chemo 
+table(subset_data$prtx_chemo) 
+
+chemo <- subset_data |> 
+  distinct(participant_id,prtx_chemo) |> 
+  group_by(prtx_chemo) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(chemo) #3 people didn not get chemo in this cohort 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    chemo = first(prtx_chemo),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$chemo, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+fishers <- fisher.test(contingency_table)
+print(fishers)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.60 
+print(contingency_table)
+print(chisq_test)
+
+
+
+####neoadjuvant chemo diag_neoadj_chemo_1 or diag_neoadj_chemo_2 
+
+table(subset_data$diag_neoadj_chemo_1) 
+table(subset_data$diag_neoadj_chemo_2) #there were no ppl who were recorded on the second biopsy form as having neoadjuvant therapy so can use only the first variable 
+
+nact <- subset_data |> 
+  distinct(participant_id,diag_neoadj_chemo_1) |> 
+  group_by(diag_neoadj_chemo_1) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(nact) #3 people didn not get chemo in this cohort 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    nact = first(diag_neoadj_chemo_1),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$nact, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.37 slightly greater trend than with ctDNA  
+print(contingency_table)
+print(chisq_test)
+
+
+####hormone therapy prtx_endo 
+
+table(subset_data$prtx_endo) 
+
+endo <- subset_data |> 
+  distinct(participant_id,prtx_endo) |> 
+  group_by(prtx_endo) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(endo) #most ppl did get endo (62 of the 109)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    endo = first(prtx_endo),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$endo, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.50 
+print(contingency_table)
+print(chisq_test)
+
+
+
+
+####bone modifying agents prtx_bonemod 
+
+table(subset_data$prtx_bonemod) 
+
+bonemod <- subset_data |> 
+  distinct(participant_id,prtx_bonemod) |> 
+  group_by(prtx_bonemod) |>  # Group by stage
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(bonemod) #most ppl did get endo (39 got bonemod)
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    bonemod = first(prtx_bonemod),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of bonemod vs dtc_ever
+contingency_table <- table(subset_data_by_id$bonemod, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 1 
+print(contingency_table)
+print(chisq_test)
+
+
+
+####referred to trial fu_trial_yn --> this variable seems to have disappeared. I can re-make it based on fu_trial_pid
+#### SOMETHING WEIRD HAPPENING WITH TRIAL REFERRAL HERE WHEN I LOOK AT IT BY DTC 
+names(d)
+
+table(subset_data$fu_trial_yn)  #this variable does not exist in our data set 
+
+subset_data <- subset_data %>%
+  mutate(trial = ifelse(!is.na(fu_trial_pid) & fu_trial_pid != "", "Yes", "No"))
+print(subset_data$trial)
+
+
+trial <- subset_data |> 
+  distinct(participant_id,trial) |> 
+  group_by(trial) |>  # Group by trial yes/no 
+  summarise(count = n())  # Count the number of participants per histology type
+
+# View the summary table
+print(trial) #38 pts went on trial based on this fu_trial_id 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    trial = first(trial),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of final_overall_stage vs dtc_ever
+contingency_table <- table(subset_data_by_id$trial, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> ### something weird 
+print(contingency_table)
+print(chisq_test)
+
+
+
+
+
+Later  
+#2 = non-pcr, 1 = pcr 
+#path cr diag_pcr_1 or diag_pcr_2  
+table(subset_data$diag_pcr_1) 
+table(subset_data$diag_pcr_2) #none recorded here si can just use pcr_1 
+
+pcr <- subset_data %>%
+  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) %>%  # Convert "." to NA
+  filter(!is.na(diag_pcr_1)) %>%  # Exclude rows where diag_pcr_1 is NA
+  distinct(participant_id, diag_pcr_1) %>%
+  group_by(diag_pcr_1) %>%
+  summarise(count = n()) # Count the number of participants per histology type
+
+# View the summary table
+print(pcr) #this is correct bc 19 ppl got NACT, and we have 19 ppl recorded for pcr data 
+
+# Summarize the data by participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    pcr = first(diag_pcr_1),  # Get the final_overall_stage for each participant
+    dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
+  )
+
+# Create a contingency table of pcr vs dtc_ever
+contingency_table <- table(subset_data_by_id$pcr, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results --> p-val  = 0.86 -- does not seem to be association among those who got pcr (but also we have a group with 1 in it...) 
+print(contingency_table)
+print(chisq_test)
+
+
+
+########recurrence
+#local first, then distant.then create summary variable of either locreg or distant 
+#local fu_locreg_prog 
+
+# Step 1: Summarize data by unique participant_id
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    fu_locreg_prog = first(fu_locreg_prog),  # Get fu_locreg_prog status for each participant
+    dtc_ever = first(dtc_ever),          # Get dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create a contingency table of fu_locreg_prog vs dtc_ever
+contingency_table <- table(subset_data_by_id$fu_locreg_prog, subset_data_by_id$dtc_ever)
+
+# Step 3: Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the contingency table and Chi-squared test results -- p-val of 0.74, less of an association (but pts on trial) 
+print(contingency_table)
+print(chisq_test)
+
+####looking at sites of locoregional progression: local site fu_locreg_site_num or fu_locreg_site_char 
+### Just want to look at site distribution here 
+
+# Summarize the distribution of fu_locreg_site_char by unique participant_id
+site_distribution <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    site = first(fu_locreg_site_char),  # Get the site for each unique participant
+    .groups = "drop"
+  ) %>%
+  count(site)  # Count the occurrences of each site
+
+# View the distribution of sites -- mostly axillary nodes. 4 of 6 axillary. 1 internal mammary. 2 supraclav. 2 ipsilateral breast 
+print(site_distribution)
+
+#####distant recurrence: distant fu_dist_prog 
+
+# Step 1: Summarize data by unique participant_id
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    fu_dist_prog = first(fu_dist_prog),  # Get fu_dist_prog status for each participant
+    dtc_ever = first(dtc_ever),          # Get dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Step 2: Create a contingency table of dist prog vs dtc_ever --> 12 who had distant progression 
+contingency_table <- table(subset_data_by_id$fu_dist_prog, subset_data_by_id$dtc_ever)
+
+# Step 3: Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Step 4: Print the contingency table and Chi-squared test results -- p-val 0.63
+print(contingency_table)
+print(chisq_test)
+
+
+### Distant sites 
+#distant site fu_dist_site_num #fu_dist_site_char  -- start justl ooking at the locations 
+
+# Summarize the distribution of fu_dist_site_char by unique participant_id
+dist_site_distribution <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    site = first(fu_dist_site_char),  # Get the site for each unique participant
+    .groups = "drop"
+  ) %>%
+  count(site)  # Count the occurrences of each site
+
+# View the distribution of sites -- Bone in 7. Liver in 3. Lung in 2. 1 intra-abdominal 
+print(dist_site_distribution)
+
+#any recurrence 
+#either fu_locreg_prog or fu_dist_prog 
+
+subset_data <- subset_data %>%
+  mutate(ever_relapsed = ifelse(fu_locreg_prog == 1 | fu_dist_prog == 1, "Yes", "No"))
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    dtc_ever = first(dtc_ever),        # Get the dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs dtc_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results -- total 14 relapses, 10 were dtc - 4 were dtc + 
+print(contingency_table)
+print(chisq_test) 
+
+#### Relapse and DTC 
+#using ever_relapsed
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    dtc = first(dtc_ever),        # Get the dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs dtc_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$dtc)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test) 
+
+# Identify participants missing data in either `ever_relapsed` or `dtc_ever`
+missing_data <- subset_data_by_id %>%
+  filter(is.na(ever_relapsed) | is.na(dtc))
+
+# Print the IDs of participants with missing data
+print(missing_data$participant_id) #two individuals do not have relapse data (17-021, 18-032, as we had seen above)
+
+
+
+####survival analysis  fu_survival 
+
+table(subset_data$fu_surv)
+
+surv <- subset_data %>%
+  distinct(participant_id, fu_surv) %>%
+  group_by(fu_surv) %>%
+  summarise(count = n()) # Count the number of participants per histology type
+
+# View the summary table
+print(surv) #1 NA patient --> identify the NA patient below  dead = 5, alive 103. There is 1 that's an NA. 
+
+na_participant <- subset_data %>%
+  filter(is.na(fu_surv)) %>%
+  select(participant_id, fu_surv)
+
+# Print the result -- 28115-17-021  -- no follow up data for this pt looking in redcap, everyone else has some survival data in the dtc cohort. 
+print(na_participant)
+
+# Summarize data by unique participant_id
+subset_data_by_id <- subset_data_clean %>%
+  group_by(participant_id) %>%
+  summarise(
+    surv = first(fu_surv),          # Get survival status for each participant
+    dtc_ever = first(dtc_ever),  # Get dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of surv vs dtc_ever
+contingency_table <- table(subset_data_by_id$surv, subset_data_by_id$dtc_ever)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results
+print(contingency_table)
+print(chisq_test)
+
+##########
+
+### looking at the population of ctDNA + and other testing 
+
+###### Messing around with code to look at ctDNA and relapse 
+
+# Filter for participants with ctDNA ever positive
+ctDNA_ever_participants <- subset(subset_data, ctDNA_ever == 1)
+
+# Select relevant columns (participant_id, timepoint, test results, relapse status)
+ctDNA_test_results <- ctDNA_ever_participants %>%
+  select(participant_id, timepoint, ctDNA_ever, ctDNA_detected, collection_date, dtc_ever, ever_relapsed, fu_locreg_date, fu_dist_date, fu_date_to)
+
+# View results# View resultsctDNA_ever
+print(ctDNA_test_results, n=26)
+
+#### We do NOT see clearance in the 1 patient who has not recurred 21-024 (but that may just be because we do not have any follow up testing on that patient)--we do have f/u data on that patient and 
+#### she has not recurred as of 10/2024. 
+
+### for the patietns who went onto clever -- we see clearance (17-032 cleared after several)
+
+
+#### ctDNA positivity graph  #### none of this was working, code in extra code doc. nick putting together 
+
+
+#### swimmers 
+
+library(khroma)
+library(here)
+library(dplyr)
+
+bright <- khroma::color("bright")
+light  <- khroma::color("light")
+hicon  <- khroma::color("high contrast")
+
+# cols <- khroma::color("vibrant")(4)
+cols <- hicon(3)
+her2col <- "forestgreen"
+hrcol   <- "forestgreen"
+
+d <- read.csv(file = here("..", "Datasets from BAC (Colleen and Jean)",
+                          "surmount184_merged_20241108.csv"))
+
+# Step 1: Identify all participant_ids where ctDNA_cohort == 1
+valid_participants <- d |> 
+  filter(ctdna_cohort == 1) |> 
+  pull(participant_id) |> 
+  unique()
+
+# Step 2: Subset the data to include all rows where participant_id is in the
+# valid list
+subset_data <- d |> 
+  filter(participant_id %in% valid_participants)
+
+# Count the number of unique participant_ids in the subset_data
+unique_count <- subset_data |> 
+  summarise(unique_participants = n_distinct(participant_id)) |> as.numeric()
+
+names(subset_data)
+
+######create the ctDNA Ever positive variable 
+
+# Create the 'ctDNA_ever' variable: This will be 1 if ctDNA_detected was 1 for
+# any record for the participant, otherwise 0.
+subset_data <- subset_data %>%
+  group_by(participant_id) %>%
+  mutate(ctDNA_ever = if_else(any(ctDNA_detected == TRUE), TRUE, FALSE)) %>%
+  ungroup()
+
+# View the updated data
+head(subset_data)
+table(subset_data$participant_id, subset_data$ctDNA_ever)
+
+#100 negatives, 9 positives, as it should be! for ctDNA_ever 
+subset_data |> 
+  group_by(participant_id) |> 
+  summarize(ctDNA_ever = first(ctDNA_ever)) |> 
+  count(ctDNA_ever)
+
+####### DTCS -- create DTC_ever -- come back to this ######## do the same thing
+#for DTCs --ever dtc positive  --> this is a little wonky, want to ensure we
+#aren't actually eliminating any of the dtc results in our subsetting...
+
+names(subset_data) 
+#looking at the names of variables to find the DTC indicator variable 
+library(stringr)
+
+#variable is dtc_ihc_result_final 
+unique(subset_data$dtc_ihc_result_final) #0, NA, 1 
+table(subset_data$dtc_ihc_result_final) 
+# 152 zeros, 41 positives as I can see, where are the NAs? 
+
+subset_data <- subset_data |> 
+  group_by(participant_id) |> 
+  mutate(dtc_ever = if_else(any(dtc_ihc_result_final == 1, na.rm = TRUE), 1, 0)) |> 
+  ungroup()
+
+# View the updated data
+table(subset_data$participant_id, subset_data$dtc_ever) 
+# there are still some "NAs" --> is this just because some people have ctDNA
+# results but no dTC results in this cohort?
+
+
+#70 DTC ever negatives, 39 positives  
+subset_data |> 
+  group_by(participant_id) |> 
+  summarize(dtc_ever = first(dtc_ever)) |> 
+  count(dtc_ever)
+
+subset_data <- subset_data %>%
+  mutate(trial = ifelse(!is.na(fu_trial_pid) & fu_trial_pid != "", TRUE, FALSE))
+
+dsub <- subset(subset_data,
+               !(ID %in% c(17021, 18032)),
+               select = c("ID", "timepoint", "org_consent_date", "trial",
+                          "final_receptor_group", 
+                          "collection_date", "ctDNA_detected", 
+                          "dtc_ihc_date_final", "dtc_ihc_result_final",
+                          "fu_date_to", "fu_date_death",
+                          "fu_locreg_date", "fu_dist_date"))
+
+dsub$collection_date <- as.Date(dsub$collection_date, format = "%d%b%Y")
+dsub$dtc_ihc_date_final <- as.Date(dsub$dtc_ihc_date_final, 
+                                   format = "%d%b%y:%H:%M:%S")
+dsub[, c("org_consent_date", "fu_date_to", "fu_date_death",
+         "fu_locreg_date", "fu_dist_date")] <-
+  lapply(dsub[, c("org_consent_date", "fu_date_to", "fu_date_death",
+                  "fu_locreg_date", "fu_dist_date")], 
+         \(x) as.Date(x, format = "%m/%d/%Y"))
+
+key_dates <- subset(dsub, timepoint == "SURMOUNT-Baseline")
+key_dates$start <- pmin(key_dates$collection_date,
+                        key_dates$dtc_ihc_date_final, na.rm = T)
+key_dates$end   <- pmin(key_dates$fu_date_to, key_dates$fu_date_death,
+                        na.rm = T)
+key_dates$time_on_study <- as.numeric(key_dates$end - key_dates$start)
+key_dates$death_time <- as.numeric(key_dates$fu_date_death - key_dates$start)
+
+key_dates$rank <- NA
+key_dates$rank[key_dates$trial] <- 
+  rank(key_dates$time_on_study[key_dates$trial], na.last = F)
+
+key_dates$rank[!key_dates$trial] <-
+  rank(key_dates$time_on_study[!key_dates$trial], na.last = F) +
+  max(key_dates$rank[key_dates$trial]) + 3
+
+key_dates$locreg <- as.numeric(key_dates$fu_locreg_date - key_dates$start)
+key_dates$dist   <- as.numeric(key_dates$fu_dist_date - key_dates$start)
+key_dates$prog   <- with(key_dates, pmin(locreg, dist, na.rm = T))
+
+dsub <- merge(dsub, subset(key_dates,
+                           select = c("ID", "start", "end",
+                                      "time_on_study", "death_time", "rank",
+                                      "locreg", "dist", "prog")),
+              by = "ID", all = T)
+
+dsub$DTC_days <- as.numeric(dsub$dtc_ihc_date_final - dsub$start)
+dsub$ctDNA_days <- as.numeric(dsub$collection_date - dsub$start)
+
+# Set up a blank plotting space without any points
+# Set up a blank plotting space without any points
+plot.new()
+par(mar = c(4, 1, 1, 4) + 0.1)
+plot.window(xlim = c(-200, 3000), ylim = c(0, 107))
+
+# Draw simple lines for each patient's time on study
+segments(x0 = 0, y0 = key_dates$rank, y1 = key_dates$rank, 
+         x1 = key_dates$time_on_study, col = "#e7e7e7", lwd = 1)
+
+# Add x-axis with year labels
+axis(side = 1, at = 0:8 * 365.25, labels = 0:8, line = 0)
+
+# Add x-axis label
+mtext("Years on Study", side = 1, line = 2.5, cex = 1)
+
+# Add labels on the y-axis
+mtext("DTC Positive", side = 2, line = 0, 
+      at = mean(key_dates$rank[key_dates$trial]), las = 0)
+mtext("DTC Negative", side = 2, line = 0, 
+      at = mean(key_dates$rank[!key_dates$trial]), las = 0)
+
+# No frame around the plot
+box(which = "plot", lty = "blank")
+
+# Receptor Status
+dsub$hrPos   <- dsub$final_receptor_group %in% c(2, 3)
+dsub$her2Pos <- dsub$final_receptor_group %in% c(3, 4)
+points(x = c(rep(-200, nrow(key_dates)), rep(-100, nrow(key_dates))),
+       y = rep(key_dates$rank, 2),
+       col = c(rep(her2col, nrow(key_dates)), rep(hrcol, nrow(key_dates))),
+       pch = 22, cex = .5,
+       lwd = .5)
+points(x = rep(-100, sum(dsub$her2Pos)), y = dsub$rank[dsub$her2Pos], pch = 22,
+       col = her2col, bg = her2col, cex = .5)
+points(x = rep(-200, sum(dsub$hrPos)), y = dsub$rank[dsub$hrPos], pch = 22,
+       col = hrcol, bg = hrcol, cex = .5)
+text(x = -50, y = 109.5, "HER2+", pos = 3, cex = .5, xpd = NA, adj = 0)
+text(x = -250, y = 109.5, "HR+", pos = 3, cex = .5, xpd = NA, adj = 1)
+
+# Recolor segments
+dsub_ctDNApos <- subset(dsub, ctDNA_detected == "TRUE")
+dsub_ctDNApos <- 
+  do.call(rbind, 
+          lapply(split(dsub_ctDNApos, dsub_ctDNApos$ID), \(x) {
+            x[which.min(x$ctDNA_days), ]
+          }))
+
+with(subset(dsub_ctDNApos, !is.na(prog)),
+     segments(x0 = ctDNA_days,
+              x1 = prog,
+              y0 = rank,
+              col = cols[3], lwd = 1))
+
+with(subset(key_dates, !is.na(prog)),
+     segments(x0 = prog,
+              x1 = time_on_study,
+              y0 = rank,
+              col = "darkgray", lwd = 1))
+
+# Deaths
+points(x = key_dates$death_time, y = key_dates$rank, pch = 4, lwd = 1)
+
+# Locoregional Recurrence
+points(x = key_dates$locreg, y = key_dates$rank, pch = 8, lwd = 2,
+       col = cols[1], cex = .6)
+
+# Distant Recurrence
+points(x = key_dates$dist, y = key_dates$rank, pch = 3, lwd = 2,
+       col = cols[1], cex = .6)
+
+# ctDNA Testing
+## ctDNA-
+with(subset(dsub, ctDNA_detected == "FALSE"),
+     points(x = jitter(ctDNA_days), y = rank, pch = 23,
+            col = cols[3]))
+
+## ctDNA+
+with(subset(dsub, ctDNA_detected == "TRUE"), {
+  points(x = jitter(ctDNA_days), y = rank, pch = 23,  # Diamond shape
+         col = "red", bg = "red", cex = 1)
+})
+
+#############3
+#KEY 
+
+# Legend
+legend(x = 2700, y = 65, 
+       legend = c("ctDNA+", "Locoreg Recur",
+                  "Dist Recur", "Death",
+                  "ctDNA+ to Recurrence",
+                  "Recurrence to End F/U"),
+       pch = c(23, 8, 3, 4, NA, NA),
+       lwd = c(rep(NA, 5), 2, 2),
+       col = c(cols[c(3, 2, 1, 1)], "black", cols[3], "darkgray"),
+       pt.lwd = c(rep(1, 4), rep(2, 3)),
+       pt.bg = c(paste0(cols[3], "88"),
+                 paste0(cols[2], "88")),
+       xpd = NA, cex = .7)
+
+
+legend(x = 2700, y = 65, 
+       legend = c("ctDNA+", "Locoreg Recur", "Dist Recur", "Death", 
+                  "ctDNA+ to Recurrence", "Recurrence to End F/U"),
+       pch = c(23, 8, 3, 4, NA, NA),        # Symbols: diamond, star, plus, cross
+       lwd = c(rep(NA, 4), 2, 2),           # Line width for segments
+       col = c("red", cols[1], cols[1], "black", cols[3], "darkgray"),  # Outline colors
+       pt.bg = c("red", NA, NA, NA, NA, NA), # Fill color, "red" for ctDNA+
+       pt.cex = c(1, 1, 1, 1, NA, NA),      # Point sizes for shapes
+       pt.lwd = c(1, 1, 1, 1, 2, 2),        # Point line widths
+       xpd = NA, cex = 0.7)    
+
+#### Extra Code 
+
+
+# DTC Testing
+## DTC-
+with(subset(dsub, dtc_ihc_result_final == 0),
+      points(x = jitter(DTC_days), y = rank, pch = 24, 
+         col = cols[2]))
+
+## DTC+/ctDNA-
+with(subset(dsub, dtc_ihc_result_final == 1), #& ctDNA_detected == "FALSE"),
+     points(x = DTC_days, y = rank, pch = 24, 
+            col = cols[2], bg = paste0(cols[2], "88"),
+            cex = 0.6))
+
+## ctDNA+/DTC+
+with(subset(dsub, ctDNA_detected == "TRUE" & dtc_ihc_result_final == 1),
+    points(x = ctDNA_days, y = rank, pch = 24,
+          col = cols[5], bg = paste0(cols[5], "90")))
+# 
+with(subset(dsub, ctDNA_detected == "TRUE" & dtc_ihc_result_final == 1),
+     points(x = ctDNA_days, y = rank, pch = 25,
+          col = cols[5], bg = paste0(cols[5], "88")))
+
+# Legend
+legend(x = 2700, y = 65, 
+       legend = c("ctDNA+", "DTC+", "Locoreg Recur",
+                  "Dist Recur", "Death",
+                  "ctDNA+ to Recur",
+                  "Recur to End F/U"),
+       pch = c(23, 24, 8, 3, 4, NA, NA),
+       lwd = c(rep(NA, 5), 2, 2),
+       col = c(cols[c(3, 2, 1, 1)], "black", cols[3], "darkgray"),
+       pt.lwd = c(rep(1, 4), rep(2, 3)),
+       pt.bg = c(paste0(cols[3], "88"),
+                 paste0(cols[2], "88")),
+       xpd = NA, cex = .7)
+
+
+
+
+
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
