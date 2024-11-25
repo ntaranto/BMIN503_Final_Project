@@ -1,89 +1,84 @@
 ---
-title: "Final Presentation"
+title: "Predictors of ctDNA positivity"
+subtitle: "BMIN503/EPID600 Final Project"
+author: "Eleanor Taranto"
 format: html
 editor: visual
+number-sections: true
+embed-resources: true
 ---
 
-## Final Project Overview: Instructions -- The overview consists of 2-3 sentences summarizing the project and goals. 
+------------------------------------------------------------------------
 
+## Overview {#sec-overview}
 
-## Introduction:
+Link to my final project: https://github.com/ntaranto/BMIN503_Final_Project
 
-After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA as risk factors for recurrence.  In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells in the bone marrow and circulating tumor DNA in the blood.    
+After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA (ctDNA) as risk factors for recurrence. Historically, and in retrospective, observational studies, these markers of minimal residual disease (MRD) have demonstrated strong associations with recurrence and disease relapse. But it remains unclear how these associations persist with modern treatment paradigms what the time course of positivity and what clinical risk factors put patients at greatest risk for having DTC or ctDNA positivity and subsequent relapse--and which most strongly predict biomarker positivity.
 
-This is a translational study, and so we will look at clinical risk factors for ctDNA and DTC positivity. 
+Optimizing detection, intervention and surveillance for MRD after breast cancer treatment utilizing highly sensitive, real-time assays to identify patients with dormant tumor cells and those undergoing tumor reactivation in-transit to recurrence would fundamentally change the paradigm of breast cancer follow up from one of “watchful waiting” to a proactive approach that could enable ongoing monitoring for subclinical disease and suppression or eradication of cells that could potentially metastasize. Ultimately, our approach has the potential to provide reassurance to patients with definitively negative MRD testing that they are unlikely to ever experience a relapse, enable effective MRD-based surveillance, detection and treatment strategies for those in whom it is detectable and, ultimately, prevent recurrence and subsequent death from metastatic breast cancer while preserving quality of life for millions of breast cancer survivors around the world.
 
-## Methods-- 
+In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells (DTCs) in the bone marrow by immunohistochemistry (DTC-IHC) and circulating tumor DNA (ctDNA) in the blood. In this overall study, we are assessing the relationship between ongoing surveillance for MRD (utilizing standard DTC-IHC and ctDNA by a tumor-informed assay) and recurrence, assess the trajectory of MRD over time, optimizing the type and number of tests needed to predict recurrence, outcomes and lead time, and further evaluating the long-term impact of our prior therapeutic interventions. In this specific analysis, we will look at clinical predictors of ctDNA and DTC positivity to try to understand the strongest drivers of MRD in the population of patients with high-risk early breast breast cancer who have finished definitive treatment. We will do so by looking at the clinical characteristics, DTC and ctDNA assessment, and clinical follow-up for the cohort of patients enrolled onto the SURMOUNT (Surveillance Markers of Utility for Recurrence after (Neo)adjuvant Therapy for Breast Cancer) study between 2016 and 2021 who had ctDNA assessment performed.
 
-In SURMOUNT, 
+For this analysis, I have spoken with Dr. Nicholas Seewald, my biostatistical mentor, and Dr. Angela DeMichele, my epidemiology mentor and a breast oncologist with expertise in the biomarkers of recurrence (and the PI on the SURMOUNT study). Dr. Seewald has been critical to thinking about the approach to multivariable analysis to assess the clinical predictors of ctDNA and DTC positivity as well as survival analyses to understand the association between biomarker positivity and relapse. Dr. Demichele has been instrumental in the development of the SURMOUNT study design, designing the analysis of this initial surveillance cohort, and thinking about the biomarkers of breast cancer recurrence and dormance more broadly.
+
+## Introduction {#sec-introduction}
+
+Breast cancer is the most prevalent cancer since it is both common and treatable, with 5-year survival rates approaching 90%. Of the 14.5 million cancer survivors alive today in the U.S., nearly 1 in 4 are breast cancer survivors. Unfortunately, up to 30% of patients who receive adjuvant therapy for breast cancer will ultimately recur and die from their disease, typically as a consequence of metastatic recurrence. Since recurrent breast cancer is incurable, the propensity of cancers to recur following treatment is arguably the most important determinant of clinical outcome.
+
+Recurrent breast cancers arise from the pool of breast cancer cells that remain after initial treatment, likely in the form of minimal residual disease (MRD): local and disseminated residual tumor cells (RTCs) that survive in their host in a presumed dormant state following treatment of the primary breast cancer.The development of incurable metastatic disease is due to this persistent pool of residual disease resulting from escape of cells from the primary tumor, intravasation and survival in the circulation, and eventual extravasation and metastatic seeding. Many breast cancers pass through a latent phase in which disseminated tumor cells (DTCs) persist in niches where they may reside in a dormant state for months to decades. These DTCs exist in a temporary quiescent state of reversible cell-cycle arrest, from which some cells may eventually reactivate, resume proliferation and recirculate, at which point they can be detected as circulating tumor DNA (ctDNA) in the blood. Longitudinal studies demonstrate that the detection of DTCs in the bone marrow in such patients is associated with poorer disease-free, breast cancer recurrence-free, and overall survival compared to patients without DTCs. Several mechanisms implicated in this process by preclinical studies are therapeutically targetable, and we have developed several interventional trials aimed at targeting these DTCs that are fed by the SURMOUNT surveillance study.
+
+In the SURMOUNT surveillance study, patients with early stage (i.e. curable) but high-risk breast cancer are enrolled and undergo initial baseline bone marrow assessment (BMA) for evaluation of DTCs, as well as peripheral blood assessment for retrospective ctDNA assesmsent. Patients who screen DTC positive--either at baseline or on yearly surveillance BMA--are referred for interventional trials. Patients who screen DTC negative remain in the SURMOUNT surveillance cohort and undergo yearly DTC assessment and peripheral blood collection. The first interventional trial, CLEVER, completed enrollment in 2021, and so this initial analysis of the surveillance cohort is focused on the patients who were enrolled for the purposes of accruing this first interventional trial.
+
+Despite years of progress in breast cancer diagnostics and therapeutics, identifying the individuals at risk of recurrence -- and figuring out how to manage and minimize their elevated risk--remains a challenge. In this study, we seek to assess the clinical validity of DTC and ctDNA assessment and to better understand the population in which they may be useful.
+
+## Methods {#sec-methods}
+
+“PENN SURMOUNT” is a single center, prospective, longitudinal cohort study examining MRD biomarkers among pts within 5 years (y) of BC diagnosis who completed all curative treatment except endocrine therapy. Eligible pts must have had: 1) TNBC, or 2) HER2+ or HR+ BC with positive LN and/or residual disease after neoadjuvant therapy, or 3) HR+ BC with a 21-gene Recurrence score \>25 and/or high risk Mammaprint. Pts had annual bone marrow aspirate (BMA) for DTCs by immunohistochemistry (using methods of Naume et al.). DTC+ pts went on therapeutic trial; DTC- pts had up to 5y of annual BMA and blood testing. ctDNA was retrospectively assessed using the RaDaR assay, which targets pt-specific somatic mutations identified by whole-exome sequencing (WES) of primary tumor tissue.
+
+The ctDNA assessment was performed after bespoke panel development on tissue on peripheral blood from 109 patients by Neogenomics, inc. and provided back to the research team in .csv format, with the last data drop occurring July 30, 2024. DTC assessment was performed based on bone marrow assessment and ultimately entered into REDCap database through this same follow-up date. Clinical and demographic factors--and follow-up data--were abstracted by the TCE research team through October 2024 and entered into the same REDCap database. Data were exported in mid-October 2024 by the TCE data manager, and merged with the ctDNA data prior to hand-off for this analysis. The final locked and merged dataset, labeled "surmount184_merged_20241108.csv" is maintained in the TCE box for the ctDNA analysis, and a copy is being stored in the FinalProject_files.
+
+**First,** we will import csv of final data, which is entitled "surmount184_merged_20241108.csv"
 
 ```{r}
 library(here)
 library(dplyr) 
- d <- read.csv(file = here("..", "Datasets",
-                          "surmount184_merged_20241108.csv"))
-names(d) 
 
-### I'm not sure what else goes into the methods for this vs results  
+d <- read.csv(file = here("FinalProject_files",
+                          "surmount184_merged_20241108.csv"))
 
 ```
 
-
-## Results 
+**Next,** we will limit data to the 109 patients who had ctDNA tested, of the 184 individuals. we will look at the names and structures of the variables in the dataset "d", of which there are 387, the majority of which are clinical variables, but some of which are outcome variables. 
 
 ```{r}
 
+#looking at the names of the variables, and the structure of the variables. 
+names(d) 
+str(d)
 
-#summary variables:  final_overall_stage final_t_stage final_n_stage 
-# final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') final_tumor_grade final_histology
-# demo_race_final fu_locreg_site_num (numeric values for local regional site) 
-# fu_locreg_site_char (character values for local regional site)
-# fu_dist_site_num (numeric values for distant site)
-# fu_dist_site_char (character values for distant site)
-# censor_date (most recent fu_date_to among patients who are alive without local or distant progression) 
+```
 
+**Summary variables:** We have a few different important summary variables which we've identified. 
+summary variables:  final_overall_stage final_t_stage final_n_stage,  final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') final_tumor_grade final_histology, demo_race_final fu_locreg_site_num (numeric values for local regional site), fu_locreg_site_char (character values for local regional site), fu_dist_site_num (numeric values for distant site), fu_dist_site_char (character values for distant site), censor_date (most recent fu_date_to among patients who are alive without local or distant progression). 
 
-# identify if 22-021 and 21-033 are in here 
-participant_check <- c("28115-22-021", "28115-21-033") %in% d$participant_id
+**Limiting from the overall cohort (184) to the ctDNA cohort**: We know that this data merge contains 184 individuals (as this was the overall cohort of individuals that were screened for the CLEVER interventional study on SURMOUNT), but also know, from the separate ctDNA csv and the information from the Neogenomics summary data, that there were 109 individuals on whom ctDNA was assessed. We need to limit the data set "d" to this "ctDNA cohort"--we will call the ctDNA cohort "subset_data." We have an indicator variable "ctDNA_cohort" with which we can limit this subset. 
 
-# Print results
-names(participant_check) <- c("28115-22-021", "28115-21-033")
-print(participant_check)
-#neither is in here! great! 
+```{r}
 
-
-str(d) #to look at what structure variables are in -- > we will need to do some stuff with dates 
-#timepoint is a character (ok) -- do we need this to be factor? 
-#collection_date is a character, should convert to date 
-#eVAF numeric
-#mean_VAF numeric 
-#total variants interger 
-#ctDNA_detected = character, ok 
-#ctdna_cohort = integer (but there are some NAs)-- we may want to  
-#censor_date --> should convert to date 
-#fu_dist_Date should conver to date 
-#_fu_locreg_date should convert to date 
-
-
-
-####date nonsense, come back to this#### NOT DOING THIS PART 
-library(dplyr)
-#this does not quite work as it turns a bunch into NAs. May need to do this for each individual line based on how the data is structured 
-date_columns <- grep("date", colnames(d), value = TRUE, ignore.case = TRUE) 
-date_columns 
-#d[date_columns] <- lapply(d[date_columns], function(x) as.Date(x, format = "%d/%b/%Y"))
-#str(d) #converted most of the date columns to dates 
-
+#looking at the names of the variables, and the structure of the variables. 
+names(d) 
+str(d)
 
 ###### ctDNA to limit to ctDNA cohort (but ok to include NAs as long as they were ever ctDNA cohort == 1) --> shall call this subset_data 
 
-# Step 1: Identify all participant_ids where ctDNA_cohort == 1
+# Identified all participant_ids where ctDNA_cohort == 1 
 valid_participants <- d |> 
   filter(ctdna_cohort == 1) |> 
   pull(participant_id) |> 
   unique()
 
-# Step 2: Subset the data to include all rows where participant_id is in the valid list
+# Subset the data to include all rows where participant_id is in the valid list
 subset_data <- d |> 
   filter(participant_id %in% valid_participants)
 
@@ -91,70 +86,85 @@ subset_data <- d |>
 unique_count <- subset_data |> 
   summarise(unique_participants = n_distinct(participant_id))
 
-# View the result == 109!! 
+# View the result == 109! This is the correct # of patients. 
 unique_count
 
-#now we have the subset_data = the ctDNA cohort (n=109), we can start looking at demographics. First we will do overall, then we will do divided by ctDNA_detected  
+```
+
+Now that we have the subset_data = the ctDNA cohort (n=109), we can start looking at demographics. First we will do overall, then we will do divided by ctDNA_detected. We can see, looking at the table by sample count using the ctDNA_detected variable (false = negative/ctDNA was NOT detected, true = positive/ctDNA was detected), that there were 385 negative samples, and 11 positive samples within the ctDNA cohort.  Next, we will create the ctDNA_ever variable that will, by participant_id (which is the unique study ID), tell us if that participant ever had ctDNA detected. 
+
+``` {r} 
 #ctDNA_detected = character, ok 
 
 names(subset_data)
 ### Excluding the FAILS from this cohort 
 ######create the ctDNA Ever positive variable 
-table(subset_data$ctDNA_detected) # 2 missing and then FALSE, TRUE 
-
+table(subset_data$ctDNA_detected) #385 FALSE,  11 TRUE 
 
 # Create the 'ctDNA_ever' variable: 
 # This will be 1 if ctDNA_detected was 1 for any record for the participant, otherwise 0.
-subset_data <- subset_data %>%
-  group_by(participant_id) %>%
-  mutate(ctDNA_ever = if_else(any(ctDNA_detected == TRUE), TRUE, FALSE)) %>%
+subset_data <- subset_data  |> 
+  group_by(participant_id) |>
+  mutate(ctDNA_ever = if_else(any(ctDNA_detected == TRUE), TRUE, FALSE)) |>
   ungroup()
 
 # View the updated data
 table(subset_data$participant_id, subset_data$ctDNA_ever)
 
-#100 negatives, 9 positives, as it should be! for ctDNA_ever 
 subset_data |> 
   group_by(participant_id) |> 
   summarize(ctDNA_ever = first(ctDNA_ever)) |> 
   count(ctDNA_ever)
 
-####### DTCS -- create DTC_ever -- come back to this ########
-#do the same thing for DTCs --ever dtc positive  --> this is a little wonky, want to ensure we aren't actually eliminating any of the dtc results in our subsetting... 
+```
+
+We can see here using the summary variable ctDNA_ever that there are 100 individuals with always negative results, and 9 individuals with "ever positive" ctDNA results, which matches our original ctDNA source data. 
+
+**Ever DTC Positive**
+Next, we will create a variable to represent whether someone ever had a DTC positive test. To do this,  we will use the final result variable "dtc_ihc_result_final" which tells us, for a given sample/date, whether that DTC result was positive ("1") or negative ("0"). We see in this data set, by sample, that there are 221 negatives, and 49 positives, which aligns with our prior data and consorts. 
+
+``` {r}
 
 names(subset_data) #looking at the names of variables to find the DTC indicator variable 
 library(stringr)
 
-#variable is dtc_ihc_result_final
-#dtc_ihc_summary_count
-#dtc_final_result_ date
+#final result variable is dtc_ihc_result_final. This is on a by sample level though. 
+#final count for DTCs is dtc_ihc_summary_count
+#final result date is dtc_final_result_ date
 
-#looking at the unique counts for the different dtc variables, dtc_ihc_result_final has more than final_result so is the combined one 
-unique(subset_data$dtc_ihc_result_final) #0, NA, 1 
-table(subset_data$dtc_ihc_result_final) # 152 zeros, 41 positives as I can see, where are the NAs? 
-table(d$dtc_ihc_result_final)
-sum(is.na(subset_data$dtc_ihc_result_final)) #128 NAs 
-sum(is.na(subset_data$FINAL_RESULT)) # 447 NAs 
-  
-  
-unique(subset_data$FINAL_RESULT)
-table(subset_data$FINAL_RESULT) #79 people using this one 
+table(subset_data$dtc_ihc_result_final) #221 negatives, 49 positives 
 
-
+#making the dtc_ever variable 
 subset_data <- subset_data |> 
   group_by(participant_id) |> 
   mutate(dtc_ever = if_else(any(dtc_ihc_result_final == 1, na.rm = TRUE), 1, 0)) |> 
   ungroup()
 
-# View the updated data
 table(subset_data$participant_id, subset_data$dtc_ever) 
 
-#70 DTC ever negatives, 39 positives, correct!   
 subset_data |> 
   group_by(participant_id) |> 
   summarize(dtc_ever = first(dtc_ever)) |> 
   count(dtc_ever)
 
+```
+Looking at the number of DTC positives by unique participant, we see 70 DTC ever negatives, 39 positives, which aligns with our source data for this specific ctDNA cohort. 
+
+
+Describe the data used and general methodological approach used to address the problem described in the @sec-introduction. Subsequently, incorporate full R code necessary to retrieve and clean data, and perform analysis. Be sure to include a description of code so that others (including your future self) can understand what you are doing and why.
+
+------------------------------------------------------------------------
+
+```{r}
+1 + 1
+```
+
+## Results {#sec-results}
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false #disables the printing of code (only output is displayed)
 
 ########### Variables to look at for Table 1 #########
 
@@ -848,49 +858,6 @@ print(contingency_table)
 print(chisq_test)
 
 
-
-####referred to trial fu_trial_yn --> this variable seems to have disappeared. I can re-make it based on fu_trial_pid
-
-names(d)
-
-table(subset_data$fu_trial_yn)  #this variable does not exist in our data set 
-
-subset_data <- subset_data %>%
-  mutate(trial = ifelse(!is.na(fu_trial_pid) & fu_trial_pid != "", "Yes", "No"))
-print(subset_data$trial)
-
-
-trial <- subset_data |> 
-  distinct(participant_id,trial) |> 
-  group_by(trial) |>  # Group by trial yes/no 
-  summarise(count = n())  # Count the number of participants per histology type
-
-# View the summary table
-print(trial) #most ppl did get endo (62 of the 109) --> 38 pts went on trial 
-
-# Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
-  summarise(
-    trial = first(trial),  # Get the final_overall_stage for each participant
-    ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
-  )
-
-# Create a contingency table of final_overall_stage vs ctDNA_ever
-contingency_table <- table(subset_data_by_id$trial, subset_data_by_id$ctDNA_ever)
-
-# Perform the Chi-squared test
-chisq_test <- chisq.test(contingency_table)
-
-# Print the contingency table and Chi-squared test results --> p-val  = 0.95 
-print(contingency_table)
-print(chisq_test)
-
-
-
-  
-  
-Later  
 #2 = non-pcr, 1 = pcr 
 #path cr diag_pcr_1 or diag_pcr_2  
 table(subset_data$diag_pcr_1) 
@@ -1055,6 +1022,61 @@ missing_data <- subset_data_by_id %>%
 # Print the IDs of participants with missing data
 print(missing_data$participant_id) #two individuals do not have relapse data (17-021, 18-032, as we had seen above)
 
+### look at relapses and ctDNA in the patinets who were dtc+ 
+
+# Filter for DTC-positive patients who have NOT relapsed
+dtc_not_recurred <- subset(subset_data, subset_data$dtc_ever == 1 & subset_data$fu_locreg_prog == 0 & subset_data$fu_dist_prog == 0)
+
+# Summarize the ctDNA positivity status within this subset
+table(dtc_not_recurred$ctDNA_ever) 
+
+### timing of ctDNA testing among those DTC + patients who relapsed 
+library(dplyr)
+
+# Step 1: Filter for DTC-positive participants with any relapse and arrange by date
+dtc_relapsed_data <- subset_data %>%
+  filter(dtc_ihc_result_final == 1, ever_relapsed == 1) %>%
+  arrange(participant_id, timepoint)
+
+# Step 2: Calculate overall relapse date as the earliest of locoregional and distant relapse dates
+dtc_relapsed_timing <- dtc_relapsed_data %>%
+  group_by(participant_id) %>%
+  summarize(
+    dtc_date = min(timepoint[dtc_ihc_result_final == 1], na.rm = TRUE),
+    relapse_date = pmin(fu_locreg_date, fu_dist_date, na.rm = TRUE), # Calculate earliest relapse date
+    .groups = "drop"
+  ) %>%
+  filter(!is.na(relapse_date)) # Keep only those with a relapse after DTC+
+
+# Step 3: Find ctDNA tests before relapse for these participants
+ctDNA_before_relapse <- subset_data %>%
+  filter(!is.na(ctDNA_test_date)) %>%
+  inner_join(dtc_relapsed_timing, by = "participant_id") %>%
+  filter(ctDNA_test_date < relapse_date) %>%
+  arrange(participant_id, ctDNA_test_date)
+
+# Step 4: Summarize ctDNA test counts and dates before relapse
+ctDNA_summary <- ctDNA_before_relapse %>%
+  group_by(participant_id) %>%
+  summarize(
+    num_ctDNA_tests_before_relapse = n(),
+    ctDNA_test_dates = list(ctDNA_test_date),
+    .groups = "drop"
+  )
+
+# View the results
+ctDNA_summary
+
+# Filter for participant 28115-17-025 and select DTC and ctDNA-related columns
+patient_results <- subset_data %>%
+  filter(participant_id == "28115-17-025") %>%
+  select(participant_id, timepoint, dtc_ever, dtc_ihc_date_final, dtc_ihc_result_final,
+         ctDNA_ever, collection_date, ctDNA_detected, ever_relapsed, fu_locreg_date, fu_dist_date)
+
+# View the results
+patient_results
+
+
 ### look at ever_relapsed by ctDNA 
 
 subset_data_by_id <- subset_data %>%
@@ -1145,7 +1167,7 @@ print(chisq_test)
 #number of tests (ctDNA)
 library(dplyr)
 
-# Assuming the status variable is named `ctDNA_status` in d, and then in subset 
+# Assuming the status variable is named `ctDNA_detected` in d, and then in subset 
 status_summary_d <- d %>%
   group_by(ctDNA_detected) %>%
   summarise(total_samples = n(), .groups = "drop")
@@ -2616,319 +2638,47 @@ chisq_test <- chisq.test(contingency_table)
 print(contingency_table)
 print(chisq_test)
 
-##########
+####### Making Table 1 ######### 
+library(tableone)
 
-### looking at the population of ctDNA + and other testing 
+# Specify variables
+continuous_vars <- c("age_summary", "dtc_count", "dtc_ihc_summary_count_final",
+                     "timepoints_per_patient", "total_timepoints", "ctDNA_timepoints", "dtc_timepoints")
 
-###### Messing around with code to look at ctDNA and relapse 
-
-# Filter for participants with ctDNA ever positive
-ctDNA_ever_participants <- subset(subset_data, ctDNA_ever == 1)
-
-# Select relevant columns (participant_id, timepoint, test results, relapse status)
-ctDNA_test_results <- ctDNA_ever_participants %>%
-  select(participant_id, timepoint, ctDNA_ever, ctDNA_detected, collection_date, dtc_ever, ever_relapsed, fu_locreg_date, fu_dist_date, fu_date_to)
-
-# View results# View resultsctDNA_ever
-print(ctDNA_test_results, n=26)
-
-#### We do NOT see clearance in the 1 patient who has not recurred 21-024 (but that may just be because we do not have any follow up testing on that patient)--we do have f/u data on that patient and 
-#### she has not recurred as of 10/2024. 
-
-### for the patietns who went onto clever -- we see clearance (17-032 cleared after several)
+categorical_vars <- c("demo_race_final", "final_receptor_group", "HR_status_by_participant",
+                      "final_tumor_grade", "histology_category", "final_n_stage", 
+                      "nodal_status", "final_t_stage", "final_t_stage_combined", "final_overall_stage", 
+                      "diag_surgery_type_1", "axillary_dissection", "prtx_radiation", "prtx_chemo", 
+                      "diag_neoadj_chemo_1", "prtx_endo", "prtx_bonemod", "diag_pcr_1", "fu_locreg_prog", 
+                      "fu_locreg_site_char", "fu_dist_prog", "fu_dist_site_char", "ever_relapsed", 
+                      "fu_surv", "unique_timepoints")
 
 
-#### ctDNA positivity graph  #### none of this was working, code in extra code doc. nick putting together 
-
-
-#### swimmers 
-
-library(khroma)
-library(here)
-library(dplyr)
-
-bright <- khroma::color("bright")
-light  <- khroma::color("light")
-hicon  <- khroma::color("high contrast")
-
-# cols <- khroma::color("vibrant")(4)
-cols <- hicon(3)
-her2col <- "forestgreen"
-hrcol   <- "forestgreen"
-
-d <- read.csv(file = here("..", "Datasets from BAC (Colleen and Jean)",
-                          "surmount184_merged_20241108.csv"))
-
-# Step 1: Identify all participant_ids where ctDNA_cohort == 1
-valid_participants <- d |> 
-  filter(ctdna_cohort == 1) |> 
-  pull(participant_id) |> 
-  unique()
-
-# Step 2: Subset the data to include all rows where participant_id is in the
-# valid list
-subset_data <- d |> 
-  filter(participant_id %in% valid_participants)
-
-# Count the number of unique participant_ids in the subset_data
-unique_count <- subset_data |> 
-  summarise(unique_participants = n_distinct(participant_id)) |> as.numeric()
-
-names(subset_data)
-
-######create the ctDNA Ever positive variable 
-
-# Create the 'ctDNA_ever' variable: This will be 1 if ctDNA_detected was 1 for
-# any record for the participant, otherwise 0.
+# Ensure categorical variables are factors with meaningful labels
 subset_data <- subset_data %>%
-  group_by(participant_id) %>%
-  mutate(ctDNA_ever = if_else(any(ctDNA_detected == TRUE), TRUE, FALSE)) %>%
-  ungroup()
+  mutate(across(all_of(categorical_vars), as.factor))
 
-# View the updated data
-head(subset_data)
-table(subset_data$participant_id, subset_data$ctDNA_ever)
+## labels race 
+subset_data$demo_race_final <- factor(subset_data$demo_race_final,
+                                      levels = c("1", "2", "3"),
+                                      labels = c("White", "Black", "Asian"))
 
-#100 negatives, 9 positives, as it should be! for ctDNA_ever 
-subset_data |> 
-  group_by(participant_id) |> 
-  summarize(ctDNA_ever = first(ctDNA_ever)) |> 
-  count(ctDNA_ever)
-
-####### DTCS -- create DTC_ever -- come back to this ######## do the same thing
-#for DTCs --ever dtc positive  --> this is a little wonky, want to ensure we
-#aren't actually eliminating any of the dtc results in our subsetting...
-
-names(subset_data) 
-#looking at the names of variables to find the DTC indicator variable 
-library(stringr)
-
-#variable is dtc_ihc_result_final 
-unique(subset_data$dtc_ihc_result_final) #0, NA, 1 
-table(subset_data$dtc_ihc_result_final) 
-# 152 zeros, 41 positives as I can see, where are the NAs? 
-
-subset_data <- subset_data |> 
-  group_by(participant_id) |> 
-  mutate(dtc_ever = if_else(any(dtc_ihc_result_final == 1, na.rm = TRUE), 1, 0)) |> 
-  ungroup()
-
-# View the updated data
-table(subset_data$participant_id, subset_data$dtc_ever) 
-# there are still some "NAs" --> is this just because some people have ctDNA
-# results but no dTC results in this cohort?
-
-
-#70 DTC ever negatives, 39 positives  
-subset_data |> 
-  group_by(participant_id) |> 
-  summarize(dtc_ever = first(dtc_ever)) |> 
-  count(dtc_ever)
-
-subset_data <- subset_data %>%
-  mutate(trial = ifelse(!is.na(fu_trial_pid) & fu_trial_pid != "", TRUE, FALSE))
-
-dsub <- subset(subset_data,
-               !(ID %in% c(17021, 18032)),
-               select = c("ID", "timepoint", "org_consent_date", "trial",
-                          "final_receptor_group", 
-                          "collection_date", "ctDNA_detected", 
-                          "dtc_ihc_date_final", "dtc_ihc_result_final",
-                          "fu_date_to", "fu_date_death",
-                          "fu_locreg_date", "fu_dist_date"))
-
-dsub$collection_date <- as.Date(dsub$collection_date, format = "%d%b%Y")
-dsub$dtc_ihc_date_final <- as.Date(dsub$dtc_ihc_date_final, 
-                                   format = "%d%b%y:%H:%M:%S")
-dsub[, c("org_consent_date", "fu_date_to", "fu_date_death",
-         "fu_locreg_date", "fu_dist_date")] <-
-  lapply(dsub[, c("org_consent_date", "fu_date_to", "fu_date_death",
-                  "fu_locreg_date", "fu_dist_date")], 
-         \(x) as.Date(x, format = "%m/%d/%Y"))
-
-key_dates <- subset(dsub, timepoint == "SURMOUNT-Baseline")
-key_dates$start <- pmin(key_dates$collection_date,
-                        key_dates$dtc_ihc_date_final, na.rm = T)
-key_dates$end   <- pmin(key_dates$fu_date_to, key_dates$fu_date_death,
-                        na.rm = T)
-key_dates$time_on_study <- as.numeric(key_dates$end - key_dates$start)
-key_dates$death_time <- as.numeric(key_dates$fu_date_death - key_dates$start)
-
-key_dates$rank <- NA
-key_dates$rank[key_dates$trial] <- 
-  rank(key_dates$time_on_study[key_dates$trial], na.last = F)
-
-key_dates$rank[!key_dates$trial] <-
-  rank(key_dates$time_on_study[!key_dates$trial], na.last = F) +
-  max(key_dates$rank[key_dates$trial]) + 3
-
-key_dates$locreg <- as.numeric(key_dates$fu_locreg_date - key_dates$start)
-key_dates$dist   <- as.numeric(key_dates$fu_dist_date - key_dates$start)
-key_dates$prog   <- with(key_dates, pmin(locreg, dist, na.rm = T))
-
-dsub <- merge(dsub, subset(key_dates,
-                           select = c("ID", "start", "end",
-                                      "time_on_study", "death_time", "rank",
-                                      "locreg", "dist", "prog")),
-              by = "ID", all = T)
-
-dsub$DTC_days <- as.numeric(dsub$dtc_ihc_date_final - dsub$start)
-dsub$ctDNA_days <- as.numeric(dsub$collection_date - dsub$start)
-
-# Set up a blank plotting space without any points
-# Set up a blank plotting space without any points
-plot.new()
-par(mar = c(4, 1, 1, 4) + 0.1)
-plot.window(xlim = c(-200, 3000), ylim = c(0, 107))
-
-# Draw simple lines for each patient's time on study
-segments(x0 = 0, y0 = key_dates$rank, y1 = key_dates$rank, 
-         x1 = key_dates$time_on_study, col = "#e7e7e7", lwd = 1)
-
-# Add x-axis with year labels
-axis(side = 1, at = 0:8 * 365.25, labels = 0:8, line = 0)
-
-# Add x-axis label
-mtext("Years on Study", side = 1, line = 2.5, cex = 1)
-
-# Add labels on the y-axis
-mtext("DTC Positive", side = 2, line = 0, 
-      at = mean(key_dates$rank[key_dates$trial]), las = 0)
-mtext("DTC Negative", side = 2, line = 0, 
-      at = mean(key_dates$rank[!key_dates$trial]), las = 0)
-
-# No frame around the plot
-box(which = "plot", lty = "blank")
-
-# Receptor Status
-dsub$hrPos   <- dsub$final_receptor_group %in% c(2, 3)
-dsub$her2Pos <- dsub$final_receptor_group %in% c(3, 4)
-points(x = c(rep(-200, nrow(key_dates)), rep(-100, nrow(key_dates))),
-       y = rep(key_dates$rank, 2),
-       col = c(rep(her2col, nrow(key_dates)), rep(hrcol, nrow(key_dates))),
-       pch = 22, cex = .5,
-       lwd = .5)
-points(x = rep(-100, sum(dsub$her2Pos)), y = dsub$rank[dsub$her2Pos], pch = 22,
-       col = her2col, bg = her2col, cex = .5)
-points(x = rep(-200, sum(dsub$hrPos)), y = dsub$rank[dsub$hrPos], pch = 22,
-       col = hrcol, bg = hrcol, cex = .5)
-text(x = -50, y = 109.5, "HER2+", pos = 3, cex = .5, xpd = NA, adj = 0)
-text(x = -250, y = 109.5, "HR+", pos = 3, cex = .5, xpd = NA, adj = 1)
-
-# Recolor segments
-dsub_ctDNApos <- subset(dsub, ctDNA_detected == "TRUE")
-dsub_ctDNApos <- 
-  do.call(rbind, 
-          lapply(split(dsub_ctDNApos, dsub_ctDNApos$ID), \(x) {
-            x[which.min(x$ctDNA_days), ]
-          }))
-
-with(subset(dsub_ctDNApos, !is.na(prog)),
-     segments(x0 = ctDNA_days,
-              x1 = prog,
-              y0 = rank,
-              col = cols[3], lwd = 1))
-
-with(subset(key_dates, !is.na(prog)),
-     segments(x0 = prog,
-              x1 = time_on_study,
-              y0 = rank,
-              col = "darkgray", lwd = 1))
-
-# Deaths
-points(x = key_dates$death_time, y = key_dates$rank, pch = 4, lwd = 1)
-
-# Locoregional Recurrence
-points(x = key_dates$locreg, y = key_dates$rank, pch = 8, lwd = 2,
-       col = cols[1], cex = .6)
-
-# Distant Recurrence
-points(x = key_dates$dist, y = key_dates$rank, pch = 3, lwd = 2,
-       col = cols[1], cex = .6)
-
-# ctDNA Testing
-## ctDNA-
-with(subset(dsub, ctDNA_detected == "FALSE"),
-     points(x = jitter(ctDNA_days), y = rank, pch = 23,
-            col = cols[3]))
-
-## ctDNA+
-with(subset(dsub, ctDNA_detected == "TRUE"), {
-  points(x = jitter(ctDNA_days), y = rank, pch = 23,  # Diamond shape
-         col = "red", bg = "red", cex = 1)
-})
-
-#############3
-#KEY 
-
-# Legend
-legend(x = 2700, y = 65, 
-       legend = c("ctDNA+", "Locoreg Recur",
-                  "Dist Recur", "Death",
-                  "ctDNA+ to Recurrence",
-                  "Recurrence to End F/U"),
-       pch = c(23, 8, 3, 4, NA, NA),
-       lwd = c(rep(NA, 5), 2, 2),
-       col = c(cols[c(3, 2, 1, 1)], "black", cols[3], "darkgray"),
-       pt.lwd = c(rep(1, 4), rep(2, 3)),
-       pt.bg = c(paste0(cols[3], "88"),
-                 paste0(cols[2], "88")),
-       xpd = NA, cex = .7)
-
-
-legend(x = 2700, y = 65, 
-       legend = c("ctDNA+", "Locoreg Recur", "Dist Recur", "Death", 
-                  "ctDNA+ to Recurrence", "Recurrence to End F/U"),
-       pch = c(23, 8, 3, 4, NA, NA),        # Symbols: diamond, star, plus, cross
-       lwd = c(rep(NA, 4), 2, 2),           # Line width for segments
-       col = c("red", cols[1], cols[1], "black", cols[3], "darkgray"),  # Outline colors
-       pt.bg = c("red", NA, NA, NA, NA, NA), # Fill color, "red" for ctDNA+
-       pt.cex = c(1, 1, 1, 1, NA, NA),      # Point sizes for shapes
-       pt.lwd = c(1, 1, 1, 1, 2, 2),        # Point line widths
-       xpd = NA, cex = 0.7)    
-
-#### Extra Code 
-
-
-# DTC Testing
-## DTC-
-with(subset(dsub, dtc_ihc_result_final == 0),
-      points(x = jitter(DTC_days), y = rank, pch = 24, 
-         col = cols[2]))
-
-## DTC+/ctDNA-
-with(subset(dsub, dtc_ihc_result_final == 1), #& ctDNA_detected == "FALSE"),
-     points(x = DTC_days, y = rank, pch = 24, 
-            col = cols[2], bg = paste0(cols[2], "88"),
-            cex = 0.6))
-
-## ctDNA+/DTC+
-with(subset(dsub, ctDNA_detected == "TRUE" & dtc_ihc_result_final == 1),
-    points(x = ctDNA_days, y = rank, pch = 24,
-          col = cols[5], bg = paste0(cols[5], "90")))
-# 
-with(subset(dsub, ctDNA_detected == "TRUE" & dtc_ihc_result_final == 1),
-     points(x = ctDNA_days, y = rank, pch = 25,
-          col = cols[5], bg = paste0(cols[5], "88")))
-
-# Legend
-legend(x = 2700, y = 65, 
-       legend = c("ctDNA+", "DTC+", "Locoreg Recur",
-                  "Dist Recur", "Death",
-                  "ctDNA+ to Recur",
-                  "Recur to End F/U"),
-       pch = c(23, 24, 8, 3, 4, NA, NA),
-       lwd = c(rep(NA, 5), 2, 2),
-       col = c(cols[c(3, 2, 1, 1)], "black", cols[3], "darkgray"),
-       pt.lwd = c(rep(1, 4), rep(2, 3)),
-       pt.bg = c(paste0(cols[3], "88"),
-                 paste0(cols[2], "88")),
-       xpd = NA, cex = .7)
+### labels 
+subset_data$final_receptor_group <- factor(subset_data$final_receptor_group,
+                                           levels = c("ER+", "ER-", "HER2+"),
+                                           labels = c("ER Positive", "ER Negative", "HER2 Positive"))
 
 
 
+# Create table
+table1 <- CreateTableOne(vars = c(continuous_vars, categorical_vars), 
+                         strata = "ctDNA_ever", 
+                         data = subset_data, 
+                         factorVars = categorical_vars)
+
+# Print the table with p-values
+print(table1, showAllLevels = TRUE, pDigits = 3)
 
 
 
 ```
-
