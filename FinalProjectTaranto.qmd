@@ -156,7 +156,10 @@ Describe the data used and general methodological approach used to address the p
 ------------------------------------------------------------------------
 
 ```{r}
-1 + 1
+
+
+
+
 ```
 
 ## Results {#sec-results}
@@ -165,6 +168,8 @@ You can add options to executable code like this
 
 ```{r}
 #| echo: false #disables the printing of code (only output is displayed)
+
+library(dplyr)
 
 ########### Variables to look at for Table 1 #########
 
@@ -216,7 +221,7 @@ age_summary <- subset_data %>%
     .groups = "drop"
   )
 
-# View the summary table
+# View the summary table for age 
 print(age_summary)
 
 ##### Race: demo_race_final
@@ -241,9 +246,6 @@ count_distinct_participants <- subset_data %>%
 count_distinct_participants
 
 
-
-library(dplyr)
-
 # Step 1: Summarize by unique participant_id
 summarized_data <- subset_data %>%
   group_by(participant_id) %>%
@@ -263,8 +265,7 @@ chisq_test <- chisq.test(contingency_table)
 chisq_test
 
 
-
-#receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
+#####receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
 
 # Breakdown of final_receptor_group by unique participant_id
 receptor_status_by_participant <- subset_data %>%
@@ -295,11 +296,8 @@ chisq_test <- chisq.test(contingency_table_receptor)
 chisq_test
 
 
-#curious about whether TNBC vs non-TNBC association exists (or HR + vs non-HR positive)
-#start with TNBC (using QDC)
-#inclusion criteria inc_dx_crit___1  = TNBC 
-
-
+#I was curious about whether TNBC vs non-TNBC association exists (or HR + vs non-HR positive)
+#inclusion criteria inc_dx_crit___1  = TNBC  (This has been confirmed with the study team)
 #inc_dx_crit_list___1  
 
 TNBC_ctDNA_status <- subset_data %>%
@@ -321,8 +319,8 @@ chisq_test <- chisq.test(contingency_table_TNBC)
 chisq_test
  
 
-#ER vs non-ER 
-#first create HR_status variable 
+### HR positive vs HR negative (Hormone receptor positive vs hormone receptor negative)
+#first, I need to create a HR positive variable (HR_status)
 subset_data <- subset_data |> 
   mutate(HR_status = case_when(
     final_receptor_group %in% c(2, 3) ~ "HR+",
@@ -358,10 +356,7 @@ chisq_test <- chisq.test(contingency_table_HR)
 chisq_test
 
 
-
-
 ###tumor grade: final_tumor_grade --> NOTE: 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not reported  
-
 # Exclude rows where final_tumor_grade is 3 (not reported), want to exclude the 2 pts who had grade not reported 
 summary_data <- subset_data %>%
   filter(final_tumor_grade != 3) %>%  # Exclude grade == 3
@@ -384,8 +379,9 @@ chisq_test <- chisq.test(contingency_table)
 # View the Chi-squared test result -- p-value 0.0229 
 print(chisq_test)
 
-######histology  #people have different combinations of histology (1-15)
-  table(subset_data$participant_id, subset_data$final_histology)
+######histology (final histology)
+#people have different combinations of histology (1-15)
+table(subset_data$participant_id, subset_data$final_histology)
   
   histology_summary <- subset_data %>%
     distinct(participant_id, final_histology) %>%  # Get unique participant-histology combinations
@@ -395,7 +391,7 @@ print(chisq_test)
   # View the summary table
   print(histology_summary) #the different combinations add up to 109. There are a decent number who had both ductal and lobular histology 
   
-  #trying to create Ductal, lobular, both, or other variables 
+  #trying to create Ductal, lobular, both, or other variables --> histology_category 
   subset_data <- subset_data %>%
     mutate(histology_category = case_when(
       grepl("3", as.character(final_histology)) & grepl("14", as.character(final_histology)) ~ "Both Ductal and Lobular",  # Both Ductal and Lobular
@@ -430,11 +426,11 @@ print(chisq_test)
   
   
   
-  #### Stage -- N stage  --> come back to this N stage stuff 
+#### Staging N stage (Nodal stage) 
 
 table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 (No, N1, N2, N3)
   
- nodal_summary <- subset_data %>%
+nodal_summary <- subset_data %>%
     distinct(participant_id, final_n_stage) %>%  # Get unique participant-stage combinations
     group_by(final_n_stage) %>%  # Group by stage
     summarise(count = n())  # Count the number of participants per histology type
@@ -451,10 +447,10 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
       .groups = "drop"
     )
   
-  # Step 3: Create a contingency table of nodal_status vs ctDNA_ever
+  #Create a contingency table of nodal_status vs ctDNA_ever
   contingency_table <- table(subset_data_by_id$nodal_status, subset_data_by_id$ctDNA_ever)
   
-  # Step 4: Check if any cells in the contingency table have zero counts, which could affect test validity
+  # Check if any cells in the contingency table have zero counts, which could affect test validity
   print(contingency_table)
   
   # Step 5: Perform Chi-squared test
@@ -464,7 +460,7 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   print(chisq_test) 
   
   
-  #### Creating Node - vs node + variable from summary indicator variable 
+  #### Node positive versus node negative: Using the final n stage to create a Node - vs node + variable from this summary indicator variable 
   subset_data_by_id <- subset_data %>%
     group_by(participant_id) %>%
     summarise(
@@ -473,46 +469,25 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
       .groups = "drop"
     )
   
-  # Step 2: Create a contingency table of node_status vs ctDNA_ever
+  #adding node_status to subset_data 
+ subset_data <- subset_data %>%
+  left_join(subset_data_by_id %>% select(participant_id, node_status), by = "participant_id")
+  
+  
+  #Create a contingency table of node_status vs ctDNA_ever
   contingency_table <- table(subset_data_by_id$node_status, subset_data_by_id$ctDNA_ever)
   
-  # Step 3: Perform the Chi-squared test
+  # Perform the Chi-squared test
   chisq_test <- chisq.test(contingency_table)
   
-  # Step 4: Print the contingency table and Chi-squared test results
+  #Print the contingency table and Chi-squared test results
   print(contingency_table)
   print(chisq_test)
   
-  
-  ####### EXTRA CODE/CONFIRMATION / slightly different but ignore for our analysis 
-  #cross-check with indicator pN0 in our data that reflects nodal positivity.... there is 1 patient that is node - by summary variable but node + by indicator variable 
-  ## should double check this at some point 
-  node_pos <- subset_data %>%
-    distinct(participant_id, inc_dx_crit_list___2) %>%  # Get unique participant-stage combinations
-    group_by(inc_dx_crit_list___2) %>%  # Group by stage
-    summarise(count = n())  # Count the number of participants per histology type
-  
-  print(node_pos)
-  
-  contingency_table <- subset_data %>%
-    distinct(participant_id, inc_dx_crit_list___2, ctDNA_ever) %>%  # Ensure unique participants
-    count(inc_dx_crit_list___2, ctDNA_ever) %>%  # Count occurrences
-    spread(key = ctDNA_ever, value = n, fill = 0)  # Spread data into a matrix
-  
-  # View the contingency table
-  print(contingency_table)
-  
-  # Perform the Chi-square test =0.3902 
-  chi_square_result <- chisq.test(contingency_table[, -1])  # Exclude the first column with the levels
-  print(chi_square_result)
 
+#######Looking at T stage or tumor size: the variable is final_t_stage 
   
-  
-
-  
-#######t stage final_t_stage 
-  
-  table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (90 = pTx) so can proceed with this 
+  table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (99 = pTx, cannot evaluate) so can proceed with this 
   
   t_summary <- subset_data %>%
     distinct(participant_id, final_t_stage) %>%  # Get unique participant-stage combinations
@@ -523,8 +498,7 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   print(t_summary)
   
   
-  #### T stage, for our T stage table, will use T1 vs T2 or greater to simplify 
- #exclude 99 (the pTx) 
+  #for our T stage table, will use T1 vs T2 or greater to simplify, and we want to exclude 99 (the pTx). We will create "final_t_stage_combined" to represent this.  
   subset_data_clean <- subset_data %>%
     filter(final_t_stage != 99, ctDNA_ever != 99)
   
@@ -546,11 +520,11 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   # Perform the Chi-squared test
   chisq_test <- chisq.test(contingency_table)
   
-  # Print the contingency table and Chi-squared test results
+  # Print the contingency table and Chi-squared test results. P value = 0.6
   print(contingency_table)
   print(chisq_test)
 
-#### TRy for T stage stats using T3 or greater as cutoff -- not super useful, So DONOT USE THIS FOR TABLE  
+#### I looked at a different cut-off for T stage stats using T3 or greater as cutoff and didn't see any significant difference so am not using this for the table. 
   
   #exclude 99 (the pTx) 
   subset_data_clean <- subset_data %>%
@@ -585,7 +559,7 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   
   
   
-  ########stage of disease -- final_overall_stage 
+  ########Overall stage of disease -- final_overall_stage 
 
   table(subset_data$final_overall_stage) #we have values in 1,2,3,4, and 99 so can proceed with this 
   
@@ -615,7 +589,7 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   # Perform the Chi-squared test
   chisq_test <- chisq.test(contingency_table)
   
-  # Print the contingency table and Chi-squared test results --> hot dogggg p val = 0.006 
+  # Print the contingency table and Chi-squared test results --> hot dogggg p val = 0.006. Higher stage is associated with ctDNA_ever.  
   print(contingency_table)
   print(chisq_test)
   
@@ -623,7 +597,6 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
 
 
 ###########surgical treatment diag_surgery_type_1 (or diag_surgery_type_2) 
-  
   
   table(subset_data$diag_surgery_type_1) #1= partial mastectomy/lumpectomy, 2 = mastectomy. no missingness 
   
@@ -656,7 +629,7 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   
   
 
-######## axillary management. Really just care about whether or not someone got an axillary dissection. diag_axillary_type___2_1 (or diag_axillary_type___2_2 IF 2 biopsy forms)
+######## axillary management. Really just care about whether or not someone got an axillary dissection. diag_axillary_type___2_1 (or diag_axillary_type___2_2 IF 2 biopsy forms). Created a new variable (axillary_dissection) 
 
   table(subset_data$diag_axillary_type___2_1) 
   table(subset_data$diag_axillary_type___2_2) #a handful of axillary dissection on the second biopsy form so i think we want to combine these two 
@@ -664,6 +637,9 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   # Create a binary variable to identify participants who had axillary dissection
   subset_data_clean <- subset_data %>%
     mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
+  
+  subset_data <- subset_data %>%
+  mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
   
   # Ensure every participant has a ctDNA_ever and axillary_dissection value
   # Ensure every patient has an axillary dissection category, where 0 means no axillary dissection, and 1 means they had one
@@ -685,18 +661,17 @@ table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 
   
   # Perform the Chi-squared test
   chisq_test <- chisq.test(contingency_table)
-  fishers <- fisher.test(contingency_table)
-  print(fishers)
   
-  # Print the contingency table and Chi-squared test results --> p-value 0.173 (used chisq for consistency...)
+  # Print the contingency table and Chi-squared test results --> p-value 0.173 
   print(contingency_table)
   print(chisq_test)
 
-####inflammatory inflamm_yn -- IGNORE THIS for Table 1 
+####inflammatory (variable inflamm_yn)-- do not include inflammatory variable as there were NO inflammatory breast cancers in the ctDNA cohort. 
 table(d$inflamm_yn_1) ### i think the inflammatory folks must just not be in the subset of patients (6 yes's in the overall cohort, but none in the subset data for etierh inflamm variable)
 table(d$inflamm_yn_2)  ### I think inflammatory folks just not in subset of patients in the ctDNA cohort 
-table(subset_data$inflamm_yn)
+table(subset_data$inflamm_yn) 
   
+
 #### radiation prtx_radiation 
 table(subset_data$prtx_radiation) 
 
@@ -712,7 +687,7 @@ print(radiation)
 subset_data_by_id <- subset_data_clean %>%
   group_by(participant_id) %>%
   summarise(
-    radiation = first(prtx_radiation),  # Get the final_overall_stage for each participant
+    radiation = first(prtx_radiation),  # xrt for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
   )
 
@@ -721,8 +696,6 @@ contingency_table <- table(subset_data_by_id$radiation, subset_data_by_id$ctDNA_
 
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
-fishers <- fisher.test(contingency_table)
-print(fishers)
 
 # Print the contingency table and Chi-squared test results --> p-val  = 0.33 
 print(contingency_table)
@@ -738,13 +711,13 @@ chemo <- subset_data |>
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table
-print(chemo) #3 people didn not get chemo in this cohort 
+print(chemo) #3 people did not get chemo in this cohort 
 
 # Summarize the data by participant_id
 subset_data_by_id <- subset_data_clean %>%
   group_by(participant_id) %>%
   summarise(
-    chemo = first(prtx_chemo),  # Get the final_overall_stage for each participant
+    chemo = first(prtx_chemo),  # chemo for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
   )
 
@@ -753,16 +726,14 @@ contingency_table <- table(subset_data_by_id$chemo, subset_data_by_id$ctDNA_ever
 
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
-fishers <- fisher.test(contingency_table)
-print(fishers)
 
-# Print the contingency table and Chi-squared test results --> p-val  = 0.33 
+# Print the contingency table and Chi-squared test results --> p-val  = 0.59 
 print(contingency_table)
 print(chisq_test)
 
 
 
-####neoadjuvant chemo diag_neoadj_chemo_1 or diag_neoadj_chemo_2 
+####neoadjuvant chemo -- there are two variables for this that could theoretically be included: diag_neoadj_chemo_1 or diag_neoadj_chemo_2 
 
 table(subset_data$diag_neoadj_chemo_1) 
 table(subset_data$diag_neoadj_chemo_2) #there were no ppl who were recorded on the second biopsy form as having neoadjuvant therapy so can use only the first variable 
@@ -773,17 +744,17 @@ nact <- subset_data |>
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table
-print(nact) #3 people didn not get chemo in this cohort 
+print(nact) #3 people did not get chemo in this cohort 
 
 # Summarize the data by participant_id
 subset_data_by_id <- subset_data_clean %>%
   group_by(participant_id) %>%
   summarise(
-    nact = first(diag_neoadj_chemo_1),  # Get the final_overall_stage for each participant
+    nact = first(diag_neoadj_chemo_1),  # NACT for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
   )
 
-# Create a contingency table of final_overall_stage vs ctDNA_ever
+# Create a contingency table of NACT vs ctDNA_ever
 contingency_table <- table(subset_data_by_id$nact, subset_data_by_id$ctDNA_ever)
 
 # Perform the Chi-squared test
@@ -820,10 +791,9 @@ contingency_table <- table(subset_data_by_id$endo, subset_data_by_id$ctDNA_ever)
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
 
-# Print the contingency table and Chi-squared test results --> p-val  = 0.95 
+# Print the contingency table and Chi-squared test results --> p-val  = 0.33 
 print(contingency_table)
 print(chisq_test)
-
 
 
 
@@ -843,7 +813,7 @@ print(bonemod) #most ppl did get endo (39 got bonemod)
 subset_data_by_id <- subset_data_clean %>%
   group_by(participant_id) %>%
   summarise(
-    bonemod = first(prtx_bonemod),  # Get the final_overall_stage for each participant
+    bonemod = first(prtx_bonemod),  # Get bone mod status for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
   )
 
@@ -857,11 +827,11 @@ chisq_test <- chisq.test(contingency_table)
 print(contingency_table)
 print(chisq_test)
 
-
-#2 = non-pcr, 1 = pcr 
-#path cr diag_pcr_1 or diag_pcr_2  
+#### PCR -- did NOT include this in Table 1 as it aligns closely with NACT) 
+# 2 = non-pcr, 1 = pcr 
+#the variables of interest for path cr: diag_pcr_1 or diag_pcr_2  
 table(subset_data$diag_pcr_1) 
-table(subset_data$diag_pcr_2) #none recorded here si can just use pcr_1 
+table(subset_data$diag_pcr_2) #none recorded here so can just use diag_pcr_1 
 
 pcr <- subset_data %>%
   mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) %>%  # Convert "." to NA
@@ -877,7 +847,7 @@ print(pcr) #this is correct bc 19 ppl got NACT, and we have 19 ppl recorded for 
 subset_data_by_id <- subset_data_clean %>%
   group_by(participant_id) %>%
   summarise(
-    pcr = first(diag_pcr_1),  # Get the final_overall_stage for each participant
+    pcr = first(diag_pcr_1),  # Get pcr for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
   )
 
@@ -968,9 +938,9 @@ dist_site_distribution <- subset_data %>%
 # View the distribution of sites -- Bone in 7. Liver in 3. Lung in 2. 1 intra-abdominal 
 print(dist_site_distribution)
 
-#any recurrence 
-#either fu_locreg_prog or fu_dist_prog 
+##### ANY Recurrence -- this includes either fu_locreg_prog or fu_dist_prog 
 
+#create ever_relapsed variable 
 subset_data <- subset_data %>%
   mutate(ever_relapsed = ifelse(fu_locreg_prog == 1 | fu_dist_prog == 1, "Yes", "No"))
 
@@ -993,8 +963,8 @@ chisq_test <- chisq.test(contingency_table)
 print(contingency_table)
 print(chisq_test) 
 
-#### Relapse and DTC 
-#using ever_relapsed
+#### Relapse and DTCs  
+#using ever_relapsed and dtc_ever
 
 # link by participant id 
 subset_data_by_id <- subset_data %>%
@@ -1022,61 +992,6 @@ missing_data <- subset_data_by_id %>%
 # Print the IDs of participants with missing data
 print(missing_data$participant_id) #two individuals do not have relapse data (17-021, 18-032, as we had seen above)
 
-### look at relapses and ctDNA in the patinets who were dtc+ 
-
-# Filter for DTC-positive patients who have NOT relapsed
-dtc_not_recurred <- subset(subset_data, subset_data$dtc_ever == 1 & subset_data$fu_locreg_prog == 0 & subset_data$fu_dist_prog == 0)
-
-# Summarize the ctDNA positivity status within this subset
-table(dtc_not_recurred$ctDNA_ever) 
-
-### timing of ctDNA testing among those DTC + patients who relapsed 
-library(dplyr)
-
-# Step 1: Filter for DTC-positive participants with any relapse and arrange by date
-dtc_relapsed_data <- subset_data %>%
-  filter(dtc_ihc_result_final == 1, ever_relapsed == 1) %>%
-  arrange(participant_id, timepoint)
-
-# Step 2: Calculate overall relapse date as the earliest of locoregional and distant relapse dates
-dtc_relapsed_timing <- dtc_relapsed_data %>%
-  group_by(participant_id) %>%
-  summarize(
-    dtc_date = min(timepoint[dtc_ihc_result_final == 1], na.rm = TRUE),
-    relapse_date = pmin(fu_locreg_date, fu_dist_date, na.rm = TRUE), # Calculate earliest relapse date
-    .groups = "drop"
-  ) %>%
-  filter(!is.na(relapse_date)) # Keep only those with a relapse after DTC+
-
-# Step 3: Find ctDNA tests before relapse for these participants
-ctDNA_before_relapse <- subset_data %>%
-  filter(!is.na(ctDNA_test_date)) %>%
-  inner_join(dtc_relapsed_timing, by = "participant_id") %>%
-  filter(ctDNA_test_date < relapse_date) %>%
-  arrange(participant_id, ctDNA_test_date)
-
-# Step 4: Summarize ctDNA test counts and dates before relapse
-ctDNA_summary <- ctDNA_before_relapse %>%
-  group_by(participant_id) %>%
-  summarize(
-    num_ctDNA_tests_before_relapse = n(),
-    ctDNA_test_dates = list(ctDNA_test_date),
-    .groups = "drop"
-  )
-
-# View the results
-ctDNA_summary
-
-# Filter for participant 28115-17-025 and select DTC and ctDNA-related columns
-patient_results <- subset_data %>%
-  filter(participant_id == "28115-17-025") %>%
-  select(participant_id, timepoint, dtc_ever, dtc_ihc_date_final, dtc_ihc_result_final,
-         ctDNA_ever, collection_date, ctDNA_detected, ever_relapsed, fu_locreg_date, fu_dist_date)
-
-# View the results
-patient_results
-
-
 ### look at ever_relapsed by ctDNA 
 
 subset_data_by_id <- subset_data %>%
@@ -1093,11 +1008,11 @@ contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$ct
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
 
-# Print the contingency table and Chi-squared test results
+# Print the contingency table and Chi-squared test results, p < 0.00001 
 print(contingency_table)
 print(chisq_test) 
 
-####survival analysis  fu_survival 
+####survival: fu_survival 
 
 table(subset_data$fu_surv)
 
@@ -1131,21 +1046,31 @@ contingency_table <- table(subset_data_by_id$surv, subset_data_by_id$ctDNA_ever)
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
 
-# Print the contingency table and Chi-squared test results
+# Print the contingency table and Chi-squared test results, p<0.00001
 print(contingency_table)
 print(chisq_test)
 
 
+```
+
+
+
+
+**Test Characteristics**
+
+Next, we will look at ctDNA and DTC test characteristics. First we will look at the association between ctDNA and DTC positivity. Next we will look at the number of tests.    
+
+``` {r} 
+
 ############ Test Characteristics and Baseline versus cumulative positivity (ctDNA to start)#######
 
-
-### DTC by ctDNA (ever positive) 
+### DTC by ctDNA (ever positive), association between test positivity. 
 
 # link by participant id 
 subset_data_by_id <- subset_data %>%
   group_by(participant_id) %>%
   summarise(
-    dtc = first(DTC_ever),  # Get the ever dtc for each participant
+    dtc = first(dtc_ever),  # Get the ever dtc for each participant
     ctDNA_ever = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
     .groups = "drop"
   )
@@ -1507,50 +1432,143 @@ dtc_pos_vs_total <- subset_data %>%
 
 # Print the results
 print(dtc_pos_vs_total)
+ 
+
+```
 
 
+**Test Characteristics of ctDNA assay**: 
+Next we will look at the sensitivity and specificity of the ctDNA assay. 
+
+``` {r} 
 ######  Test characteristics ctDNA 
+#trying to do ctDNA 2x2 with ever relapsed on a patient level 
 
-true_results <- subset_data$ever_relapsed  # Actual labels (True: 1 = relapsed, 0 = not relapsed)
-predicted_results <- subset_data$ctDNA_ever  # Predicted labels (True: 1 = ctDNA ever detected, 0 = not detected)
+library(dplyr)
 
-# Create confusion matrix
-conf_matrix <- table(Predicted = predicted_results, Actual = true_results)
+# Exclude participants with all NA for `ctDNA_ever` or `ever_relapsed`
+summarized_data <- subset_data %>%
+  filter(!is.na(ctDNA_ever) | !is.na(ever_relapsed)) %>% # Keep rows with at least one non-NA value
+  group_by(participant_id) %>%
+  summarize(
+    ctDNA_ever = max(ctDNA_ever, na.rm = TRUE),       
+    ever_relapsed = max(ever_relapsed, na.rm = TRUE)  
+  )
 
-# Calculate sensitivity, specificity, PPV, and NPV
-sensitivity <- conf_matrix[2, 2] / sum(conf_matrix[2, ])  # True Positives / (True Positives + False Negatives)
-specificity <- conf_matrix[1, 1] / sum(conf_matrix[1, ])  # True Negatives / (True Negatives + False Positives)
-ppv <- conf_matrix[2, 2] / sum(conf_matrix[, 2])  # True Positives / (True Positives + False Positives)
-npv <- conf_matrix[1, 1] / sum(conf_matrix[, 1])  # True Negatives / (True Negatives + False Negatives)
+# Create the confusion matrix
+confusion_matrix <- table(summarized_data$ctDNA_ever, summarized_data$ever_relapsed)
 
-# Print the results
-cat("Sensitivity: ", sensitivity, "\n")
-cat("Specificity: ", specificity, "\n")
-cat("Positive Predictive Value (PPV): ", ppv, "\n")
-cat("Negative Predictive Value (NPV): ", npv, "\n")
+# Extract counts from the confusion matrix
+TP <- ifelse(!is.na(confusion_matrix[2, 2]), confusion_matrix[2, 2], 0)  # True Positives
+FP <- ifelse(!is.na(confusion_matrix[2, 1]), confusion_matrix[2, 1], 0)  # False Positives
+TN <- ifelse(!is.na(confusion_matrix[1, 1]), confusion_matrix[1, 1], 0)  # True Negatives
+FN <- ifelse(!is.na(confusion_matrix[1, 2]), confusion_matrix[1, 2], 0)  # False Negatives
 
+# Calculate performance metrics
+sensitivity <- TP / (TP + FN)  # Sensitivity
+specificity <- TN / (TN + FP)  # Specificity
+PPV <- TP / (TP + FP)          # Positive Predictive Value
+NPV <- TN / (TN + FN)          # Negative Predictive Value
 
+# Create a data frame for the table
+performance_table <- data.frame(
+  Metric = c("Sensitivity", "Specificity", "Positive Predictive Value (PPV)", "Negative Predictive Value (NPV)"),
+  Value = c(sensitivity, specificity, PPV, NPV)
+)
+
+# Print the table
+print(performance_table)
+
+#Format the table for better readability
+library(knitr)
+kable(performance_table, digits = 2, col.names = c("Metric", "Value"))
+
+```
+
+This ctDNA assay has high specificity (99%), with a high positive predictive value for relapse (94%) and also a high negative predictive value (88%).
+
+``` {r} 
 ### Test characteristics for DTC 
 
+library(dplyr)
 
-# Example data: True results (ever relapsed) and predicted results (DTC ever detected)
-true_results <- subset_data$ever_relapsed  # Actual labels (True: 1 = relapsed, 0 = not relapsed)
-predicted_results <- subset_data$dtc_ever  # Predicted labels (True: 1 = DTC ever detected, 0 = not detected)
+# Total unique DTC+ patients
+total_dtc_plus <- subset_data %>%
+  filter(dtc_ihc_result_final == 1) %>%
+  distinct(participant_id) %>%
+  nrow()
 
-# Create confusion matrix
-conf_matrix_2 <- table(Predicted = predicted_results, Actual = true_results)
+# Unique DTC+ patients who went on trial (those who have a trial ID fu_trial_pid)
+dtc_plus_trial <- subset_data %>%
+  filter(dtc_ihc_result_final == 1 & !is.na(fu_trial_pid)) %>%
+  distinct(participant_id) %>%
+  nrow()
 
-# Calculate sensitivity, specificity, PPV, and NPV
-sensitivity <- conf_matrix_2[2, 2] / sum(conf_matrix_2[2, ])  # True Positives / (True Positives + False Negatives)
-specificity <- conf_matrix_2[1, 1] / sum(conf_matrix_2[1, ])  # True Negatives / (True Negatives + False Positives)
-ppv <- conf_matrix_2[2, 2] / sum(conf_matrix_2[, 2])  # True Positives / (True Positives + False Positives)
-npv <- conf_matrix_2[1, 1] / sum(conf_matrix_2[, 1])  # True Negatives / (True Negatives + False Negatives)
+# Proportion of DTC+ patients who went on trial
+proportion_trial <- dtc_plus_trial / total_dtc_plus
 
-# Print the results
-cat("Sensitivity: ", sensitivity, "\n")
-cat("Specificity: ", specificity, "\n")
-cat("Positive Predictive Value (PPV): ", ppv, "\n")
-cat("Negative Predictive Value (NPV): ", npv, "\n")
+# Display results
+cat("Total unique DTC+ patients:", total_dtc_plus, "\n")
+cat("Unique DTC+ patients who went on trial:", dtc_plus_trial, "\n")
+cat("Proportion of DTC+ patients who went on trial:", proportion_trial, "\n")
+
+# All DTC + patients went on trial (39/39)
+
+```
+
+All of the 39 individuals who were DTC positive went onto an interventional treatment trial aimed at eliminating the presence of the DTCs. It is therefore challenging to interpret the sensitivity and specificity of the DTC test, as relapse is the outcome and all of these patients are receiving an intervention aimed at eliminating the presence of the DTCs.  
+
+``` {r} 
+##### Concordance between DTC and ctDNA 
+
+
+### concordance overall 
+
+# Filter and get unique participants by participant_id
+concordance_overall_unique <- subset_data %>%
+  distinct(participant_id, .keep_all = TRUE) %>%
+  mutate(concordance = ifelse(dtc_ever == ctDNA_ever, "Concordant", "Discordant"))
+
+# Count total concordant and discordant pairs for unique participants
+overall_concordant <- sum(concordance_overall_unique$concordance == "Concordant")
+overall_discordant <- sum(concordance_overall_unique$concordance == "Discordant")
+
+# Proportion of concordance
+proportion_concordant <- overall_concordant / (overall_concordant + overall_discordant)
+
+cat("Overall Concordant (unique participants):", overall_concordant, "\n")
+cat("Overall Discordant (unique participants):", overall_discordant, "\n")
+cat("Overall Proportion Concordant (unique participants):", proportion_concordant, "\n")
+
+#Proportion concordance 63% (ever positive)
+
+# Ensure that dtc_ihc_result_final is converted to TRUE/FALSE for consistency with ctDNA_detected
+concordance_by_timepoint <- subset_data %>%
+  filter(!is.na(dtc_ihc_result_final) & !is.na(ctDNA_detected)) %>%
+  mutate(
+    # Convert dtc_ihc_result_final (1 = TRUE, 0 = FALSE) to match ctDNA format (TRUE/FALSE)
+    dtc_ihc_result_final_bool = ifelse(dtc_ihc_result_final == 1, TRUE, FALSE),
+    # Create a column to determine concordance (both DTC and ctDNA being TRUE or both being FALSE)
+    concordance = ifelse(dtc_ihc_result_final_bool == ctDNA_detected, "Concordant", "Discordant")
+  ) %>%
+  group_by(timepoint) %>%
+  summarise(
+    total_concordant = sum(concordance == "Concordant"),
+    total_discordant = sum(concordance == "Discordant"),
+    total_samples = n(),  # Total number of samples at this timepoint
+    concordance_rate = total_concordant / total_samples  # Concordance rate per timepoint
+  )
+
+# Print concordance results for each timepoint
+print(concordance_by_timepoint)
+
+# Now calculate overall concordance across all timepoints
+overall_concordance <- sum(concordance_by_timepoint$total_concordant) / 
+  sum(concordance_by_timepoint$total_samples)
+
+cat("Overall Concordance Rate across all timepoints:", overall_concordance, "\n")
+#concordance, considering testing by timepoint, is 80%, versus 63% when you consider the tests separately. Does this make sense? 
+
 
 #### how many DTC pts went on trial? 
 
@@ -2642,16 +2660,15 @@ print(chisq_test)
 library(tableone)
 
 # Specify variables
-continuous_vars <- c("age_summary", "dtc_count", "dtc_ihc_summary_count_final",
-                     "timepoints_per_patient", "total_timepoints", "ctDNA_timepoints", "dtc_timepoints")
+continuous_vars <- c("age_summary", "dtc_count", "dtc_ihc_summary_count_final")
 
-categorical_vars <- c("demo_race_final", "final_receptor_group", "HR_status_by_participant",
+categorical_vars <- c("demo_race_final", "final_receptor_group",
                       "final_tumor_grade", "histology_category", "final_n_stage", 
-                      "nodal_status", "final_t_stage", "final_t_stage_combined", "final_overall_stage", 
+                      "final_t_stage", "final_overall_stage", 
                       "diag_surgery_type_1", "axillary_dissection", "prtx_radiation", "prtx_chemo", 
                       "diag_neoadj_chemo_1", "prtx_endo", "prtx_bonemod", "diag_pcr_1", "fu_locreg_prog", 
                       "fu_locreg_site_char", "fu_dist_prog", "fu_dist_site_char", "ever_relapsed", 
-                      "fu_surv", "unique_timepoints")
+                      "fu_surv")
 
 
 # Ensure categorical variables are factors with meaningful labels
@@ -2660,8 +2677,16 @@ subset_data <- subset_data %>%
 
 ## labels race 
 subset_data$demo_race_final <- factor(subset_data$demo_race_final,
-                                      levels = c("1", "2", "3"),
+                                      levels = c("5", "1", "3"),
                                       labels = c("White", "Black", "Asian"))
+print(subset_data$demo_race_final)
+
+as.factor(d$demo_race_final)
+#5 = white 
+#1 = black 
+#3 = asian 
+
+
 
 ### labels 
 subset_data$final_receptor_group <- factor(subset_data$final_receptor_group,
@@ -2679,6 +2704,106 @@ table1 <- CreateTableOne(vars = c(continuous_vars, categorical_vars),
 # Print the table with p-values
 print(table1, showAllLevels = TRUE, pDigits = 3)
 
+names(subset_data)
 
 
 ```
+
+
+I have chosen to perform a multivariable logistic regression to identify predictors of ctDNA positivity. ctDNA positivity is a binary outcome, and we have performed univariable analyses as above already to look at   
+
+``` {r} 
+library(dplyr)
+
+# Univariable logistic regression
+# Define the outcome variable
+outcome <- "ctDNA_ever"
+
+# Continuous predictors
+continuous_vars <- c("age_at_diag", "dtc_ihc_summary_count_final")
+
+# Categorical predictors
+categorical_vars <- c("demo_race_final", "final_receptor_group", "HR_status",
+                      "final_tumor_grade", "histology_category", "final_n_stage", 
+                      "final_t_stage", "final_overall_stage", 
+                      "diag_surgery_type_1", "axillary_dissection", "prtx_radiation", "prtx_chemo", 
+                      "diag_neoadj_chemo_1", "prtx_endo", "prtx_bonemod", "diag_pcr_1", "fu_locreg_prog", 
+                      "fu_locreg_site_char", "fu_dist_prog", "fu_dist_site_char", "ever_relapsed", 
+                      "fu_surv")
+
+# Univariable regression for continuous variables
+univariable_results_continuous <- sapply(continuous_vars, function(var) {
+  formula <- as.formula(paste(outcome, "~", var))
+  model <- glm(formula, data = subset_data, family = "binomial")
+  summary(model)$coefficients[2, c(1, 4)]  # Extract coefficient and p-value
+})
+
+# Univariable regression for categorical variables (assuming factors are properly encoded)
+univariable_results_categorical <- sapply(categorical_vars, function(var) {
+  formula <- as.formula(paste(outcome, "~", var))
+  model <- glm(formula, data = subset_data, family = "binomial")
+  summary(model)$coefficients[2, c(1, 4)]  # Extract coefficient and p-value
+})
+
+# Combine continuous and categorical results
+univariable_results <- data.frame(
+  Variable = c(continuous_vars, categorical_vars),
+  Estimate = c(univariable_results_continuous[1,], univariable_results_categorical[1,]),
+  p_value = c(univariable_results_continuous[2,], univariable_results_categorical[2,])
+)
+
+# Print univariable results
+print(univariable_results)
+
+
+```
+
+** do i need to do univariate associations
+
+We will next think about our multivariable regression model. We have several variables that were significant in our univariable analyses (chi-squared). These include median age-at-diagnosis, longer time from diagnosis to enrollment, higher tumor grade, and higher initial stage at diagnosis. Variables that were not significant but that could be considered include histology, nodal positivity, higher t-stage, and receptor status. While recurrence (both distant and local) as well as worse survival are significantly associated with ctDNA positivity, these are outcomes that we think of as following ctDNA positivity temporally and therefore should not be included in our predictive model as predictors. 
+
+In thinking about what these variables represent, we think about the extent of treatment that patients have received as one major category. We also think about intrinsic tumor risk factors as another 
+
+There is no specific method to choose variables, but generally purposeful selection begins with univariate analysis. Any varialbe having significance is selected as a cndidate for multivariate analysis, based on a p-value cut-offp oint of 0.25, as more stringent cutoffs can fail to identify variables known to be important. Significance is evaluated at the 0.1 alpha level, and confounding as a change in the parameter estimate greater than 15% or 20% compared to the full model. This is as per Hosmer and Lemeshow selection methodology. 
+
+``` {r} 
+
+# Multivariable logistic regression
+# Combine all variables into a formula
+multivariable_formula <- as.formula(paste(outcome, "~", paste(c(continuous_vars, categorical_vars), collapse = " + ")))
+
+# Fit the multivariable logistic regression model
+multivariable_model <- glm(multivariable_formula, data = subset_data, family = "binomial")
+
+# Summary of the multivariable model
+summary(multivariable_model)
+
+# Extract coefficients and p-values from the multivariable model
+multivariable_results <- data.frame(
+  Variable = rownames(summary(multivariable_model)$coefficients),
+  Estimate = summary(multivariable_model)$coefficients[, 1],
+  Std_Error = summary(multivariable_model)$coefficients[, 2],
+  z_value = summary(multivariable_model)$coefficients[, 3],
+  p_value = summary(multivariable_model)$coefficients[, 4]
+)
+
+# Print multivariable results
+print(multivariable_results)
+
+
+```
+
+
+
+Of 184 pts enrolled from 2016 – 2021, 121 had tissue available; 114/121 (94%) had successful WES. A total of \_\_\_\_\_ plasma samples from 109 pts (median 2 timepoints each, range 1-12) have been successfully tested by RaDaR to date.
+
+Overall, ctDNA was detected in 11 samples from 9/96 pts (9.3%) with a median eVAF of 0.009% (range 0.002-0.084%). Two pts were ctDNA+ at baseline (BL), and 7 became positive on surveillance. 87/96 (90.6%) were ctDNA- across all timepoints.
+
+34/96 pts (35%) were DTC+, either at BL (n=24, 25%) or after (n=10, 10%). Considering all timepoints, concordance was 64%. Of 34 ever-DTC+ pts, 4 (12%) were ctDNA+ (of whom 3/4 recurred) and 30 remained ctDNA- (with 1/30 who recurred). Among the 62 pts who remained DTC-, 5 (8%) were ctDNA+ (with 5/5 who recurred), and 57 remained ctDNA- (of whom 5/57 recurred). All ctDNA positivity in DTC+ pts occurred at the time of or after DTC positivity. Over median follow-up (f/u) of 65 months (m), BC recurrence occurred in 14/96 pts (15%), with 2 locoregional-only and 12 distant +/- locoregional recurrences (involving the bone, liver, lung/pleura, and brain); 8/14 pts (57%) were ctDNA+ prior to relapse. 7/12 (58%) with distant recurrences were ctDNA+ prior to metastatic diagnosis, at a median lead time of 15 m (range 0 – 25). Overall, ctDNA+ pts experienced a median lead time from ctDNA positivity to recurrence of 13 m (range 0 – 25). Only 1 of 9 ctDNA+ pts has not recurred; this pt was DTC+ and went on therapeutic trial, without evidence of recurrence over 20 m f/u. 30/34 DTC+ pts (89%) who went on therapeutic trial have not had ctDNA detected during f/u and have not recurred. Overall, ctDNA status was significantly associated with relapse (p\<0.01), with a PPV of 89% and NPV of 93%. Of the 24 BL DTC+ pts, 2 became ctDNA+ at subsequent timepoints, an average of 18 m after DTC assessment, and both relapsed (3 and 5 m from ctDNA detection, respectively).
+
+Describe your results and include relevant tables, plots, and code/comments used to obtain them. You may refer to the @sec-methods as needed. End with a brief conclusion of your findings related to the question you set out to address. You can include references if you'd like, but this is not required.
+
+## Conclusion {#sec-conclusion}
+
+
+In this study, X was associated with Y. 
