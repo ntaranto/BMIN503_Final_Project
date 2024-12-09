@@ -14,42 +14,42 @@ embed-resources: true
 
 Link to my final project: https://github.com/ntaranto/BMIN503_Final_Project
 
-After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA (ctDNA) as risk factors for recurrence. Historically, and in retrospective, observational studies, these markers of minimal residual disease (MRD) have demonstrated strong associations with recurrence and disease relapse. But it remains unclear how these associations persist with modern treatment paradigms what the time course of positivity and what clinical risk factors put patients at greatest risk for having DTC or ctDNA positivity and subsequent relapse--and which most strongly predict biomarker positivity.
+After treatment for early stage breast cancer, recurrence remains a problem in up to 30% of individuals, in spite of these patients completing definitive treatment with curative intent (including surgery, radiation, and chemotherapy/endocrine therapy) for their early stage breast cancer. It remains unclear who will experience disease recurrence and who will not, and whether we can identify biomarkers such as disseminated/dormant tumor cells (DTCs) or circulating tumor DNA (ctDNA) as risk factors for recurrence. Historically, in retrospective, observational studies, these markers of minimal residual disease (MRD) have demonstrated strong associations with recurrence and disease relapse. But it remains unclear how these associations persist with modern treatment paradigms, what the time course of positivity, and what clinical risk factors put patients at greatest risk for having DTC or ctDNA positivity and subsequent relapse--as well as which most strongly predict biomarker positivity.
 
-Optimizing detection, intervention and surveillance for MRD after breast cancer treatment utilizing highly sensitive, real-time assays to identify patients with dormant tumor cells and those undergoing tumor reactivation in-transit to recurrence would fundamentally change the paradigm of breast cancer follow up from one of “watchful waiting” to a proactive approach that could enable ongoing monitoring for subclinical disease and suppression or eradication of cells that could potentially metastasize. Ultimately, our approach has the potential to provide reassurance to patients with definitively negative MRD testing that they are unlikely to ever experience a relapse, enable effective MRD-based surveillance, detection and treatment strategies for those in whom it is detectable and, ultimately, prevent recurrence and subsequent death from metastatic breast cancer while preserving quality of life for millions of breast cancer survivors around the world.
+Optimizing detection, intervention and surveillance for MRD after breast cancer treatment utilizing highly sensitive, real-time assays to identify patients with dormant tumor cells and those undergoing tumor reactivation in-transit to recurrence would fundamentally change the paradigm of breast cancer follow up from one of “watchful waiting” to a proactive approach that could enable ongoing monitoring for subclinical disease and suppression or eradication of cells that could potentially metastasize. Ultimately, an approach using MRD biomarkers could provide reassurance to patients with definitively negative MRD testing that they are unlikely to experience a relapse, could enable detection and treatment strategies for those in whom MRD is detectable and, ultimately, prevent recurrence and subsequent death from metastatic breast cancer while preserving quality of life for millions of breast cancer survivors around the world.
 
-In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells (DTCs) in the bone marrow by immunohistochemistry (DTC-IHC) and circulating tumor DNA (ctDNA) in the blood. In this overall study, we are assessing the relationship between ongoing surveillance for MRD (utilizing standard DTC-IHC and ctDNA by a tumor-informed assay) and recurrence, assess the trajectory of MRD over time, optimizing the type and number of tests needed to predict recurrence, outcomes and lead time, and further evaluating the long-term impact of our prior therapeutic interventions. In this specific analysis, we will look at clinical predictors of ctDNA and DTC positivity to try to understand the strongest drivers of MRD in the population of patients with high-risk early breast breast cancer who have finished definitive treatment. We will do so by looking at the clinical characteristics, DTC and ctDNA assessment, and clinical follow-up for the cohort of patients enrolled onto the SURMOUNT (Surveillance Markers of Utility for Recurrence after (Neo)adjuvant Therapy for Breast Cancer) study between 2016 and 2021 who had ctDNA assessment performed.
+In the SURMOUNT study, we have followed patients who have undergone definitive treatment for their early stage breast cancer for recurrence, and also obtained bone marrow and peripheral blood assessment, looking for disseminated tumor cells (DTCs) in the bone marrow by immunohistochemistry (DTC-IHC) and circulating tumor DNA (ctDNA) in the blood. In this study, we are following patients over multiple years after their breast cancer for these markers and clinically following them for relapse and survival events. The goal of this study is to assess the relationship between ongoing surveillance for MRD (utilizing standard DTC-IHC and ctDNA by a tumor-informed assay) and recurrence, assess the trajectory of MRD over time and risk factors for DTC and ctDNA positivity, optimize the type and number of tests needed to predict recurrence, and further evaluate the long-term impact of therapeutic interventions aimed at eliminating DTCs.
 
-For this analysis, I have spoken with Dr. Nicholas Seewald, my biostatistical mentor, and Dr. Angela DeMichele, my epidemiology mentor and a breast oncologist with expertise in the biomarkers of recurrence (and the PI on the SURMOUNT study). Dr. Seewald has been critical to thinking about the approach to multivariable analysis to assess the clinical predictors of ctDNA and DTC positivity as well as survival analyses to understand the associations between biomarker positivity and relapse. Dr. Demichele has been instrumental in the development of the SURMOUNT study design, designing the analysis of this initial surveillance cohort, and thinking about the biomarkers of breast cancer recurrence and dormance more broadly.
+In this specific analysis, we will look at the clinical predictors of ctDNA and DTC positivity to try to understand the strongest drivers of MRD in the population of patients with high-risk early breast breast cancer who have finished definitive treatment. We will do so by looking at the clinical characteristics, DTC and ctDNA assessment, and clinical follow-up for the cohort of patients enrolled onto the SURMOUNT (Surveillance Markers of Utility for Recurrence after (Neo)adjuvant Therapy for Breast Cancer) study between 2016 and 2021 who had ctDNA assessment performed.
+
+For this analysis, I have spoken with Dr. Nicholas Seewald, my biostatistical mentor, and Dr. Angela DeMichele, my epidemiology mentor and a breast oncologist with expertise in the biomarkers of recurrence (and the PI on the SURMOUNT study). Dr. Seewald has been critical to thinking about the approach to multivariable analysis to assess the clinical predictors of ctDNA and DTC positivity as well as survival analyses to understand the associations between biomarker positivity and relapse. Dr. Demichele has been instrumental in the development of the SURMOUNT study design, designing the analysis of this initial surveillance cohort, and thinking about clinical predictors of positivity and the biomarkers of breast cancer recurrence and dormance more broadly.
 
 ## Introduction {#sec-introduction}
 
-Breast cancer is the most prevalent cancer since it is both common and treatable, with 5-year survival rates approaching 90%. Of the 14.5 million cancer survivors alive today in the U.S., nearly 1 in 4 are breast cancer survivors. Unfortunately, up to 30% of patients who receive adjuvant therapy for breast cancer will ultimately recur and die from their disease, typically as a consequence of metastatic recurrence. Since recurrent breast cancer is incurable, the propensity of cancers to recur following treatment is arguably the most important determinant of clinical outcome.
+Breast cancer is the most prevalent cancer since it is both common and treatable, with 5-year survival rates approaching 90%. Of the 14.5 million cancer survivors alive today in the U.S., nearly 1 in 4 are breast cancer survivors. Unfortunately, up to 30% of patients who receive adjuvant therapy for breast cancer will ultimately recur and die from their disease, typically as a consequence of metastatic recurrence. Since recurrent breast cancer is incurable, the propensity of cancers to recur following treatment is arguably the most important determinant of clinical outcome. Recurrent breast cancers arise from the pool of breast cancer cells that remain after initial treatment, likely in the form of minimal residual disease (MRD): local and disseminated residual tumor cells that survive in their host in a presumed dormant state following treatment of the primary breast cancer. The development of incurable metastatic disease is thought to be due to this persistent pool of residual disease resulting from escape of cells from the primary tumor, intravasation and survival in the circulation, and eventual extravasation and metastatic seeding. Many breast cancers pass through a latent phase in which disseminated tumor cells (DTCs) may persist in niches where they may reside in a dormant state for months to decades. These DTCs are thought to exist in a temporary quiescent state of reversible cell-cycle arrest, from which some cells may eventually reactivate, resume proliferation and recirculate, at which point they can be detected as circulating tumor DNA (ctDNA) in the blood. Longitudinal studies demonstrate that the detection of DTCs in the bone marrow in such patients is associated with poorer disease-free, breast cancer recurrence-free, and overall survival compared to patients without DTCs. Several mechanisms implicated in this process by preclinical studies are therapeutically targetable, and the research group in the 2-PREVENT Breast Cancer Translational Center of Excellence (TCE) have developed several interventional trials aimed at targeting these DTCs.
 
-Recurrent breast cancers arise from the pool of breast cancer cells that remain after initial treatment, likely in the form of minimal residual disease (MRD): local and disseminated residual tumor cells (RTCs) that survive in their host in a presumed dormant state following treatment of the primary breast cancer.The development of incurable metastatic disease is due to this persistent pool of residual disease resulting from escape of cells from the primary tumor, intravasation and survival in the circulation, and eventual extravasation and metastatic seeding. Many breast cancers pass through a latent phase in which disseminated tumor cells (DTCs) persist in niches where they may reside in a dormant state for months to decades. These DTCs exist in a temporary quiescent state of reversible cell-cycle arrest, from which some cells may eventually reactivate, resume proliferation and recirculate, at which point they can be detected as circulating tumor DNA (ctDNA) in the blood. Longitudinal studies demonstrate that the detection of DTCs in the bone marrow in such patients is associated with poorer disease-free, breast cancer recurrence-free, and overall survival compared to patients without DTCs. Several mechanisms implicated in this process by preclinical studies are therapeutically targetable, and we have developed several interventional trials aimed at targeting these DTCs that are fed by the SURMOUNT surveillance study.
+However, it still remains unclear how exactly the presence of DTCs and/or ctDNA predicts relapse in the era of modern treatment for breast cancers, including chemotherapy, immunotherapy, surgery, targeted treatments, and radiation. Questions remain about who will develop DTC/ctDNA positivity, which patients with DTC positivity will have these cells reactivate, whether or not and when DTC positivity leads to ctDNA positivity, and which patients with these markers will develop relapse and subsequent metastatic disease.In the SURMOUNT surveillance study, patients with early stage (i.e. curable) but high-risk breast cancer are enrolled and undergo initial baseline bone marrow assessment (BMA) for evaluation of DTCs by immunohistochemistry (IHC), as well as peripheral blood assessment for retrospective ctDNA assesmsent. Patients who screen DTC positive--either at baseline or on yearly surveillance BMA--are referred for interventional trials aimed at eliminating dormant cells prior to clinical relapse. Patients who screen DTC negative remain in the SURMOUNT surveillance cohort and undergo yearly DTC assessment and peripheral blood collection for ctDNA assessment. All patients are followed for recurrence events and survival. The first intervention trial, CLEVER, completed enrollment in 2021, so this initial analysis is focused on the patients who were enrolled on SURMOUNT for the purposes of accruing this first trial.
 
-In the SURMOUNT surveillance study, patients with early stage (i.e. curable) but high-risk breast cancer are enrolled and undergo initial baseline bone marrow assessment (BMA) for evaluation of DTCs, as well as peripheral blood assessment for retrospective ctDNA assesmsent. Patients who screen DTC positive--either at baseline or on yearly surveillance BMA--are referred for interventional trials. Patients who screen DTC negative remain in the SURMOUNT surveillance cohort and undergo yearly DTC assessment and peripheral blood collection for ctDNA assessment. The first intervention trial, CLEVER, completed enrollment in 2021, and so this initial analysis is focused on the patients who were enrolled for the purposes of accruing this first trial.
-
-Despite years of progress in breast cancer diagnostics and therapeutics, identifying the individuals at risk of recurrence -- and figuring out how to manage and minimize their elevated risk--remains a challenge. In this study, we seek to assess the clinical validity of DTC and ctDNA assessment and to better understand the population in which they may be useful. Specifically, in this analysis, we looked at overall rates of ctDNA and DTC positivity in this cohort and clinical factors that were associated with each. 
+Despite years of progress in breast cancer diagnostics and therapeutics, identifying the individuals at risk of recurrence -- and figuring out how to manage and minimize their elevated risk--remains a challenge. In this study, we sought to assess the clinical validity of DTC and ctDNA assessment and to better understand the population in which they may be useful. Specifically, in this analysis, we looked at overall rates of ctDNA and DTC positivity in this cohort and clinical factors that were associated with each.
 
 ## Methods {#sec-methods}
 
-“PENN SURMOUNT” is a single center, prospective, longitudinal cohort study examining MRD biomarkers among pts within 5 years (y) of BC diagnosis who completed all curative treatment except endocrine therapy. Eligible pts must have had: 1) TNBC, or 2) HER2+ or HR+ BC with positive LN and/or residual disease after neoadjuvant therapy, or 3) HR+ BC with a 21-gene Recurrence score \>25 and/or high risk Mammaprint. Pts had annual bone marrow aspirate (BMA) for DTCs by immunohistochemistry (using methods of Naume et al.). DTC+ pts went on therapeutic trial; DTC- pts had up to 5y of annual BMA and blood testing. ctDNA was retrospectively assessed using the RaDaR assay, which targets pt-specific somatic mutations identified by whole-exome sequencing (WES) of primary tumor tissue.
+**“PENN SURMOUNT”**: SURMOUNT is a single center, prospective, longitudinal cohort study examining MRD biomarkers among pts within 5 years (y) of BC diagnosis who completed all curative treatment except endocrine therapy. Eligible pts must have had: 1) TNBC, or 2) HER2+ or HR+ BC with positive LN and/or residual disease after neoadjuvant therapy, or 3) HR+ BC with a 21-gene Recurrence score \>25 and/or high risk Mammaprint. Pts had annual bone marrow aspirate (BMA) for DTCs by immunohistochemistry (using methods of Naume et al.). DTC+ pts went on therapeutic trial; DTC- pts had up to 5y of annual BMA and blood testing. ctDNA was retrospectively assessed using the RaDaR assay (NeoGenomics), which targets pt-specific somatic mutations identified by whole-exome sequencing (WES) of primary tumor tissue.
 
-The ctDNA assessment was performed after bespoke panel development on tissue on peripheral blood from 109 patients by Neogenomics, inc. and provided back to the research team in .csv format, with the last data drop occurring July 30, 2024. DTC assessment was performed based on bone marrow assessment and ultimately entered into REDCap database by the research team through this same follow-up date. Clinical and demographic factors--and follow-up data--were abstracted by the research team through October 2024 and entered into the same REDCap database. Data were exported in mid-October 2024 by the TCE data manager, and merged with the ctDNA data prior to hand-off for this analysis. The final locked and merged dataset, labeled "surmount184_merged_20241108.csv" is maintained in the TCE box for the ctDNA analysis, and a copy is being stored in the FinalProject_files.
+**Data Collection and Merge:** The ctDNA assessment was performed after bespoke panel development on tissue on peripheral blood from 109 patients by Neogenomics, inc. and provided back to the research team in .csv format, with the last data drop occurring July 30, 2024. DTC assessment was performed based on bone marrow assessment and ultimately entered into a REDCap database by the research team through this same follow-up date. Clinical and demographic factors--and follow-up data--were abstracted by the research team through October 2024 and entered into the same REDCap database. Data were exported in mid-October 2024 by the TCE data manager, and merged with the ctDNA data prior to hand-off for this analysis. The final locked and merged dataset, labeled "surmount184_merged_20241108.csv" is maintained in the TCE box for the ctDNA analysis, and a copy is being stored in the FinalProject_files.
 
-**First,** we will import csv of final data, which is entitled "surmount184_merged_20241108.csv"
+**First,** we will import csv of final data, which is entitled "surmount184_merged_20241108.csv."
 
-```{r}
+``` {r} 
+
 library(here)
 library(dplyr) 
 
-d <- read.csv(file = here("FinalProject_files",
+d <- read.csv(file = here("data",
                           "surmount184_merged_20241108.csv"))
-
 ```
 
-**Next,** we will limit the data to the 109 patients who had ctDNA tested, of the 184 individuals who were included in the initial CLEVER trial screening group. We will look at the names and structures of the variables in the dataset "d", of which there are 387, the majority of which are clinical variables (often categorical dummy variables), but some of which are outcome variables related to local relapse, distant relapse, and survival as well as to the pathology report accounting for DTC.
+**Next,** we will limit the data to the 109 patients who had ctDNA tested, of the 184 individuals who were included in the initial CLEVER trial screening group. We will look at the names and structures of the variables in the dataset "d", of which there are 387, the majority of which are clinical variables (often categorical dummy variables), but some of which are outcome variables related to local relapse, distant relapse, and survival as well as to the pathology report accounting for DTC. This list will help us to identify the important factors to include ultimately in our multivariable model to predict positivity of these markers. We will also look at the structure of the variables as we may need to reformat some of them for analyses.
 
 ```{r}
 
@@ -61,7 +61,7 @@ str(d)
 
 **Summary variables:** We have a few different important summary variables which we've identified. Summary variables: final_overall_stage final_t_stage final_n_stage, final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') final_tumor_grade final_histology, demo_race_final fu_locreg_site_num (numeric values for local regional site), fu_locreg_site_char (character values for local regional site), fu_dist_site_num (numeric values for distant site), fu_dist_site_char (character values for distant site), censor_date (most recent fu_date_to among patients who are alive without local or distant progression).
 
-**Limiting from the overall cohort (184) to the ctDNA cohort**: We know that this data merge contains 184 individuals (as this was the overall cohort of individuals that were screened for the CLEVER interventional study on SURMOUNT), but also know, from the separate ctDNA csv and the information from the Neogenomics summary data, that there were 109 individuals on whom ctDNA was assessed. We need to limit the data set "d" to this "ctDNA cohort"--we will call the ctDNA cohort "subset_data." We have an indicator variable "ctDNA_cohort" with which we can limit this subset.
+**Limiting from the overall cohort (184) to the ctDNA cohort**: We know that this dataset contains 184 individuals (as this was the overall cohort of individuals that were screened for the CLEVER interventional study on SURMOUNT). But we also know, from the separate ctDNA csv and the information from the Neogenomics summary data, that there were 109 individuals on whom ctDNA was assessed. We need to limit the data set "d" to this "ctDNA cohort"--we will call the ctDNA cohort "subset_data." We have an indicator variable "ctDNA_cohort" with which we can limit this subset.
 
 ```{r}
 
@@ -90,7 +90,7 @@ unique_count
 
 ```
 
-Now that we have the subset_data = the ctDNA cohort (n=109), we can start looking at demographics. First we will do overall, then we will do divided by ctDNA_detected. We can see, looking at the table by sample count using the ctDNA_detected variable (false = negative/ctDNA was NOT detected, true = positive/ctDNA was detected), that there were 385 negative samples, and 11 positive samples within the ctDNA cohort. Next, we will create the ctDNA_ever variable that will, by participant_id (which is the unique study ID), tell us if that participant ever had ctDNA detected.
+**Creating the ctDNA_ever positive indicator**: Now that we have the subset_data = the ctDNA cohort (n=109), we can start looking at demographics. First we will do overall, then we will do divided by ctDNA_detected. We can see, looking at the table by sample count using the ctDNA_detected variable (false = negative/ctDNA was NOT detected, true = positive/ctDNA was detected), that there were 385 negative samples, and 11 positive samples within the ctDNA cohort. Next, we will create the ctDNA_ever variable that will, by participant_id (which is the unique study ID), tell us if that participant ever had ctDNA detected.
 
 ```{r}
 #ctDNA_detected = character, ok 
@@ -120,7 +120,7 @@ subset_data |>
 
 We can see here using the summary variable ctDNA_ever that there are 100 individuals with always negative results, and 9 individuals with "ever positive" ctDNA results, which matches our original ctDNA source data.
 
-**Ever DTC Positive** Next, we will create a variable to represent whether someone ever had a DTC positive test. To do this, we will use the final result variable "dtc_ihc_result_final" which tells us, for a given sample/date, whether that DTC result was positive ("1") or negative ("0"). We see in this data set, by sample, that there are 221 negatives, and 49 positives, which aligns with our prior data and consorts.
+**Creating the Ever DTC Positive Variable** Next, we will create a variable to represent whether someone ever had a DTC positive test. To do this, we will use the final result variable "dtc_ihc_result_final" which tells us, for a given sample/date, whether that DTC result was positive ("1") or negative ("0"). We see in this data set, by sample, that there are 221 negative samples, and 49 positive samples in this dataset (accross 109 patients, 39 of whom were DTC positive), which aligns with our prior data and consorts.
 
 ```{r}
 
@@ -154,10 +154,9 @@ Looking at the number of DTC positives by unique participant, we see 70 DTC ever
 
 ## Results {#sec-results}
 
-**Sample and Testing Information:**
-In this cohort of 109 individuals who had ctDNA and DTC testing, 100 remained persistently ctDNA negative, and 70 remained persistently DTC negative--with 9 respective ctDNA positive individuals and 39 DTC positive individuals. Of 184 pts enrolled from 2016 – 2021, 121 had tissue available; 114/121 (94%) had successful WES (prior data/NeoGenomics data). 
+**Sample and Testing Information:** In this cohort of 109 individuals who had ctDNA and DTC testing on SURMOUNT (either at baseline or in follow-up), 100 remained persistently ctDNA negative, and 70 remained persistently DTC negative--with 9 respective ctDNA-positive individuals and 39 DTC-positive individuals. Of 184 pts enrolled from 2016 – 2021, 121 had tissue available; 114/121 (94%) had successful WES (prior data/NeoGenomics data).
 
-``` {r}
+```{r}
 
 #counts for ctDNA positivity 
 subset_data |>
@@ -222,12 +221,12 @@ subset_data |>
 ### Timepoint Data (# timepoints per patient)
 
 # Timepoints per patient (median, range), overall
-timepoints_per_patient <- subset_data %>%
-  group_by(participant_id) %>%
+timepoints_per_patient <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     total_timepoints = n_distinct(timepoint),  # Count distinct timepoints for each patient
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_timepoints = median(total_timepoints, na.rm = TRUE),  # Calculate median
     min_timepoints = min(total_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -236,13 +235,13 @@ timepoints_per_patient <- subset_data %>%
 timepoints_per_patient
 
 #  Timepoints of ctDNA assessment (`ctDNA_detected`)
-ctDNA_timepoints <- subset_data %>%
-  filter(!is.na(ctDNA_detected)) %>%  # Filter out NA values for ctDNA_detected
-  group_by(participant_id) %>%
+ctDNA_timepoints <- subset_data |>
+  filter(!is.na(ctDNA_detected)) |>  # Filter out NA values for ctDNA_detected
+  group_by(participant_id) |>
   summarise(
     ctDNA_timepoints = n_distinct(timepoint),  # Count distinct timepoints of ctDNA assessment
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_ctDNA_timepoints = median(ctDNA_timepoints, na.rm = TRUE),  # Calculate median
     min_ctDNA_timepoints = min(ctDNA_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -251,13 +250,13 @@ ctDNA_timepoints <- subset_data %>%
 ctDNA_timepoints
 
 #  Timepoints of DTC assessment (`dtc_ihc_results_final`)
-dtc_timepoints <- subset_data %>%
-  filter(!is.na(dtc_ihc_result_final)) %>%  # Filter out NA values for dtc_ihc_result_final
-  group_by(participant_id) %>%
+dtc_timepoints <- subset_data |>
+  filter(!is.na(dtc_ihc_result_final)) |>  # Filter out NA values for dtc_ihc_result_final
+  group_by(participant_id) |>
   summarise(
     dtc_timepoints = n_distinct(timepoint),  # Count distinct timepoints of DTC assessment
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_dtc_timepoints = median(dtc_timepoints, na.rm = TRUE),  # Calculate median
     min_dtc_timepoints = min(dtc_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -277,13 +276,12 @@ print(dtc_timepoints)
 
 
 ```
-A total of 396 plasma samples from 109 pts (median 2 timepoints each, range 1-12) have been successfully tested by RaDaR to date, with 8 failed samples across 4 unique individuals. These 4 individuals were excluded from the ctDNA cohort as they did not ultimately have succcesful ctDNA assessment. These 109 individuals had a median of 2 DTC assessment timepoints (range 1-6). 
 
-Overall, ctDNA was detected in 11 samples from 9/109 pts with a mean eVAF of 0.009% (range 0.002-0.084%). 
-Two pts were ctDNA+ at baseline (BL), and 7 became positive on surveillance. 100/109 were ctDNA- across all timepoints. 39/109 pts were DTC+, either at BL (n=26) or after (n=13). 
+**Timepoints of samples**: A total of 396 plasma samples from 109 pts (median 2 timepoints each, range 1-12) have been successfully tested by RaDaR to date, with 8 failed samples across 4 unique individuals. These 4 individuals were excluded from the ctDNA cohort as they did not ultimately have succcesful ctDNA assessment. These 109 individuals had a median of 2 DTC assessment timepoints (range 1-6).
 
+Overall, ctDNA was detected in 11 samples from 9/109 pts with a mean eVAF of 0.009% (range 0.002-0.084%). Two pts were ctDNA+ at baseline (BL), and 7 became positive on surveillance. 100/109 were ctDNA- across all timepoints. 39/109 pts were DTC+, either at BL (n=26) or after (n=13).
 
-``` {r} 
+```{r}
 # Filter and get unique participants by participant_id
 concordance_overall_unique <- subset_data |> 
   distinct(participant_id, .keep_all = TRUE) |> 
@@ -313,7 +311,7 @@ table_ctDNA_dtc <- table(unique$ctDNA_ever, unique$dtc_ever)
 print(table_ctDNA_dtc)
 ```
 
-``` {r} 
+```{r}
 #Concordance by timepoint 
 
 # Ensure that dtc_ihc_result_final is converted to TRUE/FALSE for consistency with ctDNA_detected
@@ -324,8 +322,8 @@ concordance_by_timepoint <- subset_data |>
     dtc_ihc_result_final_bool = ifelse(dtc_ihc_result_final == 1, TRUE, FALSE),
     # Create a column to determine concordance (both DTC and ctDNA being TRUE or both being FALSE)
     concordance = ifelse(dtc_ihc_result_final_bool == ctDNA_detected, "Concordant", "Discordant")
-  ) %>%
-  group_by(timepoint) %>%
+  ) |>
+  group_by(timepoint) |>
   summarise(
     total_concordant = sum(concordance == "Concordant"),
     total_discordant = sum(concordance == "Discordant"),
@@ -343,11 +341,9 @@ overall_concordance <- sum(concordance_by_timepoint$total_concordant) /
 cat("Overall Concordance Rate across all timepoints:", overall_concordance, "\n")
 #concordance, considering testing by timepoint, is 80% 
 
-``` 
+```
 
-Considering all timepoints, concordance was 63%, with higher concordance (80%) taking into account result concordance at each timepoint. Of 39 ever-DTC+ pts, 4 were ctDNA+ (of whom 3/4 recurred) and 35 remained ctDNA- (with 1/30 who recurred). 
-
-
+**Concordance of DTC and ctDNA testing**: Considering all timepoints, concordance was 63%, with higher concordance (80%) taking into account result concordance at each timepoint. Of 39 ever-DTC+ pts, 4 were ctDNA+ (of whom 3/4 recurred) and 35 remained ctDNA- (with 1/30 who recurred).
 
 **Test Characteristics**
 
@@ -360,8 +356,8 @@ Next, we will look at ctDNA and DTC test characteristics. First we will look at 
 ### DTC by ctDNA (ever positive), association between test positivity. 
 
 # link by participant id 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     dtc = first(dtc_ever),  # Get the ever dtc for each participant
     ctDNA_ever = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
@@ -380,30 +376,30 @@ print(chisq_test)
 
 
 
-##### Test stuff (#s and such of tests)
+##### Tests (#s and such of tests)
 
 #number of tests (ctDNA)
 library(dplyr)
 
 # Assuming the status variable is named `ctDNA_detected` in d, and then in subset 
-status_summary_d <- d %>%
-  group_by(ctDNA_detected) %>%
+status_summary_d <- d |>
+  group_by(ctDNA_detected) |>
   summarise(total_samples = n(), .groups = "drop")
 
 # Print the summary -- we've got 385 FALSE, 8 FAILS, 11 TRUES 
 print(status_summary_d)
 
 #looking at the number of Fails by unique participant_id
-fail_count <- d %>%
-  filter(ctDNA_detected == "Fail") %>%   # Filter for rows where status is "FAIL"
-  distinct(participant_id) %>%          # Get unique participant IDs
+fail_count <- d |>
+  filter(ctDNA_detected == "Fail") |>   # Filter for rows where status is "FAIL"
+  distinct(participant_id) |>          # Get unique participant IDs
   summarise(total_fails = n())          # Count unique participant IDs
 
 # Print the result -- 4 individuals with FAIL results, which is what we got in the consort  
 print(fail_count)
-fail_count <- subset_data %>%
-  filter(ctDNA_detected == "Fail") %>%   # Filter for rows where status is "FAIL"
-  distinct(participant_id) %>%          # Get unique participant IDs
+fail_count <- subset_data |>
+  filter(ctDNA_detected == "Fail") |>   # Filter for rows where status is "FAIL"
+  distinct(participant_id) |>          # Get unique participant IDs
   summarise(total_fails = n())          # Count unique participant IDs
 
 # Print the result -- none of the fails were pulled into the ctDNA cohort  
@@ -413,8 +409,8 @@ print(fail_count)
 
 unique(subset_data$dtc_ihc_result_final) #NA, 0, and 1 
 
-status_summary_subset <- subset_data %>%
-  group_by(dtc_ihc_result_final) %>%
+status_summary_subset <- subset_data |>
+  group_by(dtc_ihc_result_final) |>
   summarise(total_samples = n(), .groups = "drop")
 
 # Print the summary -- we've got 221 negatives, 49 positives, 128 NAs, across 39 patients (positive) and 70 patients (negative)  
@@ -422,8 +418,8 @@ status_summary_subset <- subset_data %>%
 print(status_summary_subset)
 
 ### looking at NAs -- all of them have FALSE (so i think these are all the ones that had ctDNA timepoints )
-na_participants_dtc <- subset_data %>%
-  filter(is.na(dtc_ihc_result_final)) %>%
+na_participants_dtc <- subset_data |>
+  filter(is.na(dtc_ihc_result_final)) |>
   select(participant_id, dtc_ihc_result_final, FINAL_RESULT, ORIG_RSLT_DTC, ctDNA_detected, timepoint)
 
 # Print the list of participant IDs with NA in `dtc_ihc_result_final`-- they all have FALSE ctDNA results, so these are the ctDNA timepoints
@@ -440,8 +436,8 @@ print(unique_timepoints)
 names(subset_data) #use eVAF
 
 # Calculate the median and range (min and max) for `eVAF` as percentages for participants with `ctDNA_detected == TRUE`
-eVAF_range_ctDNA_detected_percent <- subset_data %>%
-  filter(ctDNA_detected == TRUE) %>%   # Filter for those with ctDNA detected
+eVAF_range_ctDNA_detected_percent <- subset_data |>
+  filter(ctDNA_detected == TRUE) |>   # Filter for those with ctDNA detected
   summarise(
     median_eVAF_percent = median(eVAF, na.rm = TRUE) * 100,  # Convert median to percentage
     min_eVAF_percent = min(eVAF, na.rm = TRUE) * 100,        # Convert minimum to percentage
@@ -455,8 +451,8 @@ print(eVAF_range_ctDNA_detected_percent)
 names(subset_data) #use dtc_ihc_summary_count_final  
 
 # Calculate the median and range (min and max) for `eVAF` as percentages for participants with `ctDNA_detected == TRUE`
-dtc_count <- subset_data %>%
-  filter(dtc_ihc_result_final == 1) %>%   # Filter for those with dtcs detected 
+dtc_count <- subset_data |>
+  filter(dtc_ihc_result_final == 1) |>   # Filter for those with dtcs detected 
   summarise(
     median_dtc_count = median(dtc_ihc_summary_count_final, na.rm = TRUE), 
     min_dtc_count = min(dtc_ihc_summary_count_final, na.rm = TRUE),        
@@ -470,12 +466,12 @@ print(dtc_count)
 #### Number of timepoints we see 
 
 # Timepoints per patient (median, range)
-timepoints_per_patient <- subset_data %>%
-  group_by(participant_id) %>%
+timepoints_per_patient <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     total_timepoints = n_distinct(timepoint),  # Count distinct timepoints for each patient
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_timepoints = median(total_timepoints, na.rm = TRUE),  # Calculate median
     min_timepoints = min(total_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -483,13 +479,13 @@ timepoints_per_patient <- subset_data %>%
   )
 
 #  Timepoints of ctDNA assessment (`ctDNA_detected`)
-ctDNA_timepoints <- subset_data %>%
-  filter(!is.na(ctDNA_detected)) %>%  # Filter out NA values for ctDNA_detected
-  group_by(participant_id) %>%
+ctDNA_timepoints <- subset_data |>
+  filter(!is.na(ctDNA_detected)) |>  # Filter out NA values for ctDNA_detected
+  group_by(participant_id) |>
   summarise(
     ctDNA_timepoints = n_distinct(timepoint),  # Count distinct timepoints of ctDNA assessment
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_ctDNA_timepoints = median(ctDNA_timepoints, na.rm = TRUE),  # Calculate median
     min_ctDNA_timepoints = min(ctDNA_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -497,13 +493,13 @@ ctDNA_timepoints <- subset_data %>%
   )
 
 #  Timepoints of DTC assessment (`dtc_ihc_results_final`)
-dtc_timepoints <- subset_data %>%
-  filter(!is.na(dtc_ihc_result_final)) %>%  # Filter out NA values for dtc_ihc_result_final
-  group_by(participant_id) %>%
+dtc_timepoints <- subset_data |>
+  filter(!is.na(dtc_ihc_result_final)) |>  # Filter out NA values for dtc_ihc_result_final
+  group_by(participant_id) |>
   summarise(
     dtc_timepoints = n_distinct(timepoint),  # Count distinct timepoints of DTC assessment
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(
     median_dtc_timepoints = median(dtc_timepoints, na.rm = TRUE),  # Calculate median
     min_dtc_timepoints = min(dtc_timepoints, na.rm = TRUE),        # Calculate minimum
@@ -530,9 +526,9 @@ print(unique_timepoints)
 trial_timepoints <- c("CLEVER-Baseline", "EOO", "C3", "C6", "C12", "6M F/U", "12M F/U", "18M F/U", "24M F/U", "30M F/U", "36M F/U")
 
 # Count the number of samples by timepoint (for specific clinical trial timepoints)
-samples_by_trial_timepoint <- subset_data %>%
-  filter(timepoint %in% trial_timepoints) %>%  # Filter for relevant timepoints
-  group_by(timepoint) %>%                      # Group by timepoint
+samples_by_trial_timepoint <- subset_data |>
+  filter(timepoint %in% trial_timepoints) |>  # Filter for relevant timepoints
+  group_by(timepoint) |>                      # Group by timepoint
   summarise(
     total_samples = n_distinct(participant_id),  # Count distinct participant_ids (samples)
     .groups = "drop"  # Remove grouping after summarizing
@@ -543,9 +539,9 @@ print(samples_by_trial_timepoint) #total samples on trial (ctDNA and dtC)
 
 #### ctDNA on trial 
 
-ctDNA_samples_by_timepoint <- subset_data %>%
-  filter(timepoint %in% trial_timepoints, !is.na(ctDNA_detected)) %>%  # Filter for relevant timepoints and ctDNA detected
-  group_by(timepoint) %>%                      # Group by timepoint
+ctDNA_samples_by_timepoint <- subset_data |>
+  filter(timepoint %in% trial_timepoints, !is.na(ctDNA_detected)) |>  # Filter for relevant timepoints and ctDNA detected
+  group_by(timepoint) |>                      # Group by timepoint
   summarise(
     total_samples_ctDNA = n_distinct(participant_id),  # Count distinct participant_ids (ctDNA samples)
     .groups = "drop"  # Remove grouping after summarizing
@@ -557,9 +553,9 @@ print(ctDNA_samples_by_timepoint)
 
 ##### DTC by trial timepoint 
 # Count the number of DTC samples by timepoint (for specific clinical trial timepoints)
-dtc_samples_by_timepoint <- subset_data %>%
-  filter(timepoint %in% trial_timepoints, !is.na(dtc_ihc_result_final)) %>%  # Filter for relevant timepoints and DTC results
-  group_by(timepoint) %>%                      # Group by timepoint
+dtc_samples_by_timepoint <- subset_data |>
+  filter(timepoint %in% trial_timepoints, !is.na(dtc_ihc_result_final)) |>  # Filter for relevant timepoints and DTC results
+  group_by(timepoint) |>                      # Group by timepoint
   summarise(
     total_samples_dtc = n_distinct(participant_id),  # Count distinct participant_ids (DTC samples)
     .groups = "drop"  # Remove grouping after summarizing
@@ -572,9 +568,9 @@ print(dtc_samples_by_timepoint)
 print(unique_timepoints) 
 surmount_timepoints <- c("SURMOUNT-Baseline", "Year 1 Follow Up", "Year 2 Follow Up", "Year 3 Follow Up", "Year 4 Follow Up", "Long Term FU 1", "Long Term FU 2") 
 
-ctDNA_surmount <- subset_data %>%
-  filter(timepoint %in% surmount_timepoints, !is.na(ctDNA_detected)) %>%  # Filter for relevant timepoints and ctDNA detected
-  group_by(timepoint) %>%                      # Group by timepoint
+ctDNA_surmount <- subset_data |>
+  filter(timepoint %in% surmount_timepoints, !is.na(ctDNA_detected)) |>  # Filter for relevant timepoints and ctDNA detected
+  group_by(timepoint) |>                      # Group by timepoint
   summarise(
     total_samples_ctDNA = n_distinct(participant_id),  # Count distinct participant_ids (ctDNA samples)
     .groups = "drop"  # Remove grouping after summarizing
@@ -586,9 +582,9 @@ print(ctDNA_surmount)
 
 ### number of DTC timepoints on surmount 
 # Count the number of DTC samples by timepoint 
-dtc_timepoint_surmount <- subset_data %>%
-  filter(timepoint %in% surmount_timepoints, !is.na(dtc_ihc_result_final)) %>%  # Filter for relevant timepoints and DTC results
-  group_by(timepoint) %>%                      # Group by timepoint
+dtc_timepoint_surmount <- subset_data |>
+  filter(timepoint %in% surmount_timepoints, !is.na(dtc_ihc_result_final)) |>  # Filter for relevant timepoints and DTC results
+  group_by(timepoint) |>                      # Group by timepoint
   summarise(
     total_samples_dtc = n_distinct(participant_id),  # Count distinct participant_ids (DTC samples)
     .groups = "drop"  # Remove grouping after summarizing
@@ -600,14 +596,14 @@ print(dtc_timepoint_surmount)
 
 #### positivity by timepoint -- ctDNA 
 
-ctDNA_pos_rate_by_timepoint <- subset_data %>%
-  filter(!is.na(ctDNA_detected)) %>%  # Ensure we are considering only non-missing ctDNA_detected values
-  group_by(timepoint, participant_id) %>%  # Group by timepoint and participant
+ctDNA_pos_rate_by_timepoint <- subset_data |>
+  filter(!is.na(ctDNA_detected)) |>  # Ensure we are considering only non-missing ctDNA_detected values
+  group_by(timepoint, participant_id) |>  # Group by timepoint and participant
   summarise(
     ctDNA_pos = max(ctDNA_detected == TRUE),  # If any value is TRUE, participant is ctDNA positive at that timepoint
     .groups = "drop"
-  ) %>%
-  group_by(timepoint) %>%  # Group again by timepoint to calculate the positivity rate
+  ) |>
+  group_by(timepoint) |>  # Group again by timepoint to calculate the positivity rate
   summarise(
     positivity_rate = mean(ctDNA_pos),  # Calculate the positivity rate for each timepoint
     total_samples = n_distinct(participant_id),  # Count the number of distinct participants
@@ -618,8 +614,8 @@ ctDNA_pos_rate_by_timepoint <- subset_data %>%
 print(ctDNA_pos_rate_by_timepoint)
 
 # Calculate cumulative ctDNA positivity rate by timepoint
-ctDNA_pos_rate_cumulative <- ctDNA_pos_rate_by_timepoint %>%
-  arrange(timepoint) %>%  # Ensure the data is sorted by timepoint
+ctDNA_pos_rate_cumulative <- ctDNA_pos_rate_by_timepoint |>
+  arrange(timepoint) |>  # Ensure the data is sorted by timepoint
   mutate(
     cumulative_pos_rate = cumsum(positivity_rate * total_samples) / cumsum(total_samples)  # Cumulative positivity rate
   )
@@ -631,16 +627,16 @@ print(ctDNA_pos_rate_cumulative)
 library(dplyr)
 
 # Calculate ctDNA positivity rate by participant
-ctDNA_pos_rate <- subset_data %>%
-  filter(!is.na(ctDNA_detected)) %>%  # Exclude missing ctDNA results
-  group_by(participant_id) %>%  # Group by participant
+ctDNA_pos_rate <- subset_data |>
+  filter(!is.na(ctDNA_detected)) |>  # Exclude missing ctDNA results
+  group_by(participant_id) |>  # Group by participant
   summarise(
     ctDNA_pos = max(ctDNA_detected == TRUE),  # If any value is TRUE, participant is ctDNA positive
     .groups = "drop"
   )
 
 # Calculate cumulative positivity rate
-ctDNA_pos_rate_cumulative <- ctDNA_pos_rate %>%
+ctDNA_pos_rate_cumulative <- ctDNA_pos_rate |>
   summarise(
     total_pos = sum(ctDNA_pos),  # Total number of ctDNA positive participants
     total_samples = n(),  # Total number of participants
@@ -652,13 +648,13 @@ print(ctDNA_pos_rate_cumulative)
 
 
 # Count the number of positive ctDNA samples and total samples
-ctDNA_pos_vs_total <- subset_data %>%
-  filter(!is.na(ctDNA_detected)) %>%  # Exclude missing ctDNA results
+ctDNA_pos_vs_total <- subset_data |>
+  filter(!is.na(ctDNA_detected)) |>  # Exclude missing ctDNA results
   summarise(
     total_samples = n(),  # Total number of ctDNA samples
     positive_samples = sum(ctDNA_detected == TRUE),  # Count of positive ctDNA samples
     .groups = "drop"
-  ) %>%
+  ) |>
   mutate(
     positivity_rate = positive_samples / total_samples  # Proportion of positive ctDNA samples
   )
@@ -670,16 +666,16 @@ print(ctDNA_pos_vs_total)
 #### cumulative positivity DTC 
 
 # Calculate ctDNA positivity rate by participant
-DTC_pos_rate <- subset_data %>%
-  filter(!is.na(dtc_ihc_result_final)) %>%  # Exclude missing ctDNA results
-  group_by(participant_id) %>%  # Group by participant
+DTC_pos_rate <- subset_data |>
+  filter(!is.na(dtc_ihc_result_final)) |>  # Exclude missing ctDNA results
+  group_by(participant_id) |>  # Group by participant
   summarise(
     dtc = max(dtc_ihc_result_final == 1),  # If any value is TRUE, participant is ctDNA positive
     .groups = "drop"
   )
 
 # Calculate cumulative positivity rate
-DTC_pos_rate_cumulative <- DTC_pos_rate %>%
+DTC_pos_rate_cumulative <- DTC_pos_rate |>
   summarise(
     total_pos = sum(dtc),  # Total number of ctDNA positive participants
     total_samples = n(),  # Total number of participants
@@ -691,13 +687,13 @@ print(DTC_pos_rate_cumulative)
 
 
 # Count the number of positive ctDNA samples and total samples
-dtc_pos_vs_total <- subset_data %>%
-  filter(!is.na(dtc_ihc_result_final)) %>%  # Exclude missing ctDNA results
+dtc_pos_vs_total <- subset_data |>
+  filter(!is.na(dtc_ihc_result_final)) |>  # Exclude missing ctDNA results
   summarise(
     total_samples = n(),  # Total number of ctDNA samples
     positive_samples = sum(dtc_ihc_result_final == 1),  # Count of positive ctDNA samples
     .groups = "drop"
-  ) %>%
+  ) |>
   mutate(
     positivity_rate = positive_samples / total_samples  # Proportion of positive ctDNA samples
   )
@@ -708,6 +704,8 @@ print(dtc_pos_vs_total)
 
 ```
 
+We see the distribution of test samples by timepoint, and can see that the most samples--and the highest rate of positivity-- occurred at SURMOUNT-baseline, but that more samples became positive with subsequent testing and that the cumulative positivity rate rose with additional timepoints--for both DTC and ctDNA assessment.
+
 **Test Characteristics of ctDNA assay**: Next we will look at the sensitivity and specificity of the ctDNA assay.
 
 ```{r}
@@ -715,16 +713,17 @@ print(dtc_pos_vs_total)
 #trying to do ctDNA 2x2 with ever relapsed on a patient level 
 
 library(dplyr)
+library(knitr)
 
 #create ever_relapsed variable 
-subset_data <- subset_data %>%
+subset_data <- subset_data |>
   mutate(ever_relapsed = ifelse(fu_locreg_prog == 1 | fu_dist_prog == 1, "Yes", "No"))
 
 
 # Exclude participants with all NA for `ctDNA_ever` or `ever_relapsed`
-summarized_data <- subset_data %>%
-  filter(!is.na(ctDNA_ever) | !is.na(ever_relapsed)) %>% # Keep rows with at least one non-NA value
-  group_by(participant_id) %>%
+summarized_data <- subset_data |>
+  filter(!is.na(ctDNA_ever) | !is.na(ever_relapsed)) |> # Keep rows with at least one non-NA value
+  group_by(participant_id) |>
   summarize(
     ctDNA_ever = max(ctDNA_ever, na.rm = TRUE),       
     ever_relapsed = max(ever_relapsed, na.rm = TRUE)  
@@ -755,7 +754,6 @@ performance_table <- data.frame(
 print(performance_table)
 
 #Format the table for better readability
-library(knitr)
 kable(performance_table, digits = 2, col.names = c("Metric", "Value"))
 
 ```
@@ -768,15 +766,15 @@ This ctDNA assay has high specificity (99%), with a high positive predictive val
 library(dplyr)
 
 # Total unique DTC+ patients
-total_dtc_plus <- subset_data %>%
-  filter(dtc_ihc_result_final == 1) %>%
-  distinct(participant_id) %>%
+total_dtc_plus <- subset_data |>
+  filter(dtc_ihc_result_final == 1) |>
+  distinct(participant_id) |>
   nrow()
 
 # Unique DTC+ patients who went on trial (those who have a trial ID fu_trial_pid)
-dtc_plus_trial <- subset_data %>%
-  filter(dtc_ihc_result_final == 1 & !is.na(fu_trial_pid)) %>%
-  distinct(participant_id) %>%
+dtc_plus_trial <- subset_data |>
+  filter(dtc_ihc_result_final == 1 & !is.na(fu_trial_pid)) |>
+  distinct(participant_id) |>
   nrow()
 
 # Proportion of DTC+ patients who went on trial
@@ -791,9 +789,9 @@ cat("Proportion of DTC+ patients who went on trial:", proportion_trial, "\n")
 
 
 # Exclude participants with all NA for `dtc_ever` or `ever_relapsed`
-summarized_data <- subset_data %>%
-  filter(!is.na(dtc_ever) | !is.na(ever_relapsed)) %>% # Keep rows with at least one non-NA value
-  group_by(participant_id) %>%
+summarized_data <- subset_data |>
+  filter(!is.na(dtc_ever) | !is.na(ever_relapsed)) |> # Keep rows with at least one non-NA value
+  group_by(participant_id) |>
   summarize(
     dtc_ever = max(dtc_ever, na.rm = TRUE),       
     ever_relapsed = max(ever_relapsed, na.rm = TRUE)  
@@ -831,9 +829,61 @@ kable(performance_table, digits = 2, col.names = c("Metric", "Value"))
 
 All of the 39 individuals who were DTC positive went onto an interventional treatment trial aimed at eliminating the presence of the DTCs. This is different from the workflow for ctDNA assessment, which occurred retrospectively--sometimes several years after testing--and was not the basis for any trial/intervention decision-making. It is therefore somewhat challenging to interpret the sensitivity and specificity of the DTC test, as relapse is the outcome and all of these patients are receiving an intervention aimed at eliminating the presence of the DTCs and thereby preventing relapse. The intervention after DTC assessment explains in part the low positive predictive value and the low sensitivity of the test. However, the high negative predictive value of 0.86 in the cohort--which is looking only at those who remained DTC negative and their outcomes (ie. those who did NOT get an intervention) suggests that repeat negative DTC testing (ie always remaining DTC negative on all testing) is valuable in predicting a good outcome (ie. NO relapse during follow-up).
 
- **Table 1**
- 
- Next we will build our Table 1, looking at important clinical and demographic variables in this ctDNA cohort. 
+**Associations with Relapse**
+
+```{r}
+
+## ctDNA association with relapse ## 
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    dtc = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs dtc_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$dtc)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results. ctDNA has a strong association with relapse (p<0.0001). 
+print(contingency_table)
+print(chisq_test)  
+
+
+#DTC association with relapse## 
+
+# link by participant id 
+subset_data_by_id <- subset_data %>%
+  group_by(participant_id) %>%
+  summarise(
+    ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
+    dtc = first(dtc_ever),        # Get the dtc_ever status for each participant
+    .groups = "drop"
+  )
+
+# Create a contingency table of ever_relapsed vs dtc_ever
+contingency_table <- table(subset_data_by_id$ever_relapsed, subset_data_by_id$dtc)
+
+# Perform the Chi-squared test
+chisq_test <- chisq.test(contingency_table)
+
+# Print the contingency table and Chi-squared test results. Less strong of an association with relapse (p = 0.774) 
+print(contingency_table)
+print(chisq_test)  
+
+
+
+```
+
+Looking at how our two biomarkers are associated with relapse using univariable tests of association, we can see that ctDNA positivity is strongly associated with relapse, but DTC positivity is not. It is important to keep in mind that DTC positivity was the basis for enrollment onto interventional clinical trials that were aimed at eliminating DTCs and preventing relapse (and all DTC positive individuals in this cohort enrolled on interventional trials). This likely confounds our ability to measure the association of DTC positivity with relapse. ctDNA assessment, meanwhile, was performed retrospectively and not used for clinical decision-making.
+
+**Demographics and Clinical Factor Assessment: Univariable associations by ctDNA status**
+
+Next we will start to build our Table 1, looking at important clinical and demographic variables in this ctDNA cohort. To start, we will look at univariable tests of association while looking at each variable (using chi-squared tests of association for categorical variables and t-tests for continuous variables).
 
 ```{r}
 
@@ -892,15 +942,14 @@ age_summary <- subset_data |>
 print(age_summary)
 ```
 
-
-``` {r} 
+```{r}
 
 ##### Race: demo_race_final
 
 # Get the count of unique participant_ids for each category in demo_race_final
-race_counts_unique_percent <- subset_data %>%
-  group_by(demo_race_final) %>%
-  summarise(unique_participants = n_distinct(participant_id)) %>%
+race_counts_unique_percent <- subset_data |>
+  group_by(demo_race_final) |>
+  summarise(unique_participants = n_distinct(participant_id)) |>
   mutate(percent = unique_participants / sum(unique_participants) * 100)
 
 # View the result
@@ -909,8 +958,8 @@ print(race_counts_unique_percent)
 
 
 # Count distinct participant_ids by ctDNA_ever and demo_race_final
-count_distinct_participants <- subset_data %>%
-  group_by(demo_race_final, ctDNA_ever) %>%
+count_distinct_participants <- subset_data |>
+  group_by(demo_race_final, ctDNA_ever) |>
   summarise(distinct_participant_count = n_distinct(participant_id), .groups = "drop")
 
 # Print the result
@@ -918,8 +967,8 @@ count_distinct_participants
 
 
 # Step 1: Summarize by unique participant_id
-summarized_data <- subset_data %>%
-  group_by(participant_id) %>%
+summarized_data <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ctDNA_ever = first(ctDNA_ever),   # Taking the first observed value of ctDNA_ever for each participant
     demo_race_final = first(demo_race_final),  # Taking the first observed value of demo_race_final for each participant
@@ -939,8 +988,8 @@ chisq_test
 #####receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
 
 # Breakdown of final_receptor_group by unique participant_id
-receptor_status_by_participant <- subset_data %>%
-  group_by(participant_id) %>%
+receptor_status_by_participant <- subset_data |>
+  group_by(participant_id) |>
   summarise(final_receptor_group = first(final_receptor_group),  # Or choose the most frequent group if needed
             .groups = "drop")
 
@@ -948,8 +997,8 @@ receptor_status_by_participant <- subset_data %>%
 table(receptor_status_by_participant$final_receptor_group)
 
 # Summarizing data by participant_id, final_receptor_group, and ctDNA_ever
-receptor_ctDNA_status <- subset_data %>%
-  group_by(participant_id) %>%
+receptor_ctDNA_status <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     final_receptor_group = first(final_receptor_group),  # Or the most frequent if needed
     ctDNA_ever = first(ctDNA_ever),  # Taking the first observed value for ctDNA_ever
@@ -971,8 +1020,8 @@ chisq_test
 #inclusion criteria inc_dx_crit___1  = TNBC  (This has been confirmed with the study team)
 #inc_dx_crit_list___1  
 
-TNBC_ctDNA_status <- subset_data %>%
-  group_by(participant_id) %>%
+TNBC_ctDNA_status <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     inc_dx_crit_list___1 = first(inc_dx_crit_list___1),  # Or the most frequent if needed
     ctDNA_ever = first(ctDNA_ever),  # Taking the first observed value for ctDNA_ever
@@ -1002,8 +1051,8 @@ subset_data <- subset_data |>
 # View the new HR_status variable
 table(subset_data$HR_status)
 
-HR_status_by_participant <- subset_data %>%
-  group_by(participant_id) %>%
+HR_status_by_participant <- subset_data |>
+  group_by(participant_id) |>
   summarise(HR_status = first(HR_status),  # Or use mode() if you have multiple rows per participant
             .groups = "drop")
 
@@ -1011,8 +1060,8 @@ HR_status_by_participant <- subset_data %>%
 table(HR_status_by_participant$HR_status) #aligns with final receptor status (ultimately 60 HR+, 49 HR-)
 
 # Summarize ctDNA_detected status by HR_status, for each unique participant_id
-summary_data <- subset_data %>%
-  group_by(participant_id) %>%
+summary_data <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     HR_status = first(HR_status),  # Get the HR_status for the participant
     ctDNA_status = first(ctDNA_ever),  # Get the ctDNA_detected status for the participant
@@ -1029,9 +1078,9 @@ chisq_test
 
 ###tumor grade: final_tumor_grade --> NOTE: 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not reported  
 # Exclude rows where final_tumor_grade is 3 (not reported), want to exclude the 2 pts who had grade not reported 
-summary_data <- subset_data %>%
-  filter(final_tumor_grade != 3) %>%  # Exclude grade == 3
-  group_by(participant_id) %>%
+summary_data <- subset_data |>
+  filter(final_tumor_grade != 3) |>  # Exclude grade == 3
+  group_by(participant_id) |>
   summarise(
     grade = first(final_tumor_grade),  # Get the final_tumor_grade for each participant
     ctDNA_ever = first(ctDNA_ever),    # Get the ctDNA_ever status for each participant
@@ -1054,16 +1103,16 @@ print(chisq_test)
 #people have different combinations of histology (1-15)
 table(subset_data$participant_id, subset_data$final_histology)
   
-  histology_summary <- subset_data %>%
-    distinct(participant_id, final_histology) %>%  # Get unique participant-histology combinations
-    group_by(final_histology) %>%  # Group by histology type
+  histology_summary <- subset_data |>
+    distinct(participant_id, final_histology) |>  # Get unique participant-histology combinations
+    group_by(final_histology) |>  # Group by histology type
     summarise(count = n())  # Count the number of participants per histology type
   
   # View the summary table
   print(histology_summary) #the different combinations add up to 109. There are a decent number who had both ductal and lobular histology 
   
   #trying to create Ductal, lobular, both, or other variables --> histology_category 
-  subset_data <- subset_data %>%
+  subset_data <- subset_data |>
     mutate(histology_category = case_when(
       grepl("3", as.character(final_histology)) & grepl("14", as.character(final_histology)) ~ "Both Ductal and Lobular",  # Both Ductal and Lobular
       grepl("3", as.character(final_histology)) ~ "Ductal",  # Ductal
@@ -1072,8 +1121,8 @@ table(subset_data$participant_id, subset_data$final_histology)
     ))
   
   # Count the number of participants in each histology category
-  histology_counts <- subset_data %>%
-    group_by(histology_category) %>%
+  histology_counts <- subset_data |>
+    group_by(histology_category) |>
     summarise(count = n_distinct(participant_id))  # Count distinct participants
   
   # View the counts -- adds up to 109! 
@@ -1081,9 +1130,9 @@ table(subset_data$participant_id, subset_data$final_histology)
   
   #contingency table 
   library(tidyr)
-  contingency_table <- subset_data %>%
-    distinct(participant_id, histology_category, ctDNA_ever) %>%  # Ensure each patient is counted once
-    count(histology_category, ctDNA_ever) %>%
+  contingency_table <- subset_data |>
+    distinct(participant_id, histology_category, ctDNA_ever) |>  # Ensure each patient is counted once
+    count(histology_category, ctDNA_ever) |>
     pivot_wider(names_from = ctDNA_ever, values_from = n, values_fill = list(n = 0))  # Pivot the table to get ctDNA_ever as columns
   
   # 3. Perform the Chi-squared test of independence
@@ -1101,17 +1150,17 @@ table(subset_data$participant_id, subset_data$final_histology)
 
 table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 (No, N1, N2, N3)
   
-nodal_summary <- subset_data %>%
-    distinct(participant_id, final_n_stage) %>%  # Get unique participant-stage combinations
-    group_by(final_n_stage) %>%  # Group by stage
+nodal_summary <- subset_data |>
+    distinct(participant_id, final_n_stage) |>  # Get unique participant-stage combinations
+    group_by(final_n_stage) |>  # Group by stage
     summarise(count = n())  # Count the number of participants per histology type
   
 #View the summary table --adds up to 109, 46 = pN0 63 = pN1 
   print(nodal_summary)
   
-  subset_data_by_id <- subset_data %>%
-    filter(final_n_stage %in% c(0, 1, 2, 3)) %>%  # Include only relevant nodal stages
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data |>
+    filter(final_n_stage %in% c(0, 1, 2, 3)) |>  # Include only relevant nodal stages
+    group_by(participant_id) |>
     summarise(
       nodal_status = first(final_n_stage),  # Use final_n_stage as nodal_status for each participant
       ctDNA_ever = first(ctDNA_ever),       # Get ctDNA_ever status for each participant
@@ -1132,8 +1181,8 @@ nodal_summary <- subset_data %>%
   
   
   #### Node positive versus node negative: Using the final n stage to create a Node - vs node + variable from this summary indicator variable 
-  subset_data_by_id <- subset_data %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data |>
+    group_by(participant_id) |>
     summarise(
       node_status = ifelse(first(final_n_stage) == 0, "Node Negative", "Node Positive"),  # Node negative if 0, positive otherwise
       ctDNA_ever = first(ctDNA_ever),  # Get ctDNA_ever status for each participant
@@ -1141,8 +1190,8 @@ nodal_summary <- subset_data %>%
     )
   
   #adding node_status to subset_data 
- subset_data <- subset_data %>%
-  left_join(subset_data_by_id %>% select(participant_id, node_status), by = "participant_id")
+ subset_data <- subset_data |>
+  left_join(subset_data_by_id |> select(participant_id, node_status), by = "participant_id")
   
   
   #Create a contingency table of node_status vs ctDNA_ever
@@ -1160,9 +1209,9 @@ nodal_summary <- subset_data %>%
   
   table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (99 = pTx, cannot evaluate) so can proceed with this 
   
-  t_summary <- subset_data %>%
-    distinct(participant_id, final_t_stage) %>%  # Get unique participant-stage combinations
-    group_by(final_t_stage) %>%  # Group by stage
+  t_summary <- subset_data |>
+    distinct(participant_id, final_t_stage) |>  # Get unique participant-stage combinations
+    group_by(final_t_stage) |>  # Group by stage
     summarise(count = n())  # Count the number of participants per histology type
   
   # View the summary table --adds up to 109, most are pN0 or cN0, a good number are pN1 or cN1, or pN2  
@@ -1170,16 +1219,16 @@ nodal_summary <- subset_data %>%
   
   
   #for our T stage table, will use T1 vs T2 or greater to simplify, and we want to exclude 99 (the pTx). We will create "final_t_stage_combined" to represent this.  
-  subset_data_clean <- subset_data %>%
+  subset_data_clean <- subset_data |>
     filter(final_t_stage != 99, ctDNA_ever != 99)
   
   # Combine final_t_stage into T1 vs. T2 or greater
-  subset_data_clean <- subset_data_clean %>%
+  subset_data_clean <- subset_data_clean |>
     mutate(final_t_stage_combined = ifelse(final_t_stage == 1, "T1", "T2 or greater"))
   
   # Summarize the data by participant_id after creating the new combined t_stage
-  subset_data_by_id <- subset_data_clean %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data_clean |>
+    group_by(participant_id) |>
     summarise(
       final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
       ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1198,11 +1247,11 @@ nodal_summary <- subset_data %>%
 #### I looked at a different cut-off for T stage stats using T3 or greater as cutoff and didn't see any significant difference so am not using this for the table. 
   
   #exclude 99 (the pTx) 
-  subset_data_clean <- subset_data %>%
+  subset_data_clean <- subset_data |>
     filter(final_t_stage != 99, ctDNA_ever != 99)
   
   # Combine final_t_stage into T1/T2 or T3 or greater
-  subset_data_clean <- subset_data_clean %>%
+  subset_data_clean <- subset_data_clean |>
     mutate(final_t_stage_combined = case_when(
       final_t_stage == 1 | final_t_stage == 2 ~ "T1 or T2",  # Group T1 and T2 together
       final_t_stage >= 3 ~ "T3 or greater",  # Group T3 and higher as a separate category
@@ -1211,8 +1260,8 @@ nodal_summary <- subset_data %>%
   
   
   # Summarize the data by participant_id after creating the new combined t_stage
-  subset_data_by_id <- subset_data_clean %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data_clean |>
+    group_by(participant_id) |>
     summarise(
       final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
       ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1234,21 +1283,21 @@ nodal_summary <- subset_data %>%
 
   table(subset_data$final_overall_stage) #we have values in 1,2,3,4, and 99 so can proceed with this 
   
-  stage_summary <- subset_data %>%
-    distinct(participant_id, final_overall_stage) %>%  # Get unique participant-stage combinations
-    group_by(final_overall_stage) %>%  # Group by stage
+  stage_summary <- subset_data |>
+    distinct(participant_id, final_overall_stage) |>  # Get unique participant-stage combinations
+    group_by(final_overall_stage) |>  # Group by stage
     summarise(count = n())  # Count the number of participants per histology type
   
   # View the summary table --adds up to 109 (1 99), most are stage 2, some are stage I some are stage III, no stage IV (yay)
   print(stage_summary)
   
   #exclude the 99 
-  subset_data_clean <- subset_data %>%
+  subset_data_clean <- subset_data |>
     filter(final_overall_stage != 99, ctDNA_ever != 99)
   
   # Summarize the data by participant_id
-  subset_data_by_id <- subset_data_clean %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data_clean |>
+    group_by(participant_id) |>
     summarise(
       final_overall_stage = first(final_overall_stage),  # Get the final_overall_stage for each participant
       ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1271,9 +1320,9 @@ nodal_summary <- subset_data %>%
   
   table(subset_data$diag_surgery_type_1) #1= partial mastectomy/lumpectomy, 2 = mastectomy. no missingness 
   
-  surgery <- subset_data %>%
-    distinct(participant_id, diag_surgery_type_1) %>%  # Get unique participant-stage combinations
-    group_by(diag_surgery_type_1) %>%  # Group by stage
+  surgery <- subset_data |>
+    distinct(participant_id, diag_surgery_type_1) |>  # Get unique participant-stage combinations
+    group_by(diag_surgery_type_1) |>  # Group by stage
     summarise(count = n())  # Count the number of participants per histology type
   
   # View the summary table
@@ -1281,8 +1330,8 @@ nodal_summary <- subset_data %>%
   
   
   # Summarize the data by participant_id
-  subset_data_by_id <- subset_data_clean %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data_clean |>
+    group_by(participant_id) |>
     summarise(
      surgery = first(diag_surgery_type_1),  # Get the final_overall_stage for each participant
       ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1307,23 +1356,23 @@ nodal_summary <- subset_data %>%
   table(subset_data$diag_axillary_type___2_2) #a handful of axillary dissection on the second biopsy form so i think we want to combine these two 
   
   # Create a binary variable to identify participants who had axillary dissection
-  subset_data_clean <- subset_data %>%
+  subset_data_clean <- subset_data |>
     mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
   
-  subset_data <- subset_data %>%
+  subset_data <- subset_data |>
   mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
   
   # Ensure every participant has a ctDNA_ever and axillary_dissection value
   # Ensure every patient has an axillary dissection category, where 0 means no axillary dissection, and 1 means they had one
-  subset_data_clean <- subset_data %>%
+  subset_data_clean <- subset_data |>
     mutate(axillary_dissection = case_when(
       diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1 ~ 1,  # Had axillary dissection
       TRUE ~ 0  # No axillary dissection (includes missing values)
     ))
   
   # Summarize the data by participant_id, including the axillary_dissection and ctDNA_ever variables
-  subset_data_by_id <- subset_data_clean %>%
-    group_by(participant_id) %>%
+  subset_data_by_id <- subset_data_clean |>
+    group_by(participant_id) |>
     summarise(
       axillary_dissection = first(axillary_dissection),  # Get the axillary dissection status for each participant
       ctDNA_ever = first(ctDNA_ever)  # Get the ctDNA_ever status for each participant
@@ -1331,7 +1380,7 @@ nodal_summary <- subset_data %>%
   
   contingency_table <- table(subset_data_by_id$axillary_dissection, subset_data_by_id$ctDNA_ever)
   
-  subset_data <- subset_data %>%
+  subset_data <- subset_data |>
   mutate(axillary_dissection = ifelse(is.na(axillary_dissection), 0, axillary_dissection))
 table(subset_data$axillary_dissection)
   
@@ -1360,8 +1409,8 @@ radiation <- subset_data |>
 print(radiation)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     radiation = first(prtx_radiation),  # xrt for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1390,8 +1439,8 @@ chemo <- subset_data |>
 print(chemo) #3 people did not get chemo in this cohort 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     chemo = first(prtx_chemo),  # chemo for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1423,8 +1472,8 @@ nact <- subset_data |>
 print(nact) #3 people did not get chemo in this cohort 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     nact = first(diag_neoadj_chemo_1),  # NACT for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1454,8 +1503,8 @@ endo <- subset_data |>
 print(endo) #most ppl did get endo (62 of the 109)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     endo = first(prtx_endo),  # Get the final_overall_stage for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1486,8 +1535,8 @@ bonemod <- subset_data |>
 print(bonemod) #most ppl did get endo (39 got bonemod)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     bonemod = first(prtx_bonemod),  # Get bone mod status for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1509,19 +1558,19 @@ print(chisq_test)
 table(subset_data$diag_pcr_1) 
 table(subset_data$diag_pcr_2) #none recorded here so can just use diag_pcr_1 
 
-pcr <- subset_data %>%
-  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) %>%  # Convert "." to NA
-  filter(!is.na(diag_pcr_1)) %>%  # Exclude rows where diag_pcr_1 is NA
-  distinct(participant_id, diag_pcr_1) %>%
-  group_by(diag_pcr_1) %>%
+pcr <- subset_data |>
+  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) |>  # Convert "." to NA
+  filter(!is.na(diag_pcr_1)) |>  # Exclude rows where diag_pcr_1 is NA
+  distinct(participant_id, diag_pcr_1) |>
+  group_by(diag_pcr_1) |>
   summarise(count = n()) # Count the number of participants per histology type
 
 # View the summary table
 print(pcr) #this is correct bc 19 ppl got NACT, and we have 19 ppl recorded for pcr data 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     pcr = first(diag_pcr_1),  # Get pcr for each participant
     ctDNA_ever = first(ctDNA_ever)  # Get ctDNA_ever status for each participant
@@ -1544,8 +1593,8 @@ print(chisq_test)
 #local fu_locreg_prog 
 
 # Step 1: Summarize data by unique participant_id
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     fu_locreg_prog = first(fu_locreg_prog),  # Get fu_locreg_prog status for each participant
     ctDNA_ever = first(ctDNA_ever),          # Get ctDNA_ever status for each participant
@@ -1566,12 +1615,12 @@ print(chisq_test)
 ### Just want to look at site distribution here 
 
 # Summarize the distribution of fu_locreg_site_char by unique participant_id
-site_distribution <- subset_data %>%
-  group_by(participant_id) %>%
+site_distribution <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     site = first(fu_locreg_site_char),  # Get the site for each unique participant
     .groups = "drop"
-  ) %>%
+  ) |>
   count(site)  # Count the occurrences of each site
 
 # View the distribution of sites -- mostly axillary nodes. 4 of 6 axillary. 1 internal mammary. 2 supraclav. 2 ipsilateral breast 
@@ -1580,8 +1629,8 @@ print(site_distribution)
 #####distant recurrence: distant fu_dist_prog 
 
 # Step 1: Summarize data by unique participant_id
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     fu_dist_prog = first(fu_dist_prog),  # Get fu_dist_prog status for each participant
     ctDNA_ever = first(ctDNA_ever),          # Get ctDNA_ever status for each participant
@@ -1603,12 +1652,12 @@ print(chisq_test)
 #distant site fu_dist_site_num #fu_dist_site_char  -- start just looking at the locations 
 
 # Summarize the distribution of fu_dist_site_char by unique participant_id
-dist_site_distribution <- subset_data %>%
-  group_by(participant_id) %>%
+dist_site_distribution <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     site = first(fu_dist_site_char),  # Get the site for each unique participant
     .groups = "drop"
-  ) %>%
+  ) |>
   count(site)  # Count the occurrences of each site
 
 # View the distribution of sites -- Bone in 7. Liver in 3. Lung in 2. 1 intra-abdominal 
@@ -1617,8 +1666,8 @@ print(dist_site_distribution)
 ##### ANY Recurrence -- this includes either fu_locreg_prog or fu_dist_prog 
 
 # link by participant id 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
     ctDNA_ever = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
@@ -1639,8 +1688,8 @@ print(chisq_test)
 #using ever_relapsed and dtc_ever
 
 # link by participant id 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
     dtc = first(dtc_ever),        # Get the ctDNA_ever status for each participant
@@ -1658,7 +1707,7 @@ print(contingency_table)
 print(chisq_test) 
 
 # Identify participants missing data in either `ever_relapsed` or `dtc_ever`
-missing_data <- subset_data_by_id %>%
+missing_data <- subset_data_by_id |>
   filter(is.na(ever_relapsed) | is.na(dtc))
 
 # Print the IDs of participants with missing data
@@ -1666,8 +1715,8 @@ print(missing_data$participant_id) #two individuals do not have relapse data (17
 
 ### look at ever_relapsed by ctDNA 
 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
     ctDNA = first(ctDNA_ever),        # Get the ctDNA_ever status for each participant
@@ -1688,24 +1737,24 @@ print(chisq_test)
 
 table(subset_data$fu_surv)
 
-surv <- subset_data %>%
-  distinct(participant_id, fu_surv) %>%
-  group_by(fu_surv) %>%
+surv <- subset_data |>
+  distinct(participant_id, fu_surv) |>
+  group_by(fu_surv) |>
   summarise(count = n()) # Count the number of participants per histology type
 
 # View the summary table
 print(surv) #1 NA patient --> identify the NA patient below  dead = 5, alive 103. There is 1 that's an NA. 
 
-na_participant <- subset_data %>%
-  filter(is.na(fu_surv)) %>%
+na_participant <- subset_data |>
+  filter(is.na(fu_surv)) |>
   select(participant_id, fu_surv)
 
 # Print the result -- 28115-17-021  -- no follow up data for this pt looking in redcap, everyone else has some survival data in the ctDNA cohort. 
 print(na_participant)
 
 # Summarize data by unique participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     surv = first(fu_surv),          # Get survival status for each participant
     ctDNA_ever = first(ctDNA_ever),  # Get ctDNA_ever status for each participant
@@ -1725,7 +1774,9 @@ print(chisq_test)
 
 ```
 
-``` {r} 
+**DTC Demographics and Univariable tests of association:** Next we will look at the univariable tests of association by DTC status.
+
+```{r}
 
 ############### DTC Demographics ########## 
 
@@ -1753,8 +1804,8 @@ head(subset_data$age_at_diag)
 
 summary(subset_data$age_at_diag) #median 48.75 
 
-age_summary <- subset_data %>%
-  group_by(dtc_ever) %>%
+age_summary <- subset_data |>
+  group_by(dtc_ever) |>
   summarise(
     mean_age = mean(age_at_diag, na.rm = TRUE),  # Calculate mean age
     median_age = median(age_at_diag, na.rm = TRUE),  # Calculate median age
@@ -1771,8 +1822,8 @@ wilcox_test_result <- wilcox.test(age_at_diag ~ dtc_ever, data = subset_data)
 print(wilcox_test_result)
 
 #looking at range of age for the dtc pos 
-age_summary <- subset_data %>%
-  group_by(dtc_ever) %>%
+age_summary <- subset_data |>
+  group_by(dtc_ever) |>
   summarise(
     min_age = min(age_at_diag, na.rm = TRUE),  # Minimum age
     max_age = max(age_at_diag, na.rm = TRUE),  # Maximum age
@@ -1783,15 +1834,15 @@ age_summary <- subset_data %>%
 print(age_summary)
 ```
 
-```{r} 
+```{r}
 
 
 ##### Race: demo_race_final
 
 # Get the count of unique participant_ids for each category in demo_race_final
-race_counts_unique_percent <- subset_data %>%
-  group_by(demo_race_final) %>%
-  summarise(unique_participants = n_distinct(participant_id)) %>%
+race_counts_unique_percent <- subset_data |>
+  group_by(demo_race_final) |>
+  summarise(unique_participants = n_distinct(participant_id)) |>
   mutate(percent = unique_participants / sum(unique_participants) * 100)
 
 # View the result
@@ -1800,8 +1851,8 @@ print(race_counts_unique_percent)
 
 
 # Count distinct participant_ids by dtc_ever and demo_race_final
-count_distinct_participants <- subset_data %>%
-  group_by(demo_race_final, dtc_ever) %>%
+count_distinct_participants <- subset_data |>
+  group_by(demo_race_final, dtc_ever) |>
   summarise(distinct_participant_count = n_distinct(participant_id), .groups = "drop")
 
 # Print the result
@@ -1812,8 +1863,8 @@ count_distinct_participants
 library(dplyr)
 
 # Step 1: Summarize by unique participant_id
-summarized_data <- subset_data %>%
-  group_by(participant_id) %>%
+summarized_data <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     dtc_ever = first(dtc_ever),   # Taking the first observed value of dtc_ever for each participant
     demo_race_final = first(demo_race_final),  # Taking the first observed value of demo_race_final for each participant
@@ -1834,8 +1885,8 @@ chisq_test
 #receptor status final_receptor_group (1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+') 
 
 # Breakdown of final_receptor_group by unique participant_id
-receptor_status_by_participant <- subset_data %>%
-  group_by(participant_id) %>%
+receptor_status_by_participant <- subset_data |>
+  group_by(participant_id) |>
   summarise(final_receptor_group = first(final_receptor_group),  # Or choose the most frequent group if needed
             .groups = "drop")
 
@@ -1843,8 +1894,8 @@ receptor_status_by_participant <- subset_data %>%
 table(receptor_status_by_participant$final_receptor_group)
 
 # Summarizing data by participant_id, final_receptor_group, and dtc_ever
-receptor_dtc_status <- subset_data %>%
-  group_by(participant_id) %>%
+receptor_dtc_status <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     final_receptor_group = first(final_receptor_group),  # Or the most frequent if needed
     dtc_ever = first(dtc_ever),  # Taking the first observed value for dtc_ever
@@ -1869,8 +1920,8 @@ chisq_test
 
 #inc_dx_crit_list___1  
 
-TNBC_dtc_status <- subset_data %>%
-  group_by(participant_id) %>%
+TNBC_dtc_status <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     inc_dx_crit_list___1 = first(inc_dx_crit_list___1),  # Or the most frequent if needed
     dtc_ever = first(dtc_ever),  # Taking the first observed value for dtc_ever
@@ -1900,8 +1951,8 @@ subset_data <- subset_data |>
 # View the new HR_status variable
 table(subset_data$HR_status)
 
-HR_status_by_participant <- subset_data %>%
-  group_by(participant_id) %>%
+HR_status_by_participant <- subset_data |>
+  group_by(participant_id) |>
   summarise(HR_status = first(HR_status),  # Or use mode() if you have multiple rows per participant
             .groups = "drop")
 
@@ -1909,8 +1960,8 @@ HR_status_by_participant <- subset_data %>%
 table(HR_status_by_participant$HR_status) #aligns with final receptor status (ultimately 60 HR+, 49 HR-)
 
 # Summarize dtc_detected status by HR_status, for each unique participant_id
-summary_data <- subset_data %>%
-  group_by(participant_id) %>%
+summary_data <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     HR_status = first(HR_status),  # Get the HR_status for the participant
     dtc_status = first(dtc_ever),  # Get the dtc_detected status for the participant
@@ -1930,9 +1981,9 @@ chisq_test
 ###tumor grade: final_tumor_grade --> NOTE: 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not reported  
 
 # Exclude rows where final_tumor_grade is 3 (not reported), want to exclude the 2 pts who had grade not reported 
-summary_data <- subset_data %>%
-  filter(final_tumor_grade != 3) %>%  # Exclude grade == 3
-  group_by(participant_id) %>%
+summary_data <- subset_data |>
+  filter(final_tumor_grade != 3) |>  # Exclude grade == 3
+  group_by(participant_id) |>
   summarise(
     grade = first(final_tumor_grade),  # Get the final_tumor_grade for each participant
     dtc_ever = first(dtc_ever),    # Get the dtc_ever status for each participant
@@ -1954,16 +2005,16 @@ print(chisq_test)
 ######histology  #people have different combinations of histology (1-15)
 table(subset_data$participant_id, subset_data$final_histology)
 
-histology_summary <- subset_data %>%
-  distinct(participant_id, final_histology) %>%  # Get unique participant-histology combinations
-  group_by(final_histology) %>%  # Group by histology type
+histology_summary <- subset_data |>
+  distinct(participant_id, final_histology) |>  # Get unique participant-histology combinations
+  group_by(final_histology) |>  # Group by histology type
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table
 print(histology_summary) #the different combinations add up to 109. There are a decent number who had both ductal and lobular histology 
 
 #trying to create Ductal, lobular, both, or other variables 
-subset_data <- subset_data %>%
+subset_data <- subset_data |>
   mutate(histology_category = case_when(
     grepl("3", as.character(final_histology)) & grepl("14", as.character(final_histology)) ~ "Both Ductal and Lobular",  # Both Ductal and Lobular
     grepl("3", as.character(final_histology)) ~ "Ductal",  # Ductal
@@ -1972,8 +2023,8 @@ subset_data <- subset_data %>%
   ))
 
 # Count the number of participants in each histology category
-histology_counts <- subset_data %>%
-  group_by(histology_category) %>%
+histology_counts <- subset_data |>
+  group_by(histology_category) |>
   summarise(count = n_distinct(participant_id))  # Count distinct participants
 
 # View the counts -- adds up to 109! 
@@ -1981,9 +2032,9 @@ print(histology_counts)
 
 #contingency table 
 library(tidyr)
-contingency_table <- subset_data %>%
-  distinct(participant_id, histology_category, dtc_ever) %>%  # Ensure each patient is counted once
-  count(histology_category, dtc_ever) %>%
+contingency_table <- subset_data |>
+  distinct(participant_id, histology_category, dtc_ever) |>  # Ensure each patient is counted once
+  count(histology_category, dtc_ever) |>
   pivot_wider(names_from = dtc_ever, values_from = n, values_fill = list(n = 0))  # Pivot the table to get dtc_ever as columns
 
 # 3. Perform the Chi-squared test of independence
@@ -2001,17 +2052,17 @@ print(chisq_test)
 
 table(subset_data$participant_id, subset_data$final_n_stage) #we have 0,1, 2, 3 (No, N1, N2, N3)
 
-nodal_summary <- subset_data %>%
-  distinct(participant_id, final_n_stage) %>%  # Get unique participant-stage combinations
-  group_by(final_n_stage) %>%  # Group by stage
+nodal_summary <- subset_data |>
+  distinct(participant_id, final_n_stage) |>  # Get unique participant-stage combinations
+  group_by(final_n_stage) |>  # Group by stage
   summarise(count = n())  # Count the number of participants per histology type
 
 #View the summary table --adds up to 109, 46 = pN0 63 = pN1 
 print(nodal_summary)
 
-subset_data_by_id <- subset_data %>%
-  filter(final_n_stage %in% c(0, 1, 2, 3)) %>%  # Include only relevant nodal stages
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  filter(final_n_stage %in% c(0, 1, 2, 3)) |>  # Include only relevant nodal stages
+  group_by(participant_id) |>
   summarise(
     nodal_status = first(final_n_stage),  # Use final_n_stage as nodal_status for each participant
     dtc_ever = first(dtc_ever),       # Get dtc_ever status for each participant
@@ -2032,8 +2083,8 @@ print(chisq_test)
 
 
 #### Creating Node - vs node + variable from summary variable  
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     node_status = ifelse(first(final_n_stage) == 0, "Node Negative", "Node Positive"),  # Node negative if 0, positive otherwise
     dtc_ever = first(dtc_ever),  # Get dtc_ever status for each participant
@@ -2054,16 +2105,16 @@ print(chisq_test)
 ####### EXTRA CODE/CONFIRMATION / slightly different but ignore for our analysis 
 #cross-check with indicator pN0 in our data that reflects nodal positivity.... there is 1 patient that is node - by summary variable but node + by indicator variable 
 ## should double check this at some point 
-node_pos <- subset_data %>%
-  distinct(participant_id, inc_dx_crit_list___2) %>%  # Get unique participant-stage combinations
-  group_by(inc_dx_crit_list___2) %>%  # Group by stage
+node_pos <- subset_data |>
+  distinct(participant_id, inc_dx_crit_list___2) |>  # Get unique participant-stage combinations
+  group_by(inc_dx_crit_list___2) |>  # Group by stage
   summarise(count = n())  # Count the number of participants per histology type
 
 print(node_pos)
 
-contingency_table <- subset_data %>%
-  distinct(participant_id, inc_dx_crit_list___2, dtc_ever) %>%  # Ensure unique participants
-  count(inc_dx_crit_list___2, dtc_ever) %>%  # Count occurrences
+contingency_table <- subset_data |>
+  distinct(participant_id, inc_dx_crit_list___2, dtc_ever) |>  # Ensure unique participants
+  count(inc_dx_crit_list___2, dtc_ever) |>  # Count occurrences
   spread(key = dtc_ever, value = n, fill = 0)  # Spread data into a matrix
 
 # View the contingency table
@@ -2081,9 +2132,9 @@ print(chi_square_result)
 
 table(subset_data$final_t_stage) #we have values in 1,2,3,4, and 99 (90 = pTx) so can proceed with this 
 
-t_summary <- subset_data %>%
-  distinct(participant_id, final_t_stage) %>%  # Get unique participant-stage combinations
-  group_by(final_t_stage) %>%  # Group by stage
+t_summary <- subset_data |>
+  distinct(participant_id, final_t_stage) |>  # Get unique participant-stage combinations
+  group_by(final_t_stage) |>  # Group by stage
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table --adds up to 109, most are pN0 or cN0, a good number are pN1 or cN1, or pN2  
@@ -2092,16 +2143,16 @@ print(t_summary)
 
 #### T stage, for our T stage table, will use T1 vs T2 or greater to simplify 
 #exclude 99 (the pTx) 
-subset_data_clean <- subset_data %>%
+subset_data_clean <- subset_data |>
   filter(final_t_stage != 99, dtc_ever != 99)
 
 # Combine final_t_stage into T1 vs. T2 or greater
-subset_data_clean <- subset_data_clean %>%
+subset_data_clean <- subset_data_clean |>
   mutate(final_t_stage_combined = ifelse(final_t_stage == 1, "T1", "T2 or greater"))
 
 # Summarize the data by participant_id after creating the new combined t_stage
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2120,11 +2171,11 @@ print(chisq_test)
 #### TRy for T stage stats using T3 or greater as cutoff -- not super useful, So DONOT USE THIS FOR TABLE  
 
 #exclude 99 (the pTx) 
-subset_data_clean <- subset_data %>%
+subset_data_clean <- subset_data |>
   filter(final_t_stage != 99, dtc_ever != 99)
 
 # Combine final_t_stage into T1/T2 or T3 or greater
-subset_data_clean <- subset_data_clean %>%
+subset_data_clean <- subset_data_clean |>
   mutate(final_t_stage_combined = case_when(
     final_t_stage == 1 | final_t_stage == 2 ~ "T1 or T2",  # Group T1 and T2 together
     final_t_stage >= 3 ~ "T3 or greater",  # Group T3 and higher as a separate category
@@ -2133,8 +2184,8 @@ subset_data_clean <- subset_data_clean %>%
 
 
 # Summarize the data by participant_id after creating the new combined t_stage
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     final_t_stage_combined = first(final_t_stage_combined),  # Get the combined t status for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2156,21 +2207,21 @@ print(chisq_test)
 
 table(subset_data$final_overall_stage) #we have values in 1,2,3,4, and 99 so can proceed with this 
 
-stage_summary <- subset_data %>%
-  distinct(participant_id, final_overall_stage) %>%  # Get unique participant-stage combinations
-  group_by(final_overall_stage) %>%  # Group by stage
+stage_summary <- subset_data |>
+  distinct(participant_id, final_overall_stage) |>  # Get unique participant-stage combinations
+  group_by(final_overall_stage) |>  # Group by stage
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table --adds up to 109 (1 99), most are stage 2, some are stage I some are stage III, no stage IV (yay)
 print(stage_summary)
 
 #exclude the 99 
-subset_data_clean <- subset_data %>%
+subset_data_clean <- subset_data |>
   filter(final_overall_stage != 99, dtc_ever != 99)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     final_overall_stage = first(final_overall_stage),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2194,9 +2245,9 @@ print(chisq_test)
 
 table(subset_data$diag_surgery_type_1) #1= partial mastectomy/lumpectomy, 2 = mastectomy. no missingness 
 
-surgery <- subset_data %>%
-  distinct(participant_id, diag_surgery_type_1) %>%  # Get unique participant-stage combinations
-  group_by(diag_surgery_type_1) %>%  # Group by stage
+surgery <- subset_data |>
+  distinct(participant_id, diag_surgery_type_1) |>  # Get unique participant-stage combinations
+  group_by(diag_surgery_type_1) |>  # Group by stage
   summarise(count = n())  # Count the number of participants per histology type
 
 # View the summary table
@@ -2204,8 +2255,8 @@ print(surgery)
 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     surgery = first(diag_surgery_type_1),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2229,20 +2280,20 @@ table(subset_data$diag_axillary_type___2_1)
 table(subset_data$diag_axillary_type___2_2) #a handful of axillary dissection on the second biopsy form so i think we want to combine these two 
 
 # Create a binary variable to identify participants who had axillary dissection
-subset_data_clean <- subset_data %>%
+subset_data_clean <- subset_data |>
   mutate(axillary_dissection = ifelse(diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1, 1, 0))
 
 # Ensure every participant has a dtc_ever and axillary_dissection value
 # Ensure every patient has an axillary dissection category, where 0 means no axillary dissection, and 1 means they had one
-subset_data_clean <- subset_data %>%
+subset_data_clean <- subset_data |>
   mutate(axillary_dissection = case_when(
     diag_axillary_type___2_1 == 1 | diag_axillary_type___2_2 == 1 ~ 1,  # Had axillary dissection
     TRUE ~ 0  # No axillary dissection (includes missing values)
   ))
 
 # Summarize the data by participant_id, including the axillary_dissection and dtc_ever variables
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     axillary_dissection = first(axillary_dissection),  # Get the axillary dissection status for each participant
     dtc_ever = first(dtc_ever)  # Get the dtc_ever status for each participant
@@ -2276,8 +2327,8 @@ radiation <- subset_data |>
 print(radiation)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     radiation = first(prtx_radiation),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2308,8 +2359,8 @@ chemo <- subset_data |>
 print(chemo) #3 people didn not get chemo in this cohort 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     chemo = first(prtx_chemo),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2343,8 +2394,8 @@ nact <- subset_data |>
 print(nact) #3 people didn not get chemo in this cohort 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     nact = first(diag_neoadj_chemo_1),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2374,8 +2425,8 @@ endo <- subset_data |>
 print(endo) #most ppl did get endo (62 of the 109)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     endo = first(prtx_endo),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2407,8 +2458,8 @@ bonemod <- subset_data |>
 print(bonemod) #most ppl did get endo (39 got bonemod)
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     bonemod = first(prtx_bonemod),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2428,25 +2479,25 @@ print(chisq_test)
 ```
 
 ```{r}
-#Later  
+#pCR 
 #2 = non-pcr, 1 = pcr 
 #path cr diag_pcr_1 or diag_pcr_2 (as this could be on either of the two diagnosis and staging forms, there are 2 variables for this)
 table(subset_data$diag_pcr_1) 
 table(subset_data$diag_pcr_2) #none recorded here so can just use pcr_1 
 
-pcr <- subset_data %>%
-  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) %>%  # Convert "." to NA
-  filter(!is.na(diag_pcr_1)) %>%  # Exclude rows where diag_pcr_1 is NA
-  distinct(participant_id, diag_pcr_1) %>%
-  group_by(diag_pcr_1) %>%
+pcr <- subset_data |>
+  mutate(diag_pcr_1 = na_if(diag_pcr_1, ".")) |>  # Convert "." to NA
+  filter(!is.na(diag_pcr_1)) |>  # Exclude rows where diag_pcr_1 is NA
+  distinct(participant_id, diag_pcr_1) |>
+  group_by(diag_pcr_1) |>
   summarise(count = n()) # Count the number of participants per histology type
 
 # View the summary table
 print(pcr) #this is correct bc 19 ppl got NACT, and we have 19 ppl recorded for pcr data 
 
 # Summarize the data by participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     pcr = first(diag_pcr_1),  # Get the final_overall_stage for each participant
     dtc_ever = first(dtc_ever)  # Get dtc_ever status for each participant
@@ -2458,7 +2509,7 @@ contingency_table <- table(subset_data_by_id$pcr, subset_data_by_id$dtc_ever)
 # Perform the Chi-squared test
 chisq_test <- chisq.test(contingency_table)
 
-# Print the contingency table and Chi-squared test results --> p-val  = 0.27-- does not seem to be association among those who got pcr (but also we have a group with 1 in it...).  
+# Print the contingency table and Chi-squared test results --> p-val  = 0.27-- does not seem to be association among those who got pcr (but also we have a group with 1 in it and a very small sample size of those on whom pCR was evaluated (18 individuals)
 print(contingency_table)
 print(chisq_test)
 
@@ -2469,8 +2520,8 @@ print(chisq_test)
 #local fu_locreg_prog 
 
 # Step 1: Summarize data by unique participant_id
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     fu_locreg_prog = first(fu_locreg_prog),  # Get fu_locreg_prog status for each participant
     dtc_ever = first(dtc_ever),          # Get dtc_ever status for each participant
@@ -2491,12 +2542,12 @@ print(chisq_test)
 ### Just want to look at site distribution here 
 
 # Summarize the distribution of fu_locreg_site_char by unique participant_id
-site_distribution <- subset_data %>%
-  group_by(participant_id) %>%
+site_distribution <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     site = first(fu_locreg_site_char),  # Get the site for each unique participant
     .groups = "drop"
-  ) %>%
+  ) |>
   count(site)  # Count the occurrences of each site
 
 # View the distribution of sites -- mostly axillary nodes. 4 of 6 axillary. 1 internal mammary. 2 supraclav. 2 ipsilateral breast 
@@ -2505,8 +2556,8 @@ print(site_distribution)
 #####distant recurrence: distant fu_dist_prog 
 
 # Step 1: Summarize data by unique participant_id
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     fu_dist_prog = first(fu_dist_prog),  # Get fu_dist_prog status for each participant
     dtc_ever = first(dtc_ever),          # Get dtc_ever status for each participant
@@ -2528,12 +2579,12 @@ print(chisq_test)
 #distant site fu_dist_site_num #fu_dist_site_char  -- start justl ooking at the locations 
 
 # Summarize the distribution of fu_dist_site_char by unique participant_id
-dist_site_distribution <- subset_data %>%
-  group_by(participant_id) %>%
+dist_site_distribution <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     site = first(fu_dist_site_char),  # Get the site for each unique participant
     .groups = "drop"
-  ) %>%
+  ) |>
   count(site)  # Count the occurrences of each site
 
 # View the distribution of sites -- Bone in 7. Liver in 3. Lung in 2. 1 intra-abdominal 
@@ -2542,12 +2593,12 @@ print(dist_site_distribution)
 #any recurrence 
 #either fu_locreg_prog or fu_dist_prog 
 
-subset_data <- subset_data %>%
+subset_data <- subset_data |>
   mutate(ever_relapsed = ifelse(fu_locreg_prog == 1 | fu_dist_prog == 1, "Yes", "No"))
 
 # link by participant id 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
     dtc_ever = first(dtc_ever),        # Get the dtc_ever status for each participant
@@ -2568,8 +2619,8 @@ print(chisq_test)
 #using ever_relapsed
 
 # link by participant id 
-subset_data_by_id <- subset_data %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data |>
+  group_by(participant_id) |>
   summarise(
     ever_relapsed = first(ever_relapsed),  # Get the ever_relapsed status for each participant
     dtc = first(dtc_ever),        # Get the dtc_ever status for each participant
@@ -2587,7 +2638,7 @@ print(contingency_table)
 print(chisq_test) 
 
 # Identify participants missing data in either `ever_relapsed` or `dtc_ever`
-missing_data <- subset_data_by_id %>%
+missing_data <- subset_data_by_id |>
   filter(is.na(ever_relapsed) | is.na(dtc))
 
 # Print the IDs of participants with missing data
@@ -2599,24 +2650,24 @@ print(missing_data$participant_id) #two individuals do not have relapse data (17
 
 table(subset_data$fu_surv)
 
-surv <- subset_data %>%
-  distinct(participant_id, fu_surv) %>%
-  group_by(fu_surv) %>%
+surv <- subset_data |>
+  distinct(participant_id, fu_surv) |>
+  group_by(fu_surv) |>
   summarise(count = n()) # Count the number of participants per histology type
 
 # View the summary table
 print(surv) #1 NA patient --> identify the NA patient below  dead = 5, alive 103. There is 1 that's an NA. 
 
-na_participant <- subset_data %>%
-  filter(is.na(fu_surv)) %>%
+na_participant <- subset_data |>
+  filter(is.na(fu_surv)) |>
   select(participant_id, fu_surv)
 
 # Print the result -- 28115-17-021  -- no follow up data for this pt looking in redcap, everyone else has some survival data in the dtc cohort. 
 print(na_participant)
 
 # Summarize data by unique participant_id
-subset_data_by_id <- subset_data_clean %>%
-  group_by(participant_id) %>%
+subset_data_by_id <- subset_data_clean |>
+  group_by(participant_id) |>
   summarise(
     surv = first(fu_surv),          # Get survival status for each participant
     dtc_ever = first(dtc_ever),  # Get dtc_ever status for each participant
@@ -2635,14 +2686,20 @@ print(chisq_test)
 
 ```
 
-Now that we have run the univariate associations for all the important demographic and clinical factors for both ctDNA and DTC, we will work on actually making our table 1, first by ctDNA status and a second table by DTC status.  
+Now that we have run the univariate associations for all the important demographic and clinical factors for both ctDNA and DTC, we will work on actually making our table 1, first by ctDNA status and a second table by DTC status.
+
+### **Making our Table 1**
+
+#### **Demographics and Clinical Factors by ctDNA Status**
 
 ```{r}
 ####### Making Table 1--first for ctDNA ######### 
 
-## https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html  TRY LATER 
+## Resources to try for both making Table 1 and LASSO 
+## https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 ## lasso https://stats.stackexchange.com/questions/72251/an-example-lasso-regression-using-glmnet-for-binary-outcome 
 ## https://www.r-bloggers.com/2020/05/quick-tutorial-on-lasso-regression-with-example/#google_vignette 
+
 #Table 1 Code 
 library(table1)
 names(subset_data) #to choose variables 
@@ -2653,7 +2710,7 @@ library(tidyr)
 library(stringr)
 
 # Prepare the dataset
-unique_subset_data <- subset_data %>%
+unique_subset_data <- subset_data |>
   mutate(
     # Convert "Missing" and 99 to NA in relevant columns
     final_t_stage = na_if(as.character(final_t_stage), "Missing"),
@@ -2664,23 +2721,8 @@ unique_subset_data <- subset_data %>%
     diag_pcr_1 = na_if(diag_pcr_1, "."),
     # Replace 99 with NA in all numeric columns
     across(where(is.numeric), ~ na_if(.x, 99))
-  ) %>%
-  filter(
-    # Remove rows with NA values for specific columns before summarizing
-    !is.na(final_t_stage),
-    !is.na(final_overall_stage),
-    !is.na(final_receptor_group),
-    !is.na(demo_race_final),
-    !is.na(final_tumor_grade),
-    !is.na(final_n_stage),
-    !is.na(histology_category),
-    !is.na(axillary_dissection),
-    !is.na(diag_surgery_type_1),
-    !is.na(diag_neoadj_chemo_1),
-    !is.na(diag_pcr_1),
-    !is.na(ctDNA_ever)
-  ) %>%
-  group_by(participant_id) %>%
+  )  |>
+  group_by(participant_id) |>
   summarize(
     age_at_diag = first(na.omit(age_at_diag)),
     final_receptor_group = first(na.omit(final_receptor_group)),
@@ -2700,10 +2742,6 @@ unique_subset_data <- subset_data %>%
     diag_neoadj_chemo_1 = first(na.omit(diag_neoadj_chemo_1)), diag_pcr_1 = first(na.omit(diag_pcr_1)),
     ctDNA_ever = first(na.omit(ctDNA_ever))
   )
-
-# trying to get rid of the missings for diag_pcr_1 
-
-unique(subset_data$diag_pcr_1) #. 
 
 #######
 #add labels for 
@@ -2733,7 +2771,7 @@ units(unique_subset_data$age_at_diag)       <- "years"
 
 
 # assign `final_receptor_group` factor levels and labels to `unique_subset_data`
-unique_subset_data <- unique_subset_data %>%
+unique_subset_data <- unique_subset_data |>
   mutate(
     final_receptor_group = factor(final_receptor_group, levels = c(1, 2, 3, 4),
                                   labels = c("TNBC", "HR+ HER2-", "HR+ HER2+", "HR- HER2+"))
@@ -2904,6 +2942,9 @@ factor(unique_subset_data$ctDNA_ever, levels=c("FALSE", "TRUE"),
 label(unique_subset_data$ctDNA_ever)  <- "ctDNA Status"
 table(unique_subset_data$ctDNA_ever)
 
+
+
+
 caption  <- "Table 1 by ctDNA Status"
 
 # Generate the table1 summary
@@ -2921,6 +2962,8 @@ table1(
 
 ```
 
+We have our basic Table 1 by ctDNA status.
+
 ```{r}
 #Adding P-values and tests of significance to the code. 
 
@@ -2932,7 +2975,7 @@ table1_output <- table1(
     histology_category + prtx_radiation + 
     prtx_chemo + prtx_endo + prtx_bonemod + 
     node_status + axillary_dissection + 
-    diag_surgery_type_1 + diag_neoadj_chemo_1 | 
+    diag_surgery_type_1 + diag_neoadj_chemo_1 +diag_pcr_1 | 
     ctDNA_ever,
   data = unique_subset_data,
   overall = c(left = "Total"),
@@ -2942,8 +2985,9 @@ table1_output <- table1(
 
 ####
 pvalue_function <- function(x, ...) {
-  # Remove any "Overall" group if present and focus only on ctDNA+ and ctDNA- comparisons
-  x <- x[!names(x) %in% "Overall"]  # Filter out the "Overall" column
+  print(x)
+  # Remove any "overall" group if present and focus only on ctDNA+ and ctDNA- comparisons
+  x <- x[!names(x) %in% "overall"]  # Filter out the "Overall" column
   y <- unlist(x)
   g <- factor(rep(1:length(x), times = sapply(x, length)))
   
@@ -2982,7 +3026,7 @@ table1_p <- table1(
     histology_category + prtx_radiation + 
     prtx_chemo + prtx_endo + prtx_bonemod + 
     node_status + axillary_dissection + 
-    diag_surgery_type_1 + diag_neoadj_chemo_1 | 
+    diag_surgery_type_1 + diag_neoadj_chemo_1 + diag_pcr_1| 
     ctDNA_ever,
   data = unique_subset_data,
   overall = c(left = "Total"),
@@ -2990,53 +3034,36 @@ table1_p <- table1(
   extra.col.pos = 4  # Position of the extra column
 )
 
-table1_p #Still not adding p-values....grrr 
+table1_p #we have p-values!  
 
 ```
 
-** Table of demographics and clinical factors by DTC status ** 
+We can see in this Table 1 by ctDNA status, including tests of association, that the following variables have significant (p\<0.05) associations: Tumor Grade (higher grade associated with positivity), overall stage (higher stage associated with positivity), N-stage (with higher N-stage seemingly associated with positivity), with trends towards significance (approaching a significant p-value) for receptor status and age at diagnosis.
 
-```{r} 
+### **Table of demographics and clinical factors by DTC status**
+
+Next we will create a Table to look at demographic and clinical factors by DTC status, including tests of association.
+
+```{r}
 
 ####### Table of clinical and demographic factors by DTC status ######### 
 
-## https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html  TRY LATER 
-## lasso https://stats.stackexchange.com/questions/72251/an-example-lasso-regression-using-glmnet-for-binary-outcome 
-## https://www.r-bloggers.com/2020/05/quick-tutorial-on-lasso-regression-with-example/#google_vignette 
-#Table 1 Code 
-library(table1)
-library(dplyr)
-library(tidyr)
-library(stringr)
-
 # Prepare the dataset
-unique_subset_data <- subset_data %>%
+dtc_unique_subset_data <- subset_data |>
   mutate(
-    # Convert "Missing" and 99 to NA in relevant columns
+    # Replace "Missing" and 99 with NA in relevant columns
     final_t_stage = na_if(as.character(final_t_stage), "Missing"),
     final_t_stage = na_if(final_t_stage, "99"),
     final_overall_stage = na_if(as.character(final_overall_stage), "Missing"),
     final_overall_stage = na_if(final_overall_stage, "99"),
-    final_tumor_grade = na_if(final_tumor_grade, 3),
+    final_tumor_grade = na_if(final_tumor_grade, 3), # Assumes 3 means "Not Reported"
+    diag_pcr_1 = na_if(diag_pcr_1, "."),
     # Replace 99 with NA in all numeric columns
     across(where(is.numeric), ~ na_if(.x, 99))
-  ) %>%
-  filter(
-    # Remove rows with NA values for specific columns before summarizing
-    !is.na(final_t_stage),
-    !is.na(final_overall_stage),
-    !is.na(final_receptor_group),
-    !is.na(demo_race_final),
-    !is.na(final_tumor_grade),
-    !is.na(final_n_stage),
-    !is.na(histology_category),
-    !is.na(axillary_dissection),
-    !is.na(diag_surgery_type_1),
-    !is.na(diag_neoadj_chemo_1),
-    !is.na(ctDNA_ever)
-  ) %>%
-  group_by(participant_id) %>%
+  ) |>
+  group_by(participant_id) |>
   summarize(
+    # Summarize unique participant-level data
     age_at_diag = first(na.omit(age_at_diag)),
     final_receptor_group = first(na.omit(final_receptor_group)),
     demo_race_final = first(na.omit(demo_race_final)),
@@ -3053,214 +3080,121 @@ unique_subset_data <- subset_data %>%
     axillary_dissection = first(na.omit(axillary_dissection)),
     diag_surgery_type_1 = first(na.omit(diag_surgery_type_1)),
     diag_neoadj_chemo_1 = first(na.omit(diag_neoadj_chemo_1)),
-    ctDNA_ever = first(na.omit(ctDNA_ever))
+    diag_pcr_1 = first(na.omit(diag_pcr_1)),
+    ctDNA_ever = first(na.omit(ctDNA_ever)),
+    dtc_ever = first(na.omit(dtc_ever))
   )
 
-# Generate the table1 summary
-table1(
-  ~ age_at_diag + factor(final_receptor_group) + factor(demo_race_final) + 
-    factor(final_tumor_grade) + factor(final_overall_stage) + 
-    factor(final_t_stage) + factor(final_n_stage) + 
-    factor(histology_category) + factor(prtx_radiation) + 
-    factor(prtx_chemo) + factor(prtx_endo) + factor(prtx_bonemod) + 
-    factor(node_status) + factor(axillary_dissection) + 
-    factor(diag_surgery_type_1) + factor(diag_neoadj_chemo_1) | 
-    ctDNA_ever,
-  data = unique_subset_data
-)
-
-#######
-#add labels for 
-#final_receptor_group
-#demo_race_final
-#final_tumor_grade
-#final_overall_tage
-#final_t_stage) 
-#final_n_stage 
-#histology_category
-#prtx_radiation 
-#prtx_chemo) 
-#prtx_endo
-#prtx_bonemod 
-#node_status) 
-#axillary_dissection 
-#diag_surgery_type_1
-#diag_neoadj_chemo_1 
-#ctDNA_ever 
-
-
-label(unique_subset_data$age_at_diag) <- "Age at Diagnosis"
-units(unique_subset_data$age_at_diag)       <- "years"
-
-#Final receptor group: 1='TNBC', 2='HR+ Her2-', 3='HR+ Her2+', 4='HR- Her2+'
-
-
-# assign `final_receptor_group` factor levels and labels to `unique_subset_data`
-unique_subset_data <- unique_subset_data %>%
+# Convert variables to labeled factors for table output
+dtc_unique_subset_data <- dtc_unique_subset_data |>
   mutate(
     final_receptor_group = factor(final_receptor_group, levels = c(1, 2, 3, 4),
-                                  labels = c("TNBC", "HR+ HER2-", "HR+ HER2+", "HR- HER2+"))
+                                  labels = c("TNBC", "HR+ HER2-", "HR+ HER2+", "HR- HER2+")),
+    race = factor(demo_race_final, levels = c(1, 3, 5),
+                             labels = c("Black", "Asian", "White")),
+    final_tumor_grade = factor(final_tumor_grade, levels = c(0, 1, 2),
+                               labels = c("Grade 3", "Grade 1", "Grade 2")),
+    final_overall_stage = factor(final_overall_stage, levels = c(1, 2, 3),
+                                 labels = c("Stage I", "Stage II", "Stage III")),
+    final_t_stage = factor(final_t_stage, levels = c(1, 2, 3, 4),
+                           labels = c("T1", "T2", "T3", "T4")),
+    final_n_stage = factor(final_n_stage, levels = c(0, 1, 2, 3),
+                           labels = c("N0", "N1", "N2", "N3")),
+    prtx_radiation = factor(prtx_radiation, levels = c(0, 1),
+                            labels = c("No Radiation", "Radiation")),
+    prtx_chemo = factor(prtx_chemo, levels = c(0, 1),
+                        labels = c("No Chemo", "Chemo")),
+    prtx_endo = factor(prtx_endo, levels = c(0, 1),
+                       labels = c("No Endocrine Therapy", "Endocrine Therapy")),
+    prtx_bonemod = factor(prtx_bonemod, levels = c(0, 1),
+                          labels = c("No Bone Modifying Treatment", "Bone Modifying Treatment")),
+    axillary_dissection = factor(axillary_dissection, levels = c(0, 1),
+                                 labels = c("No Axillary Dissection", "Axillary Dissection")),
+    diag_surgery_type_1 = factor(diag_surgery_type_1, levels = c(1, 2),
+                                 labels = c("Lumpectomy", "Mastectomy")),
+    diag_neoadj_chemo_1 = factor(diag_neoadj_chemo_1, levels = c(0, 1),
+                                 labels = c("No Neoadjuvant Chemo", "Neoadjuvant Chemo")),
+    diag_pcr_1 = factor(diag_pcr_1, levels = c(1, 2),
+                        labels = c("pCR", "Non-pCR")),
+    ctDNA_ever = factor(ctDNA_ever, levels = c("FALSE", "TRUE"),
+                        labels = c("ctDNA Negative", "ctDNA Positive")),
+    dtc_ever = factor(dtc_ever, levels = c(0, 1),
+                      labels = c("DTC Negative", "DTC Positive"))
   )
 
-label(unique_subset_data$final_receptor_group)       <- "Final Receptor Group"
+#### Labels 
 
-table(unique_subset_data$final_receptor_group)
+label(dtc_unique_subset_data$age_at_diag) <- "Age at Diagnosis"
+units(dtc_unique_subset_data$age_at_diag)       <- "years"
+
+# assign `final_receptor_group` labels to `dc_unique_subset_data`
+label(dtc_unique_subset_data$final_receptor_group)       <- "Final Receptor Group"
 
 ##demo_race_final 
-
-table(unique_subset_data$demo_race_final) #1, 3, 5 -- 5 = white, 1 = black, 3 = asian 
-
-unique_subset_data$demo_race_final <- 
-  factor(unique_subset_data$demo_race_final, levels=c(1,3,5),
-         labels=c("Black", 
-                  "Asian", "White"))
-label(unique_subset_data$demo_race_final)  <- "Race"
-table(unique_subset_data$demo_race_final) 
+label(dtc_unique_subset_data$demo_race_final)  <- "Race"
 
 
 #final_tumor_grade 
-table(unique_subset_data$final_tumor_grade) # 0 = grade 3, 1 = grade 1, 2 = grade 2, 3 = Not Reported. Added 3 to NA up above for table 1 code so it will be considered N/A. 
 
-unique_subset_data$final_tumor_grade <- 
-  factor(unique_subset_data$final_tumor_grade, levels=c(0,1,2),
-         labels=c("Grade 3", 
-                  "Grade 1", "Grade 2"))
-label(unique_subset_data$final_tumor_grade)  <- "Tumor Grade"
-table(unique_subset_data$final_tumor_grade) 
+label(dtc_unique_subset_data$final_tumor_grade)  <- "Tumor Grade"
 
 
 #final_overall_stage
 
-table(unique_subset_data$final_overall_stage) # 1 = stage I 2 = stage II 3 = stage III  
-
-unique_subset_data$final_overall_stage <- 
-  factor(unique_subset_data$final_overall_stage, levels=c(1,2,3),
-         labels=c("Stage I", 
-                  "Stage II", "Stage III"))
-label(unique_subset_data$final_overall_stage)  <- "Overall Stage"
-table(unique_subset_data$final_overall_stage) 
+label(dtc_unique_subset_data$final_overall_stage)  <- "Overall Stage"
 
 #final_t_stage
-table(unique_subset_data$final_t_stage) # 1 = T1 2 = T2 3 = T3 4 = T4  
-
-unique_subset_data$final_t_stage <- 
-  factor(unique_subset_data$final_t_stage, levels=c(1,2,3,4),
-         labels=c("T1", 
-                  "T2", "T3", "T4"))
-label(unique_subset_data$final_t_stage)  <- "T Stage"
-table(unique_subset_data$final_t_stage) 
+label(dtc_unique_subset_data$final_t_stage)  <- "T Stage"
 
 
 #final_n_stage 
-
-table(unique_subset_data$final_n_stage) # 0 = N0 1 = N1 2 = N2 3 = N3 
-
-unique_subset_data$final_n_stage <- 
-  factor(unique_subset_data$final_n_stage, levels=c(0,1,2,3),
-         labels=c("N0", 
-                  "N1", "N2", "N3"))
-label(unique_subset_data$final_n_stage)  <- "N Stage"
-table(unique_subset_data$final_n_stage) 
+label(dtc_unique_subset_data$final_n_stage)  <- "N Stage"
 
 #histology_category
 
-table(unique_subset_data$histology_category) #These are labeled already correctly as both ductal and lobular, ductal, lobular, and other  
-label(unique_subset_data$histology_category)  <- "Histology Category"
+
+label(dtc_unique_subset_data$histology_category)  <- "Histology Category"
 
 
 #prtx_radiation 
 
-table(unique_subset_data$prtx_radiation) #1 = radiation 0 = no 
-
-unique_subset_data$prtx_radiation <- 
-  factor(unique_subset_data$prtx_radiation, levels=c(0,1),
-         labels=c("No Radiation", "Radiation"))
-label(unique_subset_data$prtx_radiation)  <- "Radiation"
-table(unique_subset_data$prtx_radiation)
+label(dtc_unique_subset_data$prtx_radiation)  <- "Radiation"
 
 #prtx_chemo
-
-table(unique_subset_data$prtx_chemo) #1 = chemo 0 = no 
-table(subset_data$prtx_chemo)
-
-unique_subset_data$prtx_chemo <- 
-factor(unique_subset_data$prtx_chemo, levels=c(0,1),
-         labels=c("No Chemo", "Chemo"))
-label(unique_subset_data$prtx_chemo)  <- "Chemo"
-table(unique_subset_data$prtx_chemo)
+label(dtc_unique_subset_data$prtx_chemo)  <- "Chemo"
 
 #prtx_endo
-
-
-table(unique_subset_data$prtx_endo) #1 = hormone therapy 0 = no 
-table(subset_data$prtx_endo)
-
-unique_subset_data$prtx_endo <- 
-factor(unique_subset_data$prtx_endo, levels=c(0,1),
-         labels=c("No Endocrine Therapy", "Endocrine Therapy"))
-label(unique_subset_data$prtx_endo)  <- "Endocrine Therapy"
-table(unique_subset_data$prtx_endo)
+label(dtc_unique_subset_data$prtx_endo)  <- "Endocrine Therapy"
 
 #prtx_bonemod 
-
-table(unique_subset_data$prtx_bonemod) #1 = bonemod 0 = no 
-table(unique_subset_data$prtx_bonemod)
-
-unique_subset_data$prtx_bonemod <- 
-factor(unique_subset_data$prtx_bonemod, levels=c(0,1),
-         labels=c("No Bone Modifying Treatment", "Bone Modifying Treatment"))
-label(unique_subset_data$prtx_bonemod)  <- "Bone Modifying Treatment"
-table(unique_subset_data$prtx_bonemod)
-
-
+label(dtc_unique_subset_data$prtx_bonemod)  <- "Bone Modifying Treatment"
 
 #node_status 
-table(unique_subset_data$node_status) #already positive and negative  
-label(unique_subset_data$node_status)  <- "Node Status"
+label(dtc_unique_subset_data$node_status)  <- "Node Status"
 
 #axillary_dissection 
-
-table(unique_subset_data$axillary_dissection) #1 = axillary dissection 0 = no dissection
-
-unique_subset_data$axillary_dissection <- 
-factor(unique_subset_data$axillary_dissection, levels=c(0,1),
-         labels=c("No Axillary Dissection", "Axillary Dissection"))
-label(unique_subset_data$axillary_dissection)  <- "Axillary Dissection"
-table(unique_subset_data$axillary_dissection)
+label(dtc_unique_subset_data$axillary_dissection)  <- "Axillary Dissection"
 
 #diag_surgery_type_1
-table(unique_subset_data$diag_surgery_type_1) #1 = Lumpectomy 2 = Mastectomy
-
-unique_subset_data$diag_surgery_type_1 <- 
-factor(unique_subset_data$diag_surgery_type_1, levels=c(1,2),
-         labels=c("Lumpectomy", "Mastectomy"))
-label(unique_subset_data$diag_surgery_type_1)  <- "Surgery Type"
-table(unique_subset_data$diag_surgery_type_1)
+label(dtc_unique_subset_data$diag_surgery_type_1)  <- "Surgery Type"
 
 #diag_neoadj_chemo_1 
 
-table(unique_subset_data$diag_neoadj_chemo_1) #1 = Neoadj Chemo 0 = No Neoadjuv 
+label(dtc_unique_subset_data$diag_neoadj_chemo_1)  <- "Neoadjuvant Chemo"
 
-unique_subset_data$diag_neoadj_chemo_1 <- 
-factor(unique_subset_data$diag_neoadj_chemo_1, levels=c(0,1),
-         labels=c("No Neoadjuvant Chemo", "Neoadjuvant Chemo"))
-label(unique_subset_data$diag_neoadj_chemo_1)  <- "Neoadjuvant Chemo"
-table(unique_subset_data$diag_neoadj_chemo_1)
+#pCR 
+
+label(dtc_unique_subset_data$diag_pcr_1)  <- "Pathologic Complete Response"
 
 
-#ctDNA_ever 
-table(unique_subset_data$ctDNA_ever) #FALSE = ctDNA Negative TRUE = ctDNA Positive
+#DTC_ever 
+label(dtc_unique_subset_data$ctDNA_ever)  <- "DTC Status"
 
-unique_subset_data$ctDNA_ever <- 
-factor(unique_subset_data$ctDNA_ever, levels=c("FALSE", "TRUE"),
-         labels=c("ctDNA Negative", "ctDNA Positive"))
-label(unique_subset_data$ctDNA_ever)  <- "ctDNA Status"
-table(unique_subset_data$ctDNA_ever)
 
-caption  <- "Table 1 by ctDNA Status"
+####
 
-# Generate the table1 summary
-table1(
+# Step 1: Create table1 output
+table1_output <- table1(
   ~ age_at_diag + final_receptor_group + demo_race_final + 
     final_tumor_grade + final_overall_stage + 
     final_t_stage + final_n_stage + 
@@ -3268,255 +3202,253 @@ table1(
     prtx_chemo + prtx_endo + prtx_bonemod + 
     node_status + axillary_dissection + 
     diag_surgery_type_1 + diag_neoadj_chemo_1 | 
-    ctDNA_ever,
-  data = unique_subset_data, overall=c(left="Total"), caption=caption)
-
-
-
-```
-
-
-I have chosen to perform a multivariable logistic regression to identify predictors of ctDNA positivity as we suspect this is a biomarker of relapse and can see even in our data-set that it is strongly associated with relapse and worse overall survival. Identifying predictors of positivity would help us to understand who we might consider screening for ctDNA positivity, as this testing is expensive and takes time and resources--and may not benefit everyone. ctDNA positivity is a binary outcome, and we have performed univariable analyses as above already to look at potentially significant relationships. There are multiple types of variables worth considering, including demographic and clinical factors, disease factors (such as aggressiveness of the tumor measured by histology and grade, the hormone receptor status of the tumor, the stage of disease at diagnosis), and treatment factors (surgery type, radiation or no radiation, neoadjuvant chemotherapy or no, endocrine aka anti-hormone therapy). These are all time-invarying factors, and all were present at the beginning of enrollment on study, prior to ctDNA positivity.  
-
-Lasso will give us the most parsimonious model and is an automatic approach, without consideration of absolute p-value cutoffs. We considered stepwise model building based on p-values, but this approach has gone out of favor as this approach uses somewhat arbitrary p-value cutoffs and can ignore actually relevant and important variables. As we have already performed univariate tests of association above with chi-squared tests, we do not need to perform univariable logistic regression.  
-
-```{r}
-
-### DELETE 
-
-library(dplyr)
-
-# Univariable logistic regression -- do not need to do this as we did the chisquared tests already 
-# Define the outcome variable
-outcome <- "ctDNA_ever"
-
-# Continuous predictors
-continuous_vars <- c("age_at_diag", "dtc_ihc_summary_count_final")
-
-# Categorical predictors
-categorical_vars <- c("demo_race_final", "final_receptor_group", "HR_status",
-                      "final_tumor_grade", "histology_category", "final_n_stage", 
-                      "final_t_stage", "final_overall_stage", 
-                      "diag_surgery_type_1", "axillary_dissection", "prtx_radiation", "prtx_chemo", 
-                      "diag_neoadj_chemo_1", "prtx_endo", "prtx_bonemod", "diag_pcr_1", "fu_locreg_prog", 
-                      "fu_locreg_site_char", "fu_dist_prog", "fu_dist_site_char", "ever_relapsed", 
-                      "fu_surv")
-
-# Univariable regression for continuous variables
-univariable_results_continuous <- sapply(continuous_vars, function(var) {
-  formula <- as.formula(paste(outcome, "~", var))
-  model <- glm(formula, data = subset_data, family = "binomial")
-  summary(model)$coefficients[2, c(1, 4)]  # Extract coefficient and p-value
-})
-
-# Univariable regression for categorical variables (assuming factors are properly encoded)
-univariable_results_categorical <- sapply(categorical_vars, function(var) {
-  formula <- as.formula(paste(outcome, "~", var))
-  model <- glm(formula, data = subset_data, family = "binomial")
-  summary(model)$coefficients[2, c(1, 4)]  # Extract coefficient and p-value
-})
-
-# Combine continuous and categorical results
-univariable_results <- data.frame(
-  Variable = c(continuous_vars, categorical_vars),
-  Estimate = c(univariable_results_continuous[1,], univariable_results_categorical[1,]),
-  p_value = c(univariable_results_continuous[2,], univariable_results_categorical[2,])
+    dtc_ever,
+  data = dtc_unique_subset_data
 )
 
-# Print univariable results
-print(univariable_results)
+table1_output
+
+####
+pvalue_function <- function(x, ...) {
+  print(x)
+  # Remove any "overall" group if present and focus only on ctDNA+ and ctDNA- comparisons
+  x <- x[!names(x) %in% "overall"]  # Filter out the "Overall" column
+  y <- unlist(x)
+  g <- factor(rep(1:length(x), times = sapply(x, length)))
+  
+  # Debugging information to check group levels and data
+  if (length(unique(g)) != 2) {
+    return(NA)  # Return NA if not comparing exactly two groups
+  }
+
+  # Perform the appropriate test based on the type of variable
+  if (is.numeric(y)) {
+    # For continuous variables, perform a t-test
+    p <- t.test(y ~ g)$p.value
+  } else {
+    # For categorical variables, perform a chi-squared test or Fisher's test
+    table_result <- table(y, g)
+    
+    # Choose the correct test based on cell counts
+    if (any(table_result < 5)) {
+      p <- fisher.test(table_result)$p.value  # Use Fisher's test for low counts
+    } else {
+      p <- chisq.test(table_result)$p.value  # Use chi-squared test otherwise
+    }
+  }
+  
+  # Format the p-value for output
+  formatted_p <- format.pval(p, digits = 3, eps = 0.001)
+  return(formatted_p)
+}
+  
+
+# Generate table1 with the p-value column
+table1_dtc <- table1(
+  ~ age_at_diag + final_receptor_group + demo_race_final + 
+    final_tumor_grade + final_overall_stage + 
+    final_t_stage + final_n_stage + 
+    histology_category + prtx_radiation + 
+    prtx_chemo + prtx_endo + prtx_bonemod + 
+    node_status + axillary_dissection + 
+    diag_surgery_type_1 + diag_neoadj_chemo_1 | 
+    dtc_ever,
+  data = dtc_unique_subset_data,
+  overall = c(left = "Total"),
+  extra.col = list("P-value" = pvalue_function),  # Add p-value function
+  extra.col.pos = 4  # Position of the extra column
+)
+
+table1_dtc #we have p-values!  
 
 
 ```
 
-We will next think about our multivariable regression model. We have several variables that were significant in our univariable analyses (chi-squared). These include median age-at-diagnosis, longer time from diagnosis to enrollment, higher tumor grade, and higher initial stage at diagnosis. Variables that were not significant but that could be considered include histology, nodal positivity, higher t-stage, and receptor status.  While recurrence (both distant and local) as well as worse survival are significantly associated with ctDNA positivity, these are outcomes that we think of as following ctDNA positivity temporally and therefore should not be included in our predictive model as predictors.
+We can see in this series of tests that there are similar, but not identical, sets of variables that appear to be significant in predicting DTC status, including: Histology category (with ductal histology more storngly correlated with positivity), Nodal status (with node positive patients more likely to have DTC positivity), with trends towards significance for N stage, receptor group, and tumor grade. We have decided to not include pCR in this table or in further analyses because the cohort of patients who received neoadjuvant therapy is only 19 patients, so the n is very low for any tests of association and there is significant missingness for the overall cohort.
 
-In thinking about what these variables represent, we think about the extent of treatment that patients have received as one major category. We also think about intrinsic tumor risk factors as another. 
+### **Multivariable Analysis**
 
-There is no specific method to choose variables, but generally purposeful selection begins with univariate analysis which we have already performed. Next we will perform LASSO to identify and select variables. 
+**Variable Selection and Planning:** I have chosen to perform a multivariable logistic regression to identify predictors of ctDNA (and DTC) positivity as we suspect these are biomarkers of relapse and can see even in our data-set that ctDNA is strongly associated with relapse and worse overall survival. Identifying predictors of positivity would help us to understand who we might consider screening for ctDNA positivity, as this testing is expensive and takes time and resources--and may not benefit everyone. ctDNA positivity is a binary outcome, and we have performed univariable analyses as above already to look at potentially significant relationships. There are multiple types of variables worth considering, including demographic and clinical factors, disease factors (such as aggressiveness of the tumor as measured by histology and grade, the hormone receptor status of the tumor, the stage of disease at diagnosis), and treatment factors (surgery type, radiation or no radiation, neoadjuvant chemotherapy or no, endocrine aka anti-hormone therapy). The only variable we have removed from our model is pathologic complete response (whether or not patients have NO tumor at the time of surgery IF they received neoadjuvant chemo/immunotherapy before surgery) as the number of patients who received neoadjuvant therapy was not particularly high and therefore there is significant missingness (and it would not make sense to impute for this variable, as it only is a relevant factor to consider for those patients who received neoadjuvant therapy). These are all time-invarying factors, and all were present at the beginning of enrollment on study, prior to ctDNA testing. We will use all of our variables that we assessed in our initial univariable tests of association (including those that had significant associations and those that did not), as we suspect some of these variables are related to one another or colinear and therefore we cannot rely on simple univariable tests of association to determine what will be most predictive of positivity.
+
+We have several variables that were significant in our univariable analyses (chi-squared). These include median age-at-diagnosis, longer time from diagnosis to enrollment, higher tumor grade, and higher initial stage at diagnosis. Variables that were not significant but that could be considered include histology, nodal positivity, higher t-stage, and receptor status. While recurrence (both distant and local) as well as worse survival are significantly associated with ctDNA positivity, these are outcomes that we think of as following ctDNA positivity temporally and therefore should not be included in our predictive model as predictors.
+
+**LASSO:** Lasso will give us the most parsimonious model and is an automatic approach, without consideration of absolute p-value cutoffs. There is no specific "right" method to choose variables, but generally purposeful selection begins with univariable analysis which we have already performed. We considered stepwise model building based on p-values, but this approach has gone out of favor as this approach uses somewhat arbitrary p-value cutoffs and can ignore actually relevant and important variables. As we have already performed univariable tests of association above with chi-squared tests, we do not need to perform univariable logistic regression. We have removed one variable of interest that we assessed with univariable association for ctDNA because of the significant missingness in the cohort overall (and its applicability to only the small subset of patients who received neoadjuvant therapy). We will perform LASSO with our remaining variables to identify and select variables that are most predictive.
 
 ```{r}
 library(glmnet)
 
+set.seed(123) 
+
 # Prepare the response variable
 y <- unique_subset_data$ctDNA_ever
 
-# Predictor matrix, excluding the outcome variable
-X <- as.matrix(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                                      "final_tumor_grade", "final_overall_stage", 
-                                      "final_t_stage", "final_n_stage", 
-                                      "histology_category", "prtx_radiation", 
-                                      "prtx_chemo", "prtx_endo", "prtx_bonemod", 
-                                      "node_status", "axillary_dissection", 
-                                      "diag_surgery_type_1", "diag_neoadj_chemo_1")])
+
+#was getting an error message when I ran y and X2 because there were 4 missing observations, so will impute these as it is only 4 and missingness is lo (<10%)
+library(mice)
+
+# Impute missing values (as general missingness is low as above)
+imputed_data <- mice(unique_subset_data, m = 1, method = "pmm", maxit = 5)
+unique_subset_data <- complete(imputed_data)
+
+#-1 to not include intercept in this matrix as a predictor variable 
+X2 <- model.matrix(ctDNA_ever ~ -1 + age_at_diag + final_receptor_group + demo_race_final+
+                                   final_tumor_grade + final_overall_stage + 
+                                      + final_t_stage + final_n_stage +  
+                                      histology_category + prtx_radiation + 
+                                      + prtx_chemo + prtx_endo + prtx_bonemod + 
+                                      node_status + axillary_dissection + 
+                                      diag_surgery_type_1 + diag_neoadj_chemo_1, data = unique_subset_data)
+
 
 
 # Fit lasso model
-lasso_model <- glmnet(X, y, family = "binomial", alpha = 1)  # alpha = 1 for lasso
-
-#Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. 
-cv_lasso_model <- cv.glmnet(X, y, family = "binomial", alpha = 1)
-
-#plotting the results to look at the performance of different lamda 
-plot(cv_lasso_model)
-
-#getting the best lambda 
-best_lambda <- cv_lasso_model$lambda.min
-print(paste("Best lambda:", best_lambda))
-
-#Finding the final fit model with the optimal lambda 
-final_lasso_model <- glmnet(X, y, family = "binomial", alpha = 1, lambda = best_lambda)
-
-#Which coefficents are included in the model. age at diag coeff is 0.057 (so small influence)
-coef(final_lasso_model) 
-
-### Trying with fewer variables that are not as colinear (not including node status or chemo as a majority of ppl got chemo)
-
-#making sure that the variables are represented in our dataset we are going to use for the lasso 
-table(unique_subset_data$ctDNA_ever)
-table(unique_subset_data$demo_race_final)
-
-#most of these are factors or characters 
-sapply(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                              "final_tumor_grade", "final_overall_stage", 
-                              "final_t_stage", "final_n_stage", 
-                              "histology_category", "prtx_radiation", 
-                              "prtx_chemo", "prtx_endo", "prtx_bonemod", 
-                              "node_status", "axillary_dissection", 
-                              "diag_surgery_type_1", "diag_neoadj_chemo_1")], class) 
-
-#converting factors/ characters to numeric 
-unique_subset_data$final_receptor_group <- as.numeric(as.factor(unique_subset_data$final_receptor_group))
-unique_subset_data$demo_race_final <- as.numeric(as.factor(unique_subset_data$demo_race_final))
-unique_subset_data$final_tumor_grade <- as.numeric(as.factor(unique_subset_data$final_tumor_grade))
-unique_subset_data$final_overall_stage <- as.numeric(as.factor(unique_subset_data$final_overall_stage))
-unique_subset_data$final_t_stage<- as.numeric(as.factor(unique_subset_data$final_t_stage))
-unique_subset_data$final_n_stage <- as.numeric(as.factor(unique_subset_data$final_n_stage))
-unique_subset_data$histology_category <- as.numeric(as.factor(unique_subset_data$histology_category))
-unique_subset_data$prtx_radiation <- as.numeric(as.factor(unique_subset_data$prtx_radiation))
-unique_subset_data$prtx_chemo <- as.numeric(as.factor(unique_subset_data$prtx_chemo))
-unique_subset_data$prtx_endo <- as.numeric(as.factor(unique_subset_data$prtx_endo))
-unique_subset_data$prtx_bonemod <- as.numeric(as.factor(unique_subset_data$prtx_bonemod))
-unique_subset_data$node_status <- as.numeric(as.factor(unique_subset_data$node_status))
-unique_subset_data$axillary_dissection <- as.numeric(as.factor(unique_subset_data$axillary_dissection))
-unique_subset_data$diag_surgery_type_1 <- as.numeric(as.factor(unique_subset_data$diag_surgery_type_1))
-unique_subset_data$diag_neoadj_chemo_1 <- as.numeric(as.factor(unique_subset_data$diag_neoadj_chemo_1))
-                        
-
-#checking NAs 
-
-# Check for NAs in the dataset -- none! 
-sum(is.na(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                                 "final_tumor_grade", "final_overall_stage", 
-                                 "final_t_stage", "final_n_stage", 
-                                 "histology_category", "prtx_radiation", 
-                                 "prtx_chemo", "prtx_endo", "prtx_bonemod", 
-                                 "node_status", "axillary_dissection", 
-                                 "diag_surgery_type_1", "diag_neoadj_chemo_1")]))
-
-### let's try LASSO again 
-# Prepare the response variable
-y <- unique_subset_data$ctDNA_ever
-
-#making matrix / in the right form -- appears to be all numeric data 
-X1 <- as.matrix(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                                      "final_tumor_grade", "final_overall_stage", 
-                                      "final_t_stage", "final_n_stage", 
-                                      "histology_category", "prtx_radiation", 
-                                      "prtx_chemo", "prtx_endo", "prtx_bonemod", 
-                                      "node_status", "axillary_dissection", 
-                                      "diag_surgery_type_1", "diag_neoadj_chemo_1")])
-
-lasso_model <- glmnet(X1, y, family = "binomial", alpha = 1)  # alpha = 1 for lasso
-#when I initially fit this model, I got a NAs induced by coercion error message and realized that a number of these are non-numeric --so above converted a bunch of variables to numeric that were initially factors 
-
-                                                
-#Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. Do get warning that one of the groups in the outcome has fewer than 8 observations, so this modeling may not go super well.  
-cv_lasso_model <- cv.glmnet(X1, y, family = "binomial", alpha = 1)
-
-#plotting the results to look at the performance of different lamda 
-plot(cv_lasso_model)
-
-#getting the best lambda --best lambda 0.0041359
-best_lambda <- cv_lasso_model$lambda.min
-print(paste("Best lambda:", best_lambda))
-
-#Finding the final fit model with the optimal lambda 
-final_lasso_model <- glmnet(X1, y, family = "binomial", alpha = 1, lambda = best_lambda)
-
-#Which coefficents are included in the model. Only age_at_diag appears to be significant currently, but the coefficient is 0 suggesting it has very little effect.  
-coef(final_lasso_model) 
-
-
-#### Repeating Lasso without all of the variables (excluding some that we would expect to be colinear such as NACT and chemo. we will exclude chemo as a majority of individuals had chemo. We will also exclude node_status as this is a derivative/summary variable from final_n_stage) --> X2 
-
-y <- unique_subset_data$ctDNA_ever
-X2<- as.matrix(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                                      "final_tumor_grade", "final_overall_stage", 
-                                      "final_t_stage", "final_n_stage", 
-                                      "histology_category", "prtx_radiation", 
-                                      "prtx_endo", "prtx_bonemod", 
-                                       "axillary_dissection", 
-                                      "diag_surgery_type_1", "diag_neoadj_chemo_1")])
-
 lasso_model <- glmnet(X2, y, family = "binomial", alpha = 1)  # alpha = 1 for lasso
-#when I initially fit this model, I got a NAs induced by coercion error message and realized that a number of these are non-numeric --so above converted a bunch of variables to numeric that were initially factors 
 
-                                                
 #Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. 
 cv_lasso_model <- cv.glmnet(X2, y, family = "binomial", alpha = 1)
 
 #plotting the results to look at the performance of different lamda 
 plot(cv_lasso_model)
 
-#getting the best lambda  -- lambda is 0.06
+#getting the best lambda  -- 0.052 
 best_lambda <- cv_lasso_model$lambda.min
 print(paste("Best lambda:", best_lambda))
 
 #Finding the final fit model with the optimal lambda 
 final_lasso_model <- glmnet(X2, y, family = "binomial", alpha = 1, lambda = best_lambda)
 
-#Which coefficents are included in the model. Only age_at_diag appears to be predictive in the model (but its s0 value is 0), with all the others just showing dots, which suggests that all of them were shrunk to zero because they were not influential enough on the outcome. 
+#Which coefficents are included in the model. 
 coef(final_lasso_model) 
 
-### tutorial to use -- https://www.statology.org/lasso-regression-in-r/ 
 ```
 
-It is somewhat challenging to model ctDNA positivity using any of these approaches because there were only 9 individuals in this cohort with positive results. Because of this low N, it is hard to identify predictors. 
+Variables that remain significant in the LASSO for ctDNA positivity are t-stage and n-stage. It is slightly challenging to interpret these multi-level variables (such as T-stage and N stage) in the lasso but you can see that higher categories (T4, N2) are associated with positivity in the LASSO. The lambda for this model is quite low at 0.05. It is important to remember that a number of these variables are related to one another (such as T stage and N stage with final overall stage, which is built based on T and N stage), and node status + N stage (node status being built on N stage). I'll try a few other LASSOs to see whether by eliminating one of each of these colinear variables we get different results.
 
-The intercept (-2) is the log-odds of the outcome (dtc_ever, aka dtc positivity) when all the predictor variables are zero. The coefficients can be interpreted as such -- for age at diagnosis, for every 1 unit increase in age, the log-odds of testing DTC positive decreases by 0.0086, holding all other variables constant. This is a relatively small decrease though. 
+```{r}
 
-To test our proof of principle approach that lasso can be applied to this dataset, we will also look at DTC predictors, as DTC positivity was more frequent in this cohort and we therefore suspect the modeling approach may work better.  
+library(glmnet)
 
-``` {r} 
+set.seed(123) #to ensure consistency of results 
 
-#### DTC predictions. 
+# Prepare the response variable
+y <- unique_subset_data$ctDNA_ever
 
-table(subset_data$dtc_ever) #dtc_ever is in subset_data (but not yet in the unique_subset_data)
-# Merge the datasets to include dtc_ever by participant_id 
-unique_subset_data <- merge(unique_subset_data, subset_data[, c("participant_id", "dtc_ever")], by = "participant_id", all.x = TRUE)
-table(unique_subset_data$dtc_ever) #dtc_ever is now in unique_subset data 
+#yet again, the same 4 missing observations in X3, so will impute (only 4 observations). We have already imputed these, so I don't need to do it again for unique_subset_Data 
 
-#run the lasso for DTC status. This might work better as there are more DTC + results 
-y1 <- unique_subset_data$dtc_ever
-X3 <- as.matrix(unique_subset_data[, c("age_at_diag", "final_receptor_group", "demo_race_final",
-                                      "final_tumor_grade", "final_overall_stage", 
-                                      "final_t_stage", "final_n_stage", 
-                                      "histology_category", "prtx_radiation", 
-                                      "prtx_endo", "prtx_bonemod", 
-                                       "axillary_dissection", 
-                                      "diag_surgery_type_1", "diag_neoadj_chemo_1")])
 
-lasso_model <- glmnet(X3, y1, family = "binomial", alpha = 1)  # alpha = 1 for lasso. 0 for ridge. 
+### removed Nodal status as a variable 
+X3 <- model.matrix(ctDNA_ever ~ -1 + age_at_diag + final_receptor_group + demo_race_final+
+                                   final_tumor_grade + final_overall_stage + 
+                                      + final_t_stage + final_n_stage + 
+                                      histology_category + prtx_radiation + 
+                                      + prtx_chemo + prtx_endo + prtx_bonemod  
+                                       + axillary_dissection + 
+                                      diag_surgery_type_1 + diag_neoadj_chemo_1, data = unique_subset_data)
 
-                                                
+# Fit lasso model
+lasso_model <- glmnet(X3, y, family = "binomial", alpha = 1)  # alpha = 1 for lasso
+
 #Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. 
-cv_lasso_model <- cv.glmnet(X3, y1, family = "binomial", alpha = 1)
+cv_lasso_model <- cv.glmnet(X3, y, family = "binomial", alpha = 1)
 
 #plotting the results to look at the performance of different lamda 
 plot(cv_lasso_model)
 
-#getting the best lambda  -- best lambda is 0.00345 (better than with ctDNA)
+#getting the best lambda  -- 0.048, lower  
+best_lambda <- cv_lasso_model$lambda.min
+print(paste("Best lambda:", best_lambda))
+
+#Finding the final fit model with the optimal lambda 
+paired_down_lasso <- glmnet(X3, y, family = "binomial", alpha = 1, lambda = best_lambda)
+
+#Which coefficents are included in the model. 
+coef(paired_down_lasso) 
+
+```
+
+When we use the paired down lasso model for ctDNA positivity (removed nodal positivity), we see that T stage and N stage remain the only significant factors, and that higher nodal status is the most influential on ctDNA positivity.  The lambda for this model is 0.048 which is lower than the prior model.
+
+It is, however, somewhat challenging to model ctDNA positivity using any of these approaches because there were only 9 individuals in this cohort of 109 individuals with positive results. Because of this low N, it is hard to know exactly what to do with these predictors.
+
+The intercept (-2.76) is the log-odds of the outcome (ctDNA positivity or DTC positivity) when all the predictor variables are zero. The coefficients can be interpreted as the amount/times the log odds increases (or decreases) for that cohort, holding all other variables equal.
+
+To test our proof of principle approach that lasso can be applied to this dataset and perhaps generate more robust results, we will also look at DTC predictors, as DTC positivity was more frequent in this cohort and we therefore suspect the modeling approach may work better.
+
+```{r}
+
+
+set.seed(123) 
+
+#### DTC predictions. 
+
+subset_data <- subset_data[!duplicated(subset_data$participant_id), ]
+dtc_unique_subset_data <- merge(unique_subset_data, subset_data[, c("participant_id", "dtc_ever")], by = "participant_id", all.x = TRUE)
+
+nrow(dtc_unique_subset_data)  # Should still be 109
+table(dtc_unique_subset_data$dtc_ever, useNA = "ifany")  # Check for NA values
+
+#run the lasso for DTC status. This might work better as there are more DTC + results 
+y1 <- dtc_unique_subset_data$dtc_ever
+X2 #use the same X2 as it has the same predictors we are interested in  
+
+dim(X2)  # Rows should match nrow(dtc_unique_subset_data)
+length(y1)  # Should also match nrow(dtc_unique_subset_data). We have the same # (109)!
+
+lasso_model <- glmnet(X2, y1, family = "binomial", alpha = 1)  # alpha = 1 for lasso. 0 for ridge. 
+
+#Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. 
+cv_lasso_model <- cv.glmnet(X2, y1, family = "binomial", alpha = 1)
+
+#plotting the results to look at the performance of different lamda 
+plot(cv_lasso_model)
+
+#getting the best lambda  -- best lambda is 0.024, even lower! 
+best_lambda <- cv_lasso_model$lambda.min
+print(paste("Best lambda:", best_lambda)) 
+
+#Finding the final fit model with the optimal lambda 
+final_lasso_model <- glmnet(X2, y1, family = "binomial", alpha = 1, lambda = best_lambda)
+
+#Which coefficents are included in the model. For the model with DTC positivity, we get more coefficients retained in the model.  
+coef(final_lasso_model) 
+
+
+```
+
+For the LASSO model with DTC positivity, we get many more coefficients retained in the model and a lower lambda, which suggests a better overall model. Most notable factors in the LASSO for DTC positivity are higher T stage (with T4 inducing the highest log odds risk of ctDNA positivity), triple positive status (HR+ HER2+) which has a strong negative association with DTC positivty (though this cohort only had a handful of people who met this criteria), and ductal histology. Other influential factors using LASSO are node negativity, radiation history, bone modifying treatment, mastectomy, and neoadjuvant therapy. We will try this modeling for DTC positivity without our nodal status variable as this is likely colinear with node positivity to see how our model changes.
+
+```{r}
+#### DTC LASSO without final_n_stage in it 
+
+set.seed(123) 
+
+#run the lasso for DTC status. This might work better as there are more DTC + results 
+y1 <- dtc_unique_subset_data$dtc_ever
+
+
+### removed final_n_stage as a variable 
+X4 <- model.matrix(ctDNA_ever ~ -1 + age_at_diag + final_receptor_group + demo_race_final+
+                                   final_tumor_grade + final_overall_stage + 
+                                      + final_t_stage  + 
+                                      histology_category + prtx_radiation + 
+                                      + prtx_chemo + prtx_endo + prtx_bonemod  
+                                       + axillary_dissection +  node_status +
+                                      diag_surgery_type_1 + diag_neoadj_chemo_1, data = unique_subset_data)
+
+ 
+
+dim(X4)  # Rows should match nrow(dtc_unique_subset_data)
+length(y1)  # Should also match nrow(dtc_unique_subset_data). We have the same # (109)!
+
+lasso_model <- glmnet(X4, y1, family = "binomial", alpha = 1)  # alpha = 1 for lasso. 0 for ridge. 
+
+#Cross-validation. This approach performs k-fold cross validation to find the best lambda. The smaller the lambda, the more variables are included. 
+cv_lasso_model <- cv.glmnet(X4, y1, family = "binomial", alpha = 1)
+
+#plotting the results to look at the performance of different lamda 
+plot(cv_lasso_model)
+
+#getting the best lambda  -- best lambda is 0.027, same as above
 best_lambda <- cv_lasso_model$lambda.min
 print(paste("Best lambda:", best_lambda)) 
 
@@ -3527,15 +3459,24 @@ final_lasso_model <- glmnet(X3, y1, family = "binomial", alpha = 1, lambda = bes
 coef(final_lasso_model) 
 
 
+
 ```
 
-For the LASSO model with DTC positivity, we get more coefficients retained in the model and a lower lambda, which suggests a better overall model. Most notable factors in the LASSO for DTC positivity are the influence of axillary dissection (or none) on the log-odds of dtc positivity.  Other influential factors using LASSO are surgery type (with mastectomy vs lumpectomy increasing the log odds of DTC positivity) and neoadjuvant chemotherapy (with the presence of NACT increasing the log odds of DTC positivity). 
-
-
-Among the 62 pts who remained DTC-, 5 (8%) were ctDNA+ (with 5/5 who recurred), and 57 remained ctDNA- (of whom 5/57 recurred). All ctDNA positivity in DTC+ pts occurred at the time of or after DTC positivity. Over median follow-up (f/u) of 65 months (m), BC recurrence occurred in 14/96 pts (15%), with 2 locoregional-only and 12 distant +/- locoregional recurrences (involving the bone, liver, lung/pleura, and brain); 8/14 pts (57%) were ctDNA+ prior to relapse. 7/12 (58%) with distant recurrences were ctDNA+ prior to metastatic diagnosis, at a median lead time of 15 m (range 0 – 25). Overall, ctDNA+ pts experienced a median lead time from ctDNA positivity to recurrence of 13 m (range 0 – 25). Only 1 of 9 ctDNA+ pts has not recurred; this pt was DTC+ and went on therapeutic trial, without evidence of recurrence over 20 m f/u. 30/34 DTC+ pts (89%) who went on therapeutic trial have not had ctDNA detected during f/u and have not recurred. Overall, ctDNA status was significantly associated with relapse (p\<0.01), with a PPV of 89% and NPV of 93%. Of the 24 BL DTC+ pts, 2 became ctDNA+ at subsequent timepoints, an average of 18 m after DTC assessment, and both relapsed (3 and 5 m from ctDNA detection, respectively).
-
-Describe your results and include relevant tables, plots, and code/comments used to obtain them. You may refer to the @sec-methods as needed. End with a brief conclusion of your findings related to the question you set out to address. You can include references if you'd like, but this is not required.
+In this last LASSO, in which we removed nodal_status to just assess the more granular final_n_stage (N1 vs N2 vs N3 etc), a few more variables became more significant. T4 stage, ductal histology, and receptor status maintained their strong relationships with DTC positivity, and several other variables maintained their less strong relationships (including grade, nodal status, race, bone modifying treatment, mastectomy, and neoadjuvant therapy--which all increased the risk of DTC positivity). Axillary dissection was negatively associated with dtc positivity--but just barely. These models without the node_status variable are the ones we will choose given that the lambdas are about the same or lower (compared to those including node_status) for both the ctDNA and DTC models as these make more intuitive sense than including two variables that are very similar to one another (as they represent the same information in different ways). 
 
 ## Conclusion {#sec-conclusion}
 
-In this study, X was associated with Y.
+In this cohort of 109 individuals on the SURMOUNT study, DTC positivity occurred more frequently (in around 30% of individuals) than ctDNA postiivity, which occurred in \< 10% of patients either at baseline or during surveillance. Despite low numbers, there was good concordance between ctDNA and DTC positivity (in particular, accounting for timepoint, with a concordance of 0.8).
+
+In assessing predictors of ctDNA positivity, we identified that higher T stage and N stage remain the most significant predictors of ctDNA positivity (With age at diagnosis, HR+ and HER2+, lobular histology, and lower grade also serving as significant predictors of ctDNA positivity). The lambda for this model is 0.048.
+
+In assessing predictors of DTC positivity using LASSO, we identified a bunch of factors including ductal histology, higher T stage (larger tumor size), and HER2 negative histology as the factors most strongly associated with DTC positivity. Other factors that were associated in multivariable approaches included factors representing more treatment (mastectomy, radiation, and neoadjuvant therapy). Interestingly, nodal positivity seemed to be negatively associated with DTC positivity.  The lambda for this model is 0.027.
+
+It is worth noting that the ctDNA model in particular is challenging to interpret in the setting of the low number of ctDNA positive individuals (n=9).
+
+Overall, ctDNA status was significantly associated with relapse (p<0.01), with a PPV of 89% and NPV of 94% (and a specificity for relapse of 0.99). DTC positivity was NOT significantly associated with relapse and the sensitivity and specificity of this test for relapse was challenging to interpret in light of the fact that all DTC positive patients in this cohort patients went onto interventional trials aimed at eliminating dormant cancer cells. The negative predictive value of DTC assessment was high (0.86), suggesting that this test may potentially be useful in identifying those individuals who are at lower risk of relapse.
+
+Future directions will be aimed at assessing the test characteristics of DTC assessment in the full cohort of patients on SURMOUNT to date (n=220) and looking at the incremental value of multiple testing, obtaining ctDNA assessment for this full cohort of patients, and performing survival analyses to assess lead time to clinical events (relapse, death) with DTC and ctDNA assessment and looking at the fluctuation of ctDNA positivity among those patients on clinical trials who had frequent testing while on therapy (and following therapy).
+
+We had several limitations: Missing data (though low levels for our variables of interest for this analysis). Our model also includes colinear variables--or variables that represent different ways of thinking about tumor aggressiveness or disease aggressiveness (such as T stage and N stage, which directly feed into Overall Stage) in the LASSO. The LASSO does not account for this, so we will try group lasso as our next step. We also had limited power in creating predictive model for ctDNA in particular given the rarity of positivity in our cohort (though this rate matches the positivity rate in other cohort studies).
+
